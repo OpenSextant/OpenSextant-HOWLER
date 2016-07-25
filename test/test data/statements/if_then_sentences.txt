@@ -1,0 +1,4 @@
+If something has a warhead then it is a missile.
+If something has a warhead it is a missile.
+If something is a missile then it is a weapon.
+If Bob is a car then he is a wombat.

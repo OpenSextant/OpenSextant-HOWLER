@@ -1,0 +1,18 @@
+There is a missile.
+There are missiles.
+There is a warhead in a missile.
+There are two boosters on a missile.
+There are at least two boosters on a missile.
+There are no pilots on a missile.
+There is no pilot on a missile.
+There is a missile that doesn't fly.
+There is a missile that doesn't fly and that doesn't explode.
+There is a missile that doesn't fly and doesn't explode.
+There is a missile that Russia builds.
+There are seven district in Iran.
+Russia believes that there are missiles.
+Russia believes.
+A missile that explodes is a good missile.
+A missile that never explodes is a bad missile.
+A missile that always explodes is a good missile.
+A missile that sometimes explodes is a flawed missile.

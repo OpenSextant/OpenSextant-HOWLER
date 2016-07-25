@@ -1,0 +1,78 @@
+A	a
+A	an
+ALSO	also
+AND	and
+ANYX	anybody
+ANYX	anyone
+ANYX	anything
+ANYX	anywhere
+BY	by
+EVERY	all
+EVERY	every
+EVERYX	all things
+EVERYX	everybody
+EVERYX	everyone
+EVERYX	everything
+EVERYX	everywhere
+EXACT	exactly
+GROUPOF	bunch of
+GROUPOF	collection of
+GROUPOF	group of
+GROUPOF	number of
+GROUPOF	set of
+IF	if
+LESS	less than
+LESS	smaller than
+LESSOREQUAL	at most
+LESSOREQUAL	no more than
+MORE	greater than
+MORE	more than
+MOREOREQUAL	at least
+MOREOREQUAL	no less than
+MUST	can only
+MUST	must
+NONE	no
+NONE	none
+NOX	no one
+NOX	no thing
+NOX	nobody
+NOX	nothing
+NOX	not everything
+NOX	nowhere
+ONLY	only
+ONLY	can only
+ONLY	exclusively
+ONLY	either
+ONLY	nothing but
+ONLY	no thing but
+ONLY	nobody but
+ONLY	nowhere but
+ONLY	no one but
+OR	nor
+OR	or
+OR	and/or
+PERIOD	.
+QMARK	?
+SAMEAS	also known as
+SAMEAS	equivalent to
+SAMEAS	identical to
+SAMEAS	the same as
+SAMEAS	defined as
+SOME	a couple of
+SOME	a few
+SOME	many
+SOME	most
+SOME	several
+SOME	some
+SOME	not every
+SOMEX	somebody
+SOMEX	someone
+SOMEX	something
+SOMEX	somewhere
+THAT	that
+THAT	who
+THAT	which
+THE	the
+THEN	then
+THING	thing
+THING	things
