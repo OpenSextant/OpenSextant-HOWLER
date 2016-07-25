@@ -14,7 +14,8 @@ HOWLER Kanban is composed of two components
 The Wekan app is built on the Meteor JavaScript framework (https://www.meteor.com/) so the Meteor runtime components are needed. Meteor apps presume an internet connection since it downloads needed packages at runtime. 
 	 
 1. install meteor on the system which will host the Kanban web app: (see https://www.meteor.com/install for installation details)
-2. unpack kanban.zip
+2. Get the Howler Kanban release at https://github.com/OpenSextant/HOWLER-Kanban/releases/latest
+2. unpack HowlerKanban.zip
 3. cd to the Wekan directory
 4. `meteor`
 
@@ -23,7 +24,7 @@ The first time this is run any needed Meteor packages will be downloaded which m
 ### To install the HOWLER portion of HOWLER Kanban
 
 1. unzip the HOWLER distribution. Does not have to be on the same machine as the Wekan app.
-1. cd to the HOLWER-<VERSION> directory
+1. cd to the HOWLER-<VERSION> directory
 1. edit `resources/howler.properties` to set the host if you are not on the same machine as the Wekan app
 1. run kanbaner.bat/.sh
 
