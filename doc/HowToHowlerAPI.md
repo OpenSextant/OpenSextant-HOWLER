@@ -2,8 +2,7 @@
 ##How to use the HOWLER API
 	
 The `org.opensextant.howler.convertors.Howler` class is the entry point for all the primary HOWLER capabilities. If you are not modifying the HOWLER grammar or algorithms, it is the only class needed.
-This class provides access to all of the fundamental HOWLER capabilities: to translate back and forth from OWL to English. Each of these translations 
-create or consume SubjectPredicateObject (SPO) objects which serve as intermediate representations of the information being translated. For the most part these intermediate objects can be used without change.
+This class provides access to all of the fundamental HOWLER capabilities: to translate back and forth from OWL to English. Each of these translations create or consume Document objects (basically a set of SubjectPredicateObject (SPO) objects) which serve as intermediate representations of the information being translated. For the most part these intermediate objects can be used without change.
 
 
 ### To create an ontology from text

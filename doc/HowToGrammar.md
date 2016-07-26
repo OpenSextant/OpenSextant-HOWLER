@@ -3,11 +3,11 @@
 The grammar required by the HOWLER translators is a simple subset of full English. Since the primary purposes of HOWLER is to translate
 between English and OWL, this subset was selected to only include concepts and structures that have an equivalent in OWL. Since English includes some concepts that have no equivalent in OWL (for instance OWL has no distinction between past, present and future tenses), these have been excluded from HOWLER English. Similarly, OWL has some concepts that have no English equivalent (for instance there is no English equivalent to a name space)
 
-The formal specification of HOWLER English is defined in the ANTLR4 file found in *grammars/HOWL.g4*. (see <http://www.antlr.org/> for details of ANTLR). This file is used by ANTLR to create the HOWLER's English parser. The generated code resides in *org.opensextant.howler.grammar*. Unless you are changing the HOWLER grammar you will not need to regenerate this code. Changing the grammar requires code changes may be non-trivial.
+The formal specification of HOWLER English is defined in the ANTLR4 file found in `grammars/HOWL.g4`. (see <http://www.antlr.org/> for details of ANTLR). This file is used by ANTLR to create the HOWLER's English parser. The generated code resides in `org.opensextant.howler.grammar`. Unless you are changing the HOWLER grammar you will not need to regenerate this code. Changing the grammar will likely require non-trivial code changes.
 
 HOWLER English is meant to be a simple subset of English, with no special or unusual words or syntax. Although the formal specification mentioned above defines this subset very precisely, this specification might be difficult for a user  who just wants to write HOWLER sentences to understand . A few basic principles and rules should get them started in writing valid HOWLER English.
 
-See the test data for examples of valid and invalid sentences. 
+See the test data in `test/test data/statements` for examples of valid and invalid sentences. 
 
 ###HOWLER English
 
@@ -16,8 +16,8 @@ See the test data for examples of valid and invalid sentences.
   
 * Descriptions - A dog is an animal.
   * States some aspect(s) or characteristic(s) about the subject. 
-* Definitions -  A dog is defined as animal that says woof.  
-  * States that two descriptions are equivalent: "a dog"  "animal that says woof" are equivalent. 
+* Definitions -  A dog is defined as an animal that says woof.  
+  * States that two descriptions are equivalent: "a dog" and "an animal that says woof" are equivalent. 
 * Facts - Fido is a dog.  
   * States something about a specific instance of something (e.g. Fido) 
 * Questions - (Not yet implemented)
@@ -36,7 +36,7 @@ These sentences are made up of some basic elements that can be combined into phr
 * Individuals
   * specific instances of things: Bob, Japan, Fido
 * Connectors
-  * connects a phrase to another thing or phrase that it modifies: a dog that has a tail.  
+  * connects a phrase to another thing or phrase that it modifies: a dog *that* has a tail.  
 
 ###Sentence structure
 * All sentences must end with a period. No periods can be used inside the sentence (e.g. for abbreviations, title or numbers).
@@ -83,7 +83,7 @@ Sub-phrases which consist of a verb phrase and an object phrase are connected to
 3. OWL does not have an equivalent for ambiguous quantities like "some", "many", "most". HOWLER will recognize them but translate those as "at least 1"  e.g. 
 	* Bob owns many dogs. => Bob owns at least 1 dog.
 	
-	These ambiguous quantities can only occur in the object phrase.If they occur in the subject phrase, they will be translated as "every" e.g. 
+These ambiguous quantities can only occur in the object phrase.If they occur in the subject phrase, they will be translated as "every" e.g. 
 	* Some pilots own a plane. => Every pilot own a plane.
 	 
 4. OWL primarily deals with countable things e.g. a car, 3 trucks, more than 3 houses. It doesn't have any concept of "mass nouns", 
@@ -93,10 +93,6 @@ Sub-phrases which consist of a verb phrase and an object phrase are connected to
    
    This should be understood to mean "Bob drinks **a quantity of** water."  
    
-5. OWL interprets every concept (word) as a separate and distinct entity e.g. "shoe maker" is not the same as "shoe-maker". If you wish
-  to use a multi-word phrase but want it interpreted as a single thing or concept, hyphenate the words into a single phrase "shoe-maker". Similarly, 
-  since HOWLER and OWL have no built-in vocabulary, it will not know that "**United Nations**" is a single entity (an organization) but will
-  interpret it as some nations that are united. Hyphenating phrases like these e.g. "**United-Nations**" will allow HOWLER to recognize 
-  that it is intended to be a single thing. 
+5. OWL interprets every concept (word) as a separate and distinct entity e.g. "shoe maker" is not the same as "shoe-maker". If you wish to use a multi-word phrase but want it interpreted as a single thing or concept, hyphenate the words into a single phrase "shoe-maker". Similarly, since HOWLER and OWL have no built-in vocabulary, it will not know that "**United Nations**" is a single entity (an organization) but will interpret it as some nations that are united. Hyphenating phrases like these e.g. "**United-Nations**" will allow HOWLER to recognize that it is intended to be a single thing. 
  	  	
 		

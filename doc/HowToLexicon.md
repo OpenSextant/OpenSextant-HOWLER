@@ -6,7 +6,7 @@
 1. a lexicon which contains a large set of English words and their possible part(s) of speech and the frequency (probability) for that part of speech
 2. a collection of n-grams: sequences of parts of speech (POS) that occur in English and their frequencies 
 
-These data sets are contained in *resources/data/pos*.
+These data sets are contained in `resources/data/pos`.
 
 While the n-gram file contains statistical data which is difficult to create, adding or modifying the lexicon file is 
 straightforward. Each line of the lexicon file contains the information for a single word. (Note that it must be a single
@@ -48,7 +48,7 @@ NP | singular proper noun | Steve, France, Acme
 NPS | plural proper noun | Romans, Cadillacs, Masons
 CD | cardinal numeral, | 1, one, million
 OD | ordinal numeral | first, second, 701st
-VB | verb (present tense) | investigate find, act, follow 
+VB | verb (present tense) | investigate, find, act, follow 
 VBN | verb (past participle) | conducted, charged, won 
 VBD | verb (past tense) | said, produced, took, recommended 
 VBG | verb (present participle) | modernizing, improving, purchasing 
