@@ -45,12 +45,16 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.stanford.nlp.process.Morphology;
+import edu.emory.mathcs.nlp.common.util.StringUtils;
+import edu.emory.mathcs.nlp.component.morph.MorphAnalyzer;
+import edu.emory.mathcs.nlp.component.morph.english.EnglishMorphAnalyzer;
 
 public class OWLUtils {
 
   static Map<String, Integer> numbers = new HashMap<String, Integer>();
-
+  
+  static MorphAnalyzer lemmatizer = new EnglishMorphAnalyzer();
+  
   static {
     numbers.put("one", 1);
     numbers.put("two", 2);
@@ -199,12 +203,17 @@ public class OWLUtils {
       return word;
     }
 
+    // don't change numbers or Fixed vocab
+    if (pos.equals("CD") || pos.equals("FIXED")) {
+      return word;
+    }
+
     // don't normalize verbs yet
     if (pos.startsWith("V")) {
       return word;
     }
 
-    return (Morphology.lemmaStatic(word, pos, lower));
+    return lemmatizer.lemmatize(StringUtils.toSimplifiedForm(word, lower), pos);
   }
 
   public static SubjectPredicateObject rewriteSPO(
