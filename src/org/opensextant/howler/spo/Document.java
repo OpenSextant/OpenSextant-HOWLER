@@ -29,10 +29,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Document is a container for SPO which are created by one of the
- * Factories and are concumed by one of the Converters
+ * Factories and are consumed by one of the Converters
  */
 public class Document {
 
@@ -50,7 +50,7 @@ public class Document {
   }
 
   /**
-   * Sets the titl eof the document.
+   * Sets the title eof the document.
    *
    * @param title
    *          the new title
