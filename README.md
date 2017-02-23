@@ -11,6 +11,8 @@
 2. testing and debugging is simplified since we can isolate each half of the translation
 3. it will make it easier to add translations to/from other languages in the future e.g. SPARQL
 
+See [OWL English Support](doc/OWLEnglishSupport.md) for details of HOWLER's mapping between English and OWL.
+
 #### No Magic
  HOWLER is intended to lower the language barrier between English speakers and ontologies. It does not lower the thinking barrier. HOWLER has no understanding of the content it transforms, it merely transform one language to another while (hopefully) preserving any semantics.
  
