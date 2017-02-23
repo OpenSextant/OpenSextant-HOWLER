@@ -95,7 +95,7 @@ public class SPOConverterText {
   }
 
   // Most general Phrase to Words conversion
-  private List<Word> convert(Phrase phrase, boolean isObject) {
+  protected List<Word> convert(Phrase phrase, boolean isObject) {
 
     PhraseType type = phrase.getPhraseType();
 
@@ -410,7 +410,7 @@ public class SPOConverterText {
     return wrds;
   }
 
-  private List<Word> convertPredicate(Predicate predicate) {
+  protected List<Word> convertPredicate(Predicate predicate) {
 
     List<Word> wrds = new ArrayList<Word>();
 

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.opensextant.howler</groupId>
-	<artifactId>HOLWER</artifactId>
+	<artifactId>HOWLER</artifactId>
 	<version>0.1</version>
 	<packaging>jar</packaging>
 
@@ -85,6 +85,13 @@
 			<groupId>net.sourceforge.owlapi</groupId>
 			<artifactId>owlapi-distribution</artifactId>
 			<version>5.0.1</version>
+		</dependency>
+
+		<!--Tinkerpop API used by Graph converter -->
+		<dependency>
+			<groupId>com.steelbridgelabs.oss</groupId>
+			<artifactId>neo4j-gremlin-bolt</artifactId>
+			<version>0.2.18</version>
 		</dependency>
 
 		<!-- ANTLR4 runtime used to run the generated grammar code -->
