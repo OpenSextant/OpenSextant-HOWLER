@@ -4,7 +4,7 @@
 
 	<groupId>org.opensextant.howler</groupId>
 	<artifactId>HOWLER</artifactId>
-	<version>0.1</version>
+	<version>0.2</version>
 	<packaging>jar</packaging>
 
 	<name>Howler</name>
@@ -87,18 +87,11 @@
 			<version>5.0.1</version>
 		</dependency>
 
-		<!--Tinkerpop API used by Graph converter -->
-		<dependency>
-			<groupId>com.steelbridgelabs.oss</groupId>
-			<artifactId>neo4j-gremlin-bolt</artifactId>
-			<version>0.2.18</version>
-		</dependency>
-
 		<!-- ANTLR4 runtime used to run the generated grammar code -->
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr4-runtime</artifactId>
-			<version>4.5.3</version>
+			<version>4.7.1</version>
 		</dependency>
 
 		<!-- Implementation of Aho-Corasick string matching algorithm, used in 
