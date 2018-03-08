@@ -1,0 +1,2234 @@
+<?xml version="1.0"?>
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://visualdataweb.de/ontobench/ontology/5/"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     ontologyIRI="http://visualdataweb.de/ontobench/ontology/5/">
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xml" IRI="http://www.w3.org/XML/1998/namespace"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/identifier"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">http://visualdataweb.de/ontobench/ontology/5/</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Benchmark ontology created with the Ontology Visualization Benchmark Generator</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/identifier"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">http://visualdataweb.de/ontobench/ontology/5/</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/date"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">2018-01-12</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/date"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">2018-01-12</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/creator"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Ontology Visualization Benchmark Generator</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:isDefinedBy"/>
+        <IRI>http://visualdataweb.de/ontobench/</IRI>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/description"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Benchmark ontology created with the Ontology Visualization Benchmark Generator</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/description"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Benchmark ontology created with the Ontology Visualization Benchmark Generator</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:seeAlso"/>
+        <IRI>http://visualdataweb.de/ontobench/</IRI>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/title"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Benchmark Ontology</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="owl:backwardCompatibleWith"/>
+        <IRI>http://ontovibe.visualdataweb.org/minimal/</IRI>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="owl:versionInfo"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">1.0</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="owl:incompatibleWith"/>
+        <IRI>http://ontovibe.visualdataweb.org/</IRI>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="owl:versionIri"/>
+        <IRI></IRI>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="owl:priorVersion"/>
+        <IRI>http://ontovibe.visualdataweb.org/</IRI>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/publisher"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Ontology Visualization Benchmark Generator</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/title"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Benchmark Ontology</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="owl:imports"/>
+        <IRI>http://ontovibe.visualdataweb.org/minimal/</IRI>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Benchmark Ontology</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/contributor"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Vincent Link</Literal>
+    </Annotation>
+    <Declaration>
+        <Class IRI="Class1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DeprecatedClass"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="owl:Nothing"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="noDomainAndRangeObjectProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="noDomainAndRangeDataProperty"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="customAnnotationProperty"/>
+    </Declaration>
+    <Declaration>
+        <Datatype IRI="RdfsDatatype"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="ObjectOneOf_EL_Individual"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="functionalDataProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="transitiveObjectProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectMinCardinalityRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectIntersectionOf"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Class23"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectMaxQualifiedCardinalityProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="rdfsLiteralProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectSomeValuesFromRange_RL"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdStringProperty"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty abbreviatedIRI="owl:versionIri"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="HasSelfClass"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="propertyWithInfos"/>
+    </Declaration>
+    <Declaration>
+        <Datatype IRI="DatatypeRestrictionDatatype"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdShortProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectExactCardinalityRange_Lite"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/contributor"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="owlRealProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Class18"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="datatypeRestrictionProperty"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/date"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="propertyChainProperty_SingleStep"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="InverseFunctionalObjectPropertyRange"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/title"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ReflexiveObjectPropertyRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="NoObjectComplementOf"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdNCNameProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataSomeValuesFromProperty_RL"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="negativeDataPropertyAssertionProperty"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="NegativeObjectPropertyAssertion_TargetIndividual"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="negativeObjectPropertyAssertionProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DataExactQualifiedCardinalityRange"/>
+    </Declaration>
+    <Declaration>
+        <Datatype IRI="DatatypeIntersectionOf_Datatype2"/>
+    </Declaration>
+    <Declaration>
+        <Datatype IRI="DatatypeIntersectionOf_Datatype1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectMinCardinalityRange_Lite"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Class40"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/title"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty abbreviatedIRI="owl:imports"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectMaxCardinalityRange_LiteRL"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="rdfXMLLiteralProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectAllValuesFromRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectIntersectionOf_QL"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="EquivalentObjectProperty_Range1"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdLanguageProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdDateTimeStampProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="EquivalentObjectProperty_Range2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="EquivalentObjectProperty_Range3"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="AsymmetricObjectPropertyRange"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="ObjectHasValue_Individual"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataExactQualifiedCardinality"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectExactQualifiedCardinality_Qualifier"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="SymmetricObjectPropertyRange"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="SameAs_Individual2"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="SameAs_Individual1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="AllDisjointClasses_Class1"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="AllDifferent_Individual1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="AllDisjointClasses_Class3"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="AllDifferent_Individual3"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="AllDisjointClasses_Class2"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="AllDifferent_Individual2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="SuperClass"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="allDisjointObjectProperties_Property1"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="allDisjointObjectProperties_Property2"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectMaxCardinalityProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdBooleanProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DataHasValue"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="functionalObjectProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DeprecatedPropertyRange"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectExactCardinalityProperty_Lite"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="allDisjointObjectProperties_Property3"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="EquivalentClass_2"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataMaxCardinality_RL"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="EquivalentClass_1"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="AllDifferent_Individual4"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="ObjectOneOf_Individual2"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/identifier"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="ObjectOneOf_Individual1"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="rdfPlainLiteralProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ClassWithInfos"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectMaxQualifiedCardinalityRange_RL"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectUnionOf"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="SubClass"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataHasValueProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdDateTimeProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectMinQualifiedCardinalityProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdUnsignedIntProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataMinCardinality"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectMaxQualifiedCardinality_RL_Qualifier"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="noRangeDataProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DataMaxQualifiedCardinalityRange_RL"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="equivalentDataProperty_1"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="equivalentDataProperty_2"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="equivalentDataProperty_3"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="irreflexiveObjectProperty"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="ObjectOneOf_RL_Individual1"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="ObjectOneOf_RL_Individual2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectOneOf"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DatatypeMapsDomain"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="hasSelfProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectUnionOf_Class1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectUnionOf_Class2"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectAllValuesFromProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataPropertyDisjointWith_Property2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectUnionOf_Class3"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataPropertyDisjointWith_Property1"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdIntProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="DeprecatedProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectIntersectionOf_Class1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DataSomeValuesFrom_RL"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectIntersectionOf_Class2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DataExactCardinalityRange"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataAllValuesFromProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="inverseFunctionalObjectProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectExactCardinalityProperty"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/description"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DataMaxCardinalityRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectComplementOf"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdAnyURIProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="hasKeyProperty_1"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectSomeValuesFromProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Domain"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdNonPositiveIntegerProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="FunctionalObjectPropertyRange"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="noRangeObjectProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectMaxQualifiedCardinalityProperty_RL"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="datatypeIntersectionOfProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="HasKeyPropertyRange_2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectPropertyRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectMaxCardinalityRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DataMinQualifiedCardinalityRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DataAllValuesFrom"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="inverseProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DisjointObjectProperty_Range1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectSomeValuesFrom"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DisjointObjectProperty_Range3"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdUnsignedByteProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DisjointObjectProperty_Range2"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="rdfLangStringProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectMaxQualifiedCardinality_Qualifier"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="superDataProperty"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="NamedIndividual"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdNonNegativeIntegerProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="nonInverseProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataExactCardinality"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdNMTOKENProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdTokenProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="TransitiveObjectPropertyRange"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="propertyChainProperty_DoubleStep"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdNameProperty"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/creator"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="subDataProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="subObjectProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="symmetricObjectProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataSomeValuesFromProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectExactCardinalityRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DisjointUnion"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectMaxQualifiedCardinalityRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="IrreflexiveObjectPropertyRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectUnionOf_RL"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="NegativeObjectPropertyAssertion_SourceIndividual"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DataMaxCardinalityRange_RL"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdBase64BinaryProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectOneOf_EL"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectExactQualifiedCardinalityProperty"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/description"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="datatypeProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Range"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectSomeValuesFromRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="TopObjectPropertyRange"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdNegativeIntegerProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="noDomainObjectProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectPropertyDisjointWith_Range1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectIntersectionOf_QL_Class2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="PropertyChainEnd"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectIntersectionOf_QL_Class1"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdUnsignedShortProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectPropertyDisjointWith_Range2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectMinQualifiedCardinality_Qualifier"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DisjointWith_Class1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DisjointWith_Class2"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataMaxCardinality"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DisjointWith_Class3"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="DataUnionOf"/>
+    </Declaration>
+    <Declaration>
+        <Datatype IRI="DataOneOf_EL"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="allDisjointDataProperties_Property1"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="allDisjointDataProperties_Property2"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="allDisjointDataProperties_Property3"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Class66"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectMinCardinalityProperty_Lite"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Class67"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectMinQualifiedCardinalityRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DataMinCardinalityRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectExactQualifiedCardinalityRange"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="hasKeyProperty_2"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataMaxQualifiedCardinality"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdUnsignedLongProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdByteProperty"/>
+    </Declaration>
+    <Declaration>
+        <Datatype IRI="DataUnionOf_Datatype1"/>
+    </Declaration>
+    <Declaration>
+        <Datatype IRI="DataUnionOf_Datatype2"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectSomeValuesFromProperty_RL"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/date"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DisjointUnion_Class2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DisjointUnion_Class1"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdDoubleProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataComplementOfProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdHexBinaryProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="owlRationalProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Class57"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectHasValueProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="superObjectProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectPropertyDisjointWith_Property2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DataSomeValuesFrom"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectPropertyDisjointWith_Property1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectUnionOf_RL_Class3"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectUnionOf_RL_Class2"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataMinQualifiedCardinality"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectSomeValuesFrom_RL"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectUnionOf_RL_Class1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectHasValue"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdIntegerProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="HasKeyClass"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="DataMaxQualifiedCardinalityRange"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/publisher"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectOneOf_RL"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="ObjectAllValuesFrom"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="equivalentObjectProperty_3"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="equivalentObjectProperty_2"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="equivalentObjectProperty_1"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectMaxCardinalityProperty_LiteRL"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="dataMaxQualifiedCardinality_RL"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="objectMinCardinalityProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdDecimalProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="noDomainDataProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="PropertyChainMiddle"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdLongProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="datatypeIntersectionOfProperty_OWL2"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="asymmetricProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdNormalizedStringProperty"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="NegativeDataPropertyAssertion_SourceIndividual"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="BottomObjectPropertyRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="InverseOfPropertyRange"/>
+    </Declaration>
+    <Declaration>
+        <Datatype IRI="DataOneOf"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/identifier"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdPositiveIntegerProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="xsdFloatProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="reflexiveObjectProperty"/>
+    </Declaration>
+    <EquivalentClasses>
+        <Class IRI="Class18"/>
+        <Class IRI="EquivalentClass_1"/>
+        <Class IRI="EquivalentClass_2"/>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="HasSelfClass"/>
+        <ObjectHasSelf>
+            <ObjectProperty IRI="hasSelfProperty"/>
+        </ObjectHasSelf>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="ObjectIntersectionOf"/>
+        <ObjectIntersectionOf>
+            <Class IRI="ObjectIntersectionOf_Class1"/>
+            <Class IRI="ObjectIntersectionOf_Class2"/>
+        </ObjectIntersectionOf>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="ObjectOneOf"/>
+        <ObjectOneOf>
+            <NamedIndividual IRI="ObjectOneOf_Individual1"/>
+            <NamedIndividual IRI="ObjectOneOf_Individual2"/>
+        </ObjectOneOf>
+    </EquivalentClasses>
+    <SubClassOf>
+        <Class IRI="DataAllValuesFrom"/>
+        <DataAllValuesFrom>
+            <DataProperty IRI="dataAllValuesFromProperty"/>
+            <Datatype abbreviatedIRI="xsd:integer"/>
+        </DataAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="DataExactCardinalityRange"/>
+        <DataExactCardinality cardinality="11">
+            <DataProperty IRI="dataExactCardinality"/>
+            <Datatype abbreviatedIRI="rdfs:Literal"/>
+        </DataExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="DataExactQualifiedCardinalityRange"/>
+        <DataExactCardinality cardinality="12">
+            <DataProperty IRI="dataExactQualifiedCardinality"/>
+            <Datatype abbreviatedIRI="xsd:dateTime"/>
+        </DataExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="DataHasValue"/>
+        <DataHasValue>
+            <DataProperty IRI="dataHasValueProperty"/>
+            <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">6</Literal>
+        </DataHasValue>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="DataMaxCardinalityRange"/>
+        <DataMaxCardinality cardinality="19">
+            <DataProperty IRI="dataMaxCardinality"/>
+            <Datatype abbreviatedIRI="rdfs:Literal"/>
+        </DataMaxCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="DataMaxCardinalityRange_RL"/>
+        <DataMaxCardinality cardinality="1">
+            <DataProperty IRI="dataMaxCardinality_RL"/>
+            <Datatype abbreviatedIRI="rdfs:Literal"/>
+        </DataMaxCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="DataMaxQualifiedCardinalityRange"/>
+        <DataMaxCardinality cardinality="18">
+            <DataProperty IRI="dataMaxQualifiedCardinality"/>
+            <Datatype abbreviatedIRI="xsd:byte"/>
+        </DataMaxCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="DataMaxQualifiedCardinalityRange_RL"/>
+        <DataMaxCardinality cardinality="1">
+            <DataProperty IRI="dataMaxQualifiedCardinality_RL"/>
+            <Datatype abbreviatedIRI="xsd:byte"/>
+        </DataMaxCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="DataMinCardinalityRange"/>
+        <DataMinCardinality cardinality="3">
+            <DataProperty IRI="dataMinCardinality"/>
+            <Datatype abbreviatedIRI="rdfs:Literal"/>
+        </DataMinCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="DataMinQualifiedCardinalityRange"/>
+        <DataMinCardinality cardinality="9">
+            <DataProperty IRI="dataMinQualifiedCardinality"/>
+            <Datatype abbreviatedIRI="xsd:dateTime"/>
+        </DataMinCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="DataSomeValuesFrom"/>
+        <DataSomeValuesFrom>
+            <DataProperty IRI="dataSomeValuesFromProperty"/>
+            <Datatype abbreviatedIRI="xsd:dateTime"/>
+        </DataSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectAllValuesFrom"/>
+        <ObjectAllValuesFrom>
+            <ObjectProperty IRI="objectAllValuesFromProperty"/>
+            <Class IRI="ObjectAllValuesFromRange"/>
+        </ObjectAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectComplementOf"/>
+        <ObjectComplementOf>
+            <Class IRI="NoObjectComplementOf"/>
+        </ObjectComplementOf>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectExactCardinalityRange"/>
+        <ObjectExactCardinality cardinality="4">
+            <ObjectProperty IRI="objectExactCardinalityProperty"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectExactCardinalityRange_Lite"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="objectExactCardinalityProperty_Lite"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectExactQualifiedCardinalityRange"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="objectExactQualifiedCardinalityProperty"/>
+            <Class IRI="ObjectExactQualifiedCardinality_Qualifier"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectHasValue"/>
+        <ObjectHasValue>
+            <ObjectProperty IRI="objectHasValueProperty"/>
+            <NamedIndividual IRI="ObjectHasValue_Individual"/>
+        </ObjectHasValue>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectIntersectionOf_QL"/>
+        <ObjectIntersectionOf>
+            <Class IRI="ObjectIntersectionOf_QL_Class1"/>
+            <Class IRI="ObjectIntersectionOf_QL_Class2"/>
+        </ObjectIntersectionOf>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectMaxCardinalityRange"/>
+        <ObjectMaxCardinality cardinality="8">
+            <ObjectProperty IRI="objectMaxCardinalityProperty"/>
+        </ObjectMaxCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectMaxCardinalityRange_LiteRL"/>
+        <ObjectMaxCardinality cardinality="1">
+            <ObjectProperty IRI="objectMaxCardinalityProperty_LiteRL"/>
+        </ObjectMaxCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectMaxQualifiedCardinalityRange"/>
+        <ObjectMaxCardinality cardinality="3">
+            <ObjectProperty IRI="objectMaxQualifiedCardinalityProperty"/>
+            <Class IRI="ObjectMaxQualifiedCardinality_Qualifier"/>
+        </ObjectMaxCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectMaxQualifiedCardinalityRange_RL"/>
+        <ObjectMaxCardinality cardinality="0">
+            <ObjectProperty IRI="objectMaxQualifiedCardinalityProperty_RL"/>
+            <Class IRI="ObjectMaxQualifiedCardinality_RL_Qualifier"/>
+        </ObjectMaxCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectMinCardinalityRange"/>
+        <ObjectMinCardinality cardinality="2">
+            <ObjectProperty IRI="objectMinCardinalityProperty"/>
+        </ObjectMinCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectMinCardinalityRange_Lite"/>
+        <ObjectMinCardinality cardinality="0">
+            <ObjectProperty IRI="objectMinCardinalityProperty_Lite"/>
+        </ObjectMinCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectMinQualifiedCardinalityRange"/>
+        <ObjectMinCardinality cardinality="1">
+            <ObjectProperty IRI="objectMinQualifiedCardinalityProperty"/>
+            <Class IRI="ObjectMinQualifiedCardinality_Qualifier"/>
+        </ObjectMinCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectOneOf_EL"/>
+        <ObjectOneOf>
+            <NamedIndividual IRI="ObjectOneOf_EL_Individual"/>
+        </ObjectOneOf>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectSomeValuesFrom"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="objectSomeValuesFromProperty"/>
+            <Class IRI="ObjectSomeValuesFromRange"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ObjectUnionOf"/>
+        <ObjectUnionOf>
+            <Class IRI="ObjectUnionOf_Class1"/>
+            <Class IRI="ObjectUnionOf_Class2"/>
+            <Class IRI="ObjectUnionOf_Class3"/>
+        </ObjectUnionOf>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="SubClass"/>
+        <Class IRI="SuperClass"/>
+    </SubClassOf>
+    <SubClassOf>
+        <ObjectUnionOf>
+            <Class IRI="ObjectUnionOf_RL_Class1"/>
+            <Class IRI="ObjectUnionOf_RL_Class2"/>
+            <Class IRI="ObjectUnionOf_RL_Class3"/>
+        </ObjectUnionOf>
+        <Class IRI="ObjectUnionOf_RL"/>
+    </SubClassOf>
+    <SubClassOf>
+        <ObjectOneOf>
+            <NamedIndividual IRI="ObjectOneOf_RL_Individual1"/>
+            <NamedIndividual IRI="ObjectOneOf_RL_Individual2"/>
+        </ObjectOneOf>
+        <Class IRI="ObjectOneOf_RL"/>
+    </SubClassOf>
+    <SubClassOf>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="objectSomeValuesFromProperty_RL"/>
+            <Class IRI="ObjectSomeValuesFromRange_RL"/>
+        </ObjectSomeValuesFrom>
+        <Class IRI="ObjectSomeValuesFrom_RL"/>
+    </SubClassOf>
+    <SubClassOf>
+        <DataSomeValuesFrom>
+            <DataProperty IRI="dataSomeValuesFromProperty_RL"/>
+            <Datatype abbreviatedIRI="xsd:dateTime"/>
+        </DataSomeValuesFrom>
+        <Class IRI="DataSomeValuesFrom_RL"/>
+    </SubClassOf>
+    <DisjointClasses>
+        <Class IRI="AllDisjointClasses_Class1"/>
+        <Class IRI="AllDisjointClasses_Class2"/>
+        <Class IRI="AllDisjointClasses_Class3"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="DisjointWith_Class1"/>
+        <Class IRI="DisjointWith_Class2"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="DisjointWith_Class1"/>
+        <Class IRI="DisjointWith_Class3"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="DisjointWith_Class2"/>
+        <Class IRI="DisjointWith_Class3"/>
+    </DisjointClasses>
+    <DisjointUnion>
+        <Class IRI="DisjointUnion"/>
+        <Class IRI="DisjointUnion_Class1"/>
+        <Class IRI="DisjointUnion_Class2"/>
+    </DisjointUnion>
+    <ClassAssertion>
+        <Class IRI="Class40"/>
+        <NamedIndividual IRI="NamedIndividual"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="Class1"/>
+        <AnonymousIndividual nodeID="_:genid5"/>
+    </ClassAssertion>
+    <SameIndividual>
+        <NamedIndividual IRI="SameAs_Individual1"/>
+        <NamedIndividual IRI="SameAs_Individual2"/>
+    </SameIndividual>
+    <DifferentIndividuals>
+        <NamedIndividual IRI="AllDifferent_Individual1"/>
+        <NamedIndividual IRI="AllDifferent_Individual2"/>
+        <NamedIndividual IRI="AllDifferent_Individual3"/>
+        <NamedIndividual IRI="AllDifferent_Individual4"/>
+    </DifferentIndividuals>
+    <NegativeObjectPropertyAssertion>
+        <ObjectProperty IRI="negativeObjectPropertyAssertionProperty"/>
+        <NamedIndividual IRI="NegativeObjectPropertyAssertion_SourceIndividual"/>
+        <NamedIndividual IRI="NegativeObjectPropertyAssertion_TargetIndividual"/>
+    </NegativeObjectPropertyAssertion>
+    <NegativeDataPropertyAssertion>
+        <DataProperty IRI="negativeDataPropertyAssertionProperty"/>
+        <NamedIndividual IRI="NegativeDataPropertyAssertion_SourceIndividual"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">NegativeDataPropertyAssertion_TargetValue</Literal>
+    </NegativeDataPropertyAssertion>
+    <EquivalentObjectProperties>
+        <ObjectProperty IRI="equivalentObjectProperty_1"/>
+        <ObjectProperty IRI="equivalentObjectProperty_2"/>
+        <ObjectProperty IRI="equivalentObjectProperty_3"/>
+    </EquivalentObjectProperties>
+    <SubObjectPropertyOf>
+        <ObjectProperty IRI="subObjectProperty"/>
+        <ObjectProperty IRI="superObjectProperty"/>
+    </SubObjectPropertyOf>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="nonInverseProperty"/>
+        <ObjectProperty IRI="inverseProperty"/>
+    </InverseObjectProperties>
+    <FunctionalObjectProperty>
+        <ObjectProperty IRI="functionalObjectProperty"/>
+    </FunctionalObjectProperty>
+    <InverseFunctionalObjectProperty>
+        <ObjectProperty IRI="inverseFunctionalObjectProperty"/>
+    </InverseFunctionalObjectProperty>
+    <SymmetricObjectProperty>
+        <ObjectProperty IRI="symmetricObjectProperty"/>
+    </SymmetricObjectProperty>
+    <AsymmetricObjectProperty>
+        <ObjectProperty IRI="asymmetricProperty"/>
+    </AsymmetricObjectProperty>
+    <TransitiveObjectProperty>
+        <ObjectProperty IRI="transitiveObjectProperty"/>
+    </TransitiveObjectProperty>
+    <ReflexiveObjectProperty>
+        <ObjectProperty IRI="reflexiveObjectProperty"/>
+    </ReflexiveObjectProperty>
+    <IrreflexiveObjectProperty>
+        <ObjectProperty IRI="irreflexiveObjectProperty"/>
+    </IrreflexiveObjectProperty>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="DeprecatedProperty"/>
+        <Class IRI="Class18"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="allDisjointObjectProperties_Property1"/>
+        <Class IRI="Class1"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="allDisjointObjectProperties_Property2"/>
+        <Class IRI="Class1"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="allDisjointObjectProperties_Property3"/>
+        <Class IRI="Class1"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="asymmetricProperty"/>
+        <Class IRI="Class1"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="equivalentObjectProperty_1"/>
+        <Class IRI="Class23"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="equivalentObjectProperty_2"/>
+        <Class IRI="Class23"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="equivalentObjectProperty_3"/>
+        <Class IRI="Class23"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="functionalObjectProperty"/>
+        <Class IRI="Class23"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="hasKeyProperty_2"/>
+        <Class IRI="HasKeyClass"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="inverseFunctionalObjectProperty"/>
+        <Class IRI="Class23"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="inverseProperty"/>
+        <Class IRI="InverseOfPropertyRange"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="irreflexiveObjectProperty"/>
+        <Class IRI="Class23"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="noRangeObjectProperty"/>
+        <Class IRI="Domain"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="nonInverseProperty"/>
+        <Class IRI="Class23"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="objectExactCardinalityProperty"/>
+        <Class IRI="Class1"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="objectExactCardinalityProperty_Lite"/>
+        <Class IRI="Class18"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="objectExactQualifiedCardinalityProperty"/>
+        <Class IRI="Class40"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="objectMaxCardinalityProperty"/>
+        <Class IRI="Class23"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="objectMaxCardinalityProperty_LiteRL"/>
+        <Class IRI="Class23"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="objectMaxQualifiedCardinalityProperty"/>
+        <Class IRI="Class40"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="objectMaxQualifiedCardinalityProperty_RL"/>
+        <Class IRI="Class40"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="objectMinCardinalityProperty"/>
+        <Class IRI="Class40"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="objectMinCardinalityProperty_Lite"/>
+        <Class IRI="Class40"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="objectMinQualifiedCardinalityProperty"/>
+        <Class IRI="Class40"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="objectProperty"/>
+        <Class IRI="Class1"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="objectPropertyDisjointWith_Property1"/>
+        <Class IRI="Class40"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="objectPropertyDisjointWith_Property2"/>
+        <Class IRI="Class40"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="propertyChainProperty_DoubleStep"/>
+        <Class IRI="PropertyChainEnd"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="propertyChainProperty_SingleStep"/>
+        <Class IRI="PropertyChainEnd"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="propertyChainProperty_SingleStep"/>
+        <Class IRI="PropertyChainMiddle"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="propertyWithInfos"/>
+        <Class IRI="Class57"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="propertyWithInfos"/>
+        <Class IRI="Class57"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="propertyWithInfos"/>
+        <Class IRI="Class57"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="propertyWithInfos"/>
+        <Class IRI="Class57"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="reflexiveObjectProperty"/>
+        <Class IRI="Class57"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="subObjectProperty"/>
+        <Class IRI="Class57"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="superObjectProperty"/>
+        <Class IRI="Class66"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="symmetricObjectProperty"/>
+        <Class IRI="Class57"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="transitiveObjectProperty"/>
+        <Class IRI="Class57"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI="owl:bottomObjectProperty"/>
+        <Class IRI="Class1"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI="owl:topObjectProperty"/>
+        <Class IRI="Class1"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="DeprecatedProperty"/>
+        <Class IRI="DeprecatedPropertyRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="allDisjointObjectProperties_Property1"/>
+        <Class IRI="DisjointObjectProperty_Range1"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="allDisjointObjectProperties_Property2"/>
+        <Class IRI="DisjointObjectProperty_Range2"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="allDisjointObjectProperties_Property3"/>
+        <Class IRI="DisjointObjectProperty_Range3"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="asymmetricProperty"/>
+        <Class IRI="AsymmetricObjectPropertyRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="equivalentObjectProperty_1"/>
+        <Class IRI="EquivalentObjectProperty_Range1"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="equivalentObjectProperty_2"/>
+        <Class IRI="EquivalentObjectProperty_Range2"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="equivalentObjectProperty_3"/>
+        <Class IRI="EquivalentObjectProperty_Range3"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="functionalObjectProperty"/>
+        <Class IRI="FunctionalObjectPropertyRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="hasKeyProperty_2"/>
+        <Class IRI="HasKeyPropertyRange_2"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="inverseFunctionalObjectProperty"/>
+        <Class IRI="InverseFunctionalObjectPropertyRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="inverseProperty"/>
+        <Class IRI="Class23"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="irreflexiveObjectProperty"/>
+        <Class IRI="IrreflexiveObjectPropertyRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="noDomainObjectProperty"/>
+        <Class IRI="Range"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="nonInverseProperty"/>
+        <Class IRI="InverseOfPropertyRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="objectExactCardinalityProperty"/>
+        <Class IRI="ObjectExactCardinalityRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="objectExactCardinalityProperty_Lite"/>
+        <Class IRI="ObjectExactCardinalityRange_Lite"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="objectExactQualifiedCardinalityProperty"/>
+        <Class IRI="ObjectExactQualifiedCardinalityRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="objectMaxCardinalityProperty"/>
+        <Class IRI="ObjectMaxCardinalityRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="objectMaxCardinalityProperty_LiteRL"/>
+        <Class IRI="ObjectMaxCardinalityRange_LiteRL"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="objectMaxQualifiedCardinalityProperty"/>
+        <Class IRI="ObjectMaxQualifiedCardinalityRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="objectMaxQualifiedCardinalityProperty_RL"/>
+        <Class IRI="ObjectMaxQualifiedCardinalityRange_RL"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="objectMinCardinalityProperty"/>
+        <Class IRI="ObjectMinCardinalityRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="objectMinCardinalityProperty_Lite"/>
+        <Class IRI="ObjectMinCardinalityRange_Lite"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="objectMinQualifiedCardinalityProperty"/>
+        <Class IRI="ObjectMinQualifiedCardinalityRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="objectProperty"/>
+        <Class IRI="ObjectPropertyRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="objectPropertyDisjointWith_Property1"/>
+        <Class IRI="ObjectPropertyDisjointWith_Range1"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="objectPropertyDisjointWith_Property2"/>
+        <Class IRI="ObjectPropertyDisjointWith_Range2"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="propertyChainProperty_DoubleStep"/>
+        <Class IRI="Class40"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="propertyChainProperty_SingleStep"/>
+        <Class IRI="Class40"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="propertyChainProperty_SingleStep"/>
+        <Class IRI="PropertyChainMiddle"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="propertyWithInfos"/>
+        <Class IRI="ClassWithInfos"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="propertyWithInfos"/>
+        <Class IRI="ClassWithInfos"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="propertyWithInfos"/>
+        <Class IRI="ClassWithInfos"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="propertyWithInfos"/>
+        <Class IRI="ClassWithInfos"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="reflexiveObjectProperty"/>
+        <Class IRI="ReflexiveObjectPropertyRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="subObjectProperty"/>
+        <Class IRI="Class66"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="superObjectProperty"/>
+        <Class IRI="Class67"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="symmetricObjectProperty"/>
+        <Class IRI="SymmetricObjectPropertyRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="transitiveObjectProperty"/>
+        <Class IRI="TransitiveObjectPropertyRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI="owl:bottomObjectProperty"/>
+        <Class IRI="BottomObjectPropertyRange"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI="owl:topObjectProperty"/>
+        <Class IRI="TopObjectPropertyRange"/>
+    </ObjectPropertyRange>
+    <DisjointObjectProperties>
+        <ObjectProperty IRI="allDisjointObjectProperties_Property1"/>
+        <ObjectProperty IRI="allDisjointObjectProperties_Property2"/>
+        <ObjectProperty IRI="allDisjointObjectProperties_Property3"/>
+    </DisjointObjectProperties>
+    <DisjointObjectProperties>
+        <ObjectProperty IRI="objectPropertyDisjointWith_Property1"/>
+        <ObjectProperty IRI="objectPropertyDisjointWith_Property2"/>
+    </DisjointObjectProperties>
+    <SubObjectPropertyOf>
+        <ObjectPropertyChain>
+            <ObjectProperty IRI="propertyChainProperty_SingleStep"/>
+            <ObjectProperty IRI="propertyChainProperty_SingleStep"/>
+        </ObjectPropertyChain>
+        <ObjectProperty IRI="propertyChainProperty_DoubleStep"/>
+    </SubObjectPropertyOf>
+    <EquivalentDataProperties>
+        <DataProperty IRI="equivalentDataProperty_1"/>
+        <DataProperty IRI="equivalentDataProperty_2"/>
+        <DataProperty IRI="equivalentDataProperty_3"/>
+    </EquivalentDataProperties>
+    <SubDataPropertyOf>
+        <DataProperty IRI="subDataProperty"/>
+        <DataProperty IRI="superDataProperty"/>
+    </SubDataPropertyOf>
+    <FunctionalDataProperty>
+        <DataProperty IRI="functionalDataProperty"/>
+    </FunctionalDataProperty>
+    <DataPropertyDomain>
+        <DataProperty IRI="DataUnionOf"/>
+        <Class IRI="Class57"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="allDisjointDataProperties_Property1"/>
+        <Class IRI="Class1"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="allDisjointDataProperties_Property2"/>
+        <Class IRI="Class1"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="allDisjointDataProperties_Property3"/>
+        <Class IRI="Class1"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="dataAllValuesFromProperty"/>
+        <Class IRI="Class1"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="dataComplementOfProperty"/>
+        <Class IRI="Class18"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="dataExactCardinality"/>
+        <Class IRI="Class1"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="dataExactQualifiedCardinality"/>
+        <Class IRI="Class57"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="dataHasValueProperty"/>
+        <Class IRI="Class23"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="dataMaxCardinality"/>
+        <Class IRI="Class23"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="dataMaxCardinality_RL"/>
+        <Class IRI="Class40"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="dataMaxQualifiedCardinality"/>
+        <Class IRI="Class40"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="dataMaxQualifiedCardinality_RL"/>
+        <Class IRI="Class40"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="dataMinCardinality"/>
+        <Class IRI="Class40"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="dataMinQualifiedCardinality"/>
+        <Class IRI="Class40"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="dataPropertyDisjointWith_Property1"/>
+        <Class IRI="Class40"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="dataPropertyDisjointWith_Property2"/>
+        <Class IRI="Class40"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="datatypeIntersectionOfProperty"/>
+        <Class IRI="Class23"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="datatypeIntersectionOfProperty_OWL2"/>
+        <Class IRI="Class23"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="datatypeProperty"/>
+        <Class IRI="Class18"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="datatypeRestrictionProperty"/>
+        <Class IRI="Class57"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="equivalentDataProperty_1"/>
+        <Class IRI="Class23"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="equivalentDataProperty_2"/>
+        <Class IRI="Class23"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="equivalentDataProperty_3"/>
+        <Class IRI="Class23"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="functionalDataProperty"/>
+        <Class IRI="Class23"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="hasKeyProperty_1"/>
+        <Class IRI="HasKeyClass"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="noRangeDataProperty"/>
+        <Class IRI="Domain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="owlRationalProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="owlRealProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="rdfLangStringProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="rdfPlainLiteralProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="rdfXMLLiteralProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="rdfsLiteralProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="subDataProperty"/>
+        <Class IRI="Class57"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="superDataProperty"/>
+        <Class IRI="Class57"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdAnyURIProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdBase64BinaryProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdBooleanProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdByteProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdDateTimeProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdDateTimeStampProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdDecimalProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdDoubleProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdFloatProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdHexBinaryProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdIntProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdIntegerProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdLanguageProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdLongProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdNCNameProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdNMTOKENProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdNameProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdNegativeIntegerProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdNonNegativeIntegerProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdNonPositiveIntegerProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdNormalizedStringProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdPositiveIntegerProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdShortProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdStringProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdTokenProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdUnsignedByteProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdUnsignedIntProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdUnsignedLongProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="xsdUnsignedShortProperty"/>
+        <Class IRI="DatatypeMapsDomain"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI="owl:bottomDataProperty"/>
+        <Class IRI="Class1"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI="owl:topDataProperty"/>
+        <Class IRI="Class57"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="DataUnionOf"/>
+        <DataUnionOf>
+            <Datatype IRI="DataUnionOf_Datatype1"/>
+            <Datatype IRI="DataUnionOf_Datatype2"/>
+        </DataUnionOf>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="allDisjointDataProperties_Property1"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="allDisjointDataProperties_Property2"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="allDisjointDataProperties_Property3"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="dataAllValuesFromProperty"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="dataComplementOfProperty"/>
+        <DataComplementOf>
+            <Datatype abbreviatedIRI="xsd:string"/>
+        </DataComplementOf>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="dataExactCardinality"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="dataExactQualifiedCardinality"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="dataHasValueProperty"/>
+        <Datatype abbreviatedIRI="xsd:nonNegativeInteger"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="dataMaxCardinality"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="dataMaxCardinality_RL"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="dataMaxQualifiedCardinality"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="dataMaxQualifiedCardinality_RL"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="dataMinCardinality"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="dataMinQualifiedCardinality"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="dataPropertyDisjointWith_Property1"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="dataPropertyDisjointWith_Property2"/>
+        <Datatype abbreviatedIRI="xsd:decimal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="datatypeIntersectionOfProperty"/>
+        <DataIntersectionOf>
+            <Datatype IRI="DatatypeIntersectionOf_Datatype1"/>
+            <Datatype IRI="DatatypeIntersectionOf_Datatype2"/>
+        </DataIntersectionOf>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="datatypeIntersectionOfProperty_OWL2"/>
+        <DataIntersectionOf>
+            <Datatype abbreviatedIRI="xsd:dateTime"/>
+            <Datatype abbreviatedIRI="xsd:string"/>
+        </DataIntersectionOf>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="datatypeProperty"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="datatypeRestrictionProperty"/>
+        <DatatypeRestriction>
+            <Datatype IRI="DatatypeRestrictionDatatype"/>
+            <FacetRestriction facet="http://www.w3.org/2001/XMLSchema#minLength">
+                <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">10</Literal>
+            </FacetRestriction>
+            <FacetRestriction facet="http://www.w3.org/2001/XMLSchema#pattern">
+                <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">DatatypeRestrictionLiteral</Literal>
+            </FacetRestriction>
+        </DatatypeRestriction>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="equivalentDataProperty_1"/>
+        <Datatype abbreviatedIRI="xsd:nonNegativeInteger"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="equivalentDataProperty_2"/>
+        <Datatype abbreviatedIRI="xsd:nonNegativeInteger"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="equivalentDataProperty_3"/>
+        <Datatype abbreviatedIRI="xsd:nonNegativeInteger"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="functionalDataProperty"/>
+        <Datatype abbreviatedIRI="xsd:nonNegativeInteger"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="hasKeyProperty_1"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="noDomainDataProperty"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="owlRationalProperty"/>
+        <Datatype abbreviatedIRI="owl:rational"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="owlRealProperty"/>
+        <Datatype abbreviatedIRI="owl:real"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="rdfLangStringProperty"/>
+        <Datatype abbreviatedIRI="rdf:langString"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="rdfPlainLiteralProperty"/>
+        <Datatype abbreviatedIRI="rdf:PlainLiteral"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="rdfXMLLiteralProperty"/>
+        <Datatype abbreviatedIRI="rdf:XMLLiteral"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="rdfsLiteralProperty"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="subDataProperty"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="superDataProperty"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdAnyURIProperty"/>
+        <Datatype abbreviatedIRI="xsd:anyURI"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdBase64BinaryProperty"/>
+        <Datatype abbreviatedIRI="xsd:base64Binary"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdBooleanProperty"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdByteProperty"/>
+        <Datatype abbreviatedIRI="xsd:byte"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdDateTimeProperty"/>
+        <Datatype abbreviatedIRI="xsd:dateTime"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdDateTimeStampProperty"/>
+        <Datatype abbreviatedIRI="xsd:dateTimeStamp"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdDecimalProperty"/>
+        <Datatype abbreviatedIRI="xsd:decimal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdDoubleProperty"/>
+        <Datatype abbreviatedIRI="xsd:double"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdFloatProperty"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdHexBinaryProperty"/>
+        <Datatype abbreviatedIRI="xsd:hexBinary"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdIntProperty"/>
+        <Datatype abbreviatedIRI="xsd:int"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdIntegerProperty"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdLanguageProperty"/>
+        <Datatype abbreviatedIRI="xsd:language"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdLongProperty"/>
+        <Datatype abbreviatedIRI="xsd:long"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdNCNameProperty"/>
+        <Datatype abbreviatedIRI="xsd:NCName"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdNMTOKENProperty"/>
+        <Datatype abbreviatedIRI="xsd:NMTOKEN"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdNameProperty"/>
+        <Datatype abbreviatedIRI="xsd:Name"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdNegativeIntegerProperty"/>
+        <Datatype abbreviatedIRI="xsd:negativeInteger"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdNonNegativeIntegerProperty"/>
+        <Datatype abbreviatedIRI="xsd:nonNegativeInteger"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdNonPositiveIntegerProperty"/>
+        <Datatype abbreviatedIRI="xsd:nonPositiveInteger"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdNormalizedStringProperty"/>
+        <Datatype abbreviatedIRI="xsd:normalizedString"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdPositiveIntegerProperty"/>
+        <Datatype abbreviatedIRI="xsd:positiveInteger"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdShortProperty"/>
+        <Datatype abbreviatedIRI="xsd:short"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdStringProperty"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdTokenProperty"/>
+        <Datatype abbreviatedIRI="xsd:token"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdUnsignedByteProperty"/>
+        <Datatype abbreviatedIRI="xsd:unsignedByte"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdUnsignedIntProperty"/>
+        <Datatype abbreviatedIRI="xsd:unsignedInt"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdUnsignedLongProperty"/>
+        <Datatype abbreviatedIRI="xsd:unsignedLong"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="xsdUnsignedShortProperty"/>
+        <Datatype abbreviatedIRI="xsd:unsignedShort"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty abbreviatedIRI="owl:bottomDataProperty"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty abbreviatedIRI="owl:topDataProperty"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    <DisjointDataProperties>
+        <DataProperty IRI="allDisjointDataProperties_Property1"/>
+        <DataProperty IRI="allDisjointDataProperties_Property2"/>
+        <DataProperty IRI="allDisjointDataProperties_Property3"/>
+    </DisjointDataProperties>
+    <DisjointDataProperties>
+        <DataProperty IRI="dataPropertyDisjointWith_Property1"/>
+        <DataProperty IRI="dataPropertyDisjointWith_Property2"/>
+    </DisjointDataProperties>
+    <HasKey>
+        <Class IRI="HasKeyClass"/>
+        <ObjectProperty IRI="hasKeyProperty_2"/>
+        <DataProperty IRI="hasKeyProperty_1"/>
+    </HasKey>
+    <AnnotationAssertion>
+        <AnnotationProperty IRI="customAnnotationProperty"/>
+        <IRI>Class1</IRI>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Custom Annotation Value</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>ClassWithInfos</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#langString">Comment of a class</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>ClassWithInfos</IRI>
+        <Literal xml:lang="de" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#langString">Kommentar einer Klasse</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>ClassWithInfos</IRI>
+        <Literal xml:lang="ja" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#langString">どうもありがとうミスターロボット</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>ClassWithInfos</IRI>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Comment of a class (undefined language)</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>ClassWithInfos</IRI>
+        <Literal xml:lang="de" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#langString">Bezeichnung einer Klasse</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>ClassWithInfos</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#langString">Label of a class</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>ClassWithInfos</IRI>
+        <Literal xml:lang="ja" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#langString">どうもありがとうミスターロボット</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>ClassWithInfos</IRI>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Label of a class (undefined language)</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="owl:deprecated"/>
+        <IRI>DeprecatedClass</IRI>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">true</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="owl:deprecated"/>
+        <IRI>DeprecatedProperty</IRI>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">true</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>propertyWithInfos</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#langString">Comment of a property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>propertyWithInfos</IRI>
+        <Literal xml:lang="de" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#langString">Kommentar einer Property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>propertyWithInfos</IRI>
+        <Literal xml:lang="ja" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#langString">プロパティのコメント</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>propertyWithInfos</IRI>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Comment of a property (undefined language)</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>propertyWithInfos</IRI>
+        <Literal xml:lang="de" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#langString">Bezeichnung einer Property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>propertyWithInfos</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#langString">Label of a property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>propertyWithInfos</IRI>
+        <Literal xml:lang="ja" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#langString">プロパティの指定</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>propertyWithInfos</IRI>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Label of a property (undefined language)</Literal>
+    </AnnotationAssertion>
+    <DatatypeDefinition>
+        <Datatype IRI="DataOneOf"/>
+        <DataOneOf>
+            <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">DataOneOf_Literal1</Literal>
+            <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">DataOneOf_Literal2</Literal>
+            <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">DataOneOf_Literal3</Literal>
+        </DataOneOf>
+    </DatatypeDefinition>
+    <DatatypeDefinition>
+        <Datatype IRI="DataOneOf_EL"/>
+        <DataOneOf>
+            <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">DataOneOf_EL_Literal1</Literal>
+        </DataOneOf>
+    </DatatypeDefinition>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 5.0.1.20160319-0937) https://github.com/owlcs/owlapi/ -->
+
+

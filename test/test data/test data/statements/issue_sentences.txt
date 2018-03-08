@@ -1,0 +1,5 @@
+Bob is a pilot.
+Bob is a person.
+Bob likes Carol.
+Bob is a pilot.
+Carol is a person.

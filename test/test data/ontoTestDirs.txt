@@ -1,0 +1,3 @@
+# Directories containing ontologies to test to/from OWL translation relative to this file
+ontologies\OntoBench
+ontologies\SKOS

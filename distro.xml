@@ -44,6 +44,12 @@
 			<useDefaultExcludes>true</useDefaultExcludes>
 		</fileSet>
 
+		<fileSet>
+			<directory>${project.basedir}/test</directory>
+			<outputDirectory>test</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+
 	</fileSets>
 
 
