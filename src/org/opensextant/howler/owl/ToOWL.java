@@ -1287,6 +1287,11 @@ public class ToOWL {
 
     OWLClassExpression finalCE = null;
 
+    // NO = NOT EVERY
+    if (qType == Quantifier.NO) {
+      finalCE = owlDataFactory.getOWLDataAllValuesFrom(propExp, owlDataFactory.getOWLDataComplementOf(obj));
+    }
+    
     if (qType == Quantifier.SOME) {
       finalCE = owlDataFactory.getOWLDataSomeValuesFrom(propExp, obj);
     }
@@ -1601,6 +1606,11 @@ public class ToOWL {
 
     QuantifierExpression quant = ph.getObject().getQuantifier();
     Quantifier qType = quant.getQuantifierType();
+
+    //NO = NOT every
+    if (qType == Quantifier.NO) {
+      finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp, obj.getObjectComplementOf());
+    }
 
     if (qType == Quantifier.SOME) {
       finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, obj);
