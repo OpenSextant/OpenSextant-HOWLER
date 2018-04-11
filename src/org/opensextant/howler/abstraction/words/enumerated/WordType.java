@@ -1,16 +1,12 @@
 package org.opensextant.howler.abstraction.words.enumerated;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.opensextant.howler.abstraction.Vocabulary;
-import org.opensextant.howler.abstraction.Word;
-import org.opensextant.howler.abstraction.phrases.Footnote;
 import org.opensextant.howler.utils.TextUtils;
 import org.semanticweb.owlapi.model.IRI;
 
-public enum WordType implements Word { 
+public enum WordType  { 
   GENERIC_WORD("Word",false),
   BADWORD("Badword",false),
   ADJECTIVE("Adjective",false),
@@ -58,11 +54,10 @@ public enum WordType implements Word {
     return logicalform;
   }
 
-  @Override
   public String getNormalForm() {
     return normalForm;
   }
-
+/*
   @Override
   public void setNormalForm(String normalForm) {
     // ignore
@@ -92,15 +87,16 @@ public enum WordType implements Word {
   public WordType getWordType() {
     return WordType.WORD_TYPE;
   }
-
+*/
   public boolean isAbstractType() {
     return abstractType;
   }
-
+/*
   public void setAbstractType(boolean abstractType) {
     this.abstractType = abstractType;
   }
-
+  */
+/*
   @Override
   public List<Footnote> getFootnotes() {
     return new ArrayList<Footnote>();
@@ -115,5 +111,5 @@ public enum WordType implements Word {
   public void addFootnote(Footnote footnote) {
     // ignore
   }
-
+*/
 }

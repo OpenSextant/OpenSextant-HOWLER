@@ -26,19 +26,17 @@ package org.opensextant.howler.kanban.elements;
 
 import java.util.Map;
 
+import org.opensextant.howler.abstraction.words.enumerated.WordType;
+
 import com.google.gson.Gson;
 
 public class Card {
-
-  public enum EntityType {
-    NOUN, ADJECTIVE, VERB, INSTANCE
-  };
 
   private String _id;
 
   String title;
   String key;
-  EntityType entityType = EntityType.NOUN;
+  WordType entityType = WordType.COMMON_NOUN;
   boolean archived = false;
   String listId;
   String boardId;
@@ -79,11 +77,11 @@ public class Card {
     this.key = key;
   }
 
-  public EntityType getEntityType() {
+  public WordType getEntityType() {
     return entityType;
   }
 
-  public void setEntityType(EntityType entityType) {
+  public void setEntityType(WordType entityType) {
     this.entityType = entityType;
   }
 

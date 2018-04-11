@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
+import org.opensextant.howler.abstraction.WordManager;
 import org.opensextant.howler.owl.FromOWL;
 import org.opensextant.howler.owl.ToOWL;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -66,6 +67,7 @@ public class OWLTest {
 		File inputDirsFile = new File(args[0]);
 		File resultsDir = new File(args[1]);
 		boolean ignoreBadImports = Boolean.valueOf(args[2]);
+		
 		List<String> ontoDirs = FileUtils.readLines(inputDirsFile);
 
 		// create and write header to Summary file
@@ -86,9 +88,11 @@ public class OWLTest {
 		}
 
 		File baseOntoTestDir = inputDirsFile.getParentFile();
+		//File to the total set of Words seen
+		File wDump = new File(resultsDir, "wordDump.txt");
 		
 		for (String ontoDir : ontoDirs) {
-
+ 
 			// skip comments
 			if (ontoDir.startsWith("#") || ontoDir.trim().isEmpty()) {
 				continue;
@@ -109,7 +113,7 @@ public class OWLTest {
 			File results = new File(resultsDir, inputDir.getName() + "_AxiomCompare.txt");
 			File signs = new File(resultsDir, inputDir.getName() + "_SignatureCompare.txt");
 			File hdrs = new File(resultsDir, inputDir.getName() + "_HeaderCompare.txt");
-			File wDump = new File(resultsDir, inputDir.getName() + "_wordDump.txt");
+
 
 			// write header to result files
 			FileUtils.writeStringToFile(results, "Ontology Name\tStatus\tAxiom Type\tAxiom" + "\n", false);
@@ -279,10 +283,9 @@ public class OWLTest {
 								+ axiomErrorsExtra + "\t" + axiomErrorsNYI + "\n",
 						true);
 			}
-
-			// dump the vocabulary from the WordManager
-			from.getWordManager().dumpWordsToFile(wDump);
 		}
+		// dump the vocabulary from the WordManager
+		WordManager.getWordManager().dumpWordsToFile(wDump);
 	}
 
 	// catch the axioms that are not yet implmeneted by the converters

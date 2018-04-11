@@ -151,8 +151,8 @@ $ NN 10
 98 CD 10
 99 CD 10
 9th OD 10
-: COLON 1718 PERIOD 54 COMMA 1
-; PERIOD 5566
+: COLON 1718
+; COLON 5566
 < DASH 1
 <END> <END> 57340
 <START> <START> 114680
@@ -9612,6 +9612,7 @@ Xavier NP 2
 Xenia NP 1
 Ximenez-Vargas NP 1
 Xydis NP 6
+Y NP 1
 Y-Teen NN 1
 Y-cell NN 3
 Y-cells NN 1
@@ -9681,7 +9682,7 @@ Yum-Yum NP 1
 Yuri NP 6
 Yurochka NP 1
 Yvette NP 2
-Z NN 4 NP 1
+Z NP 1
 Z-axis NN 1
 Z-gyro NN 1
 Zabel NP 1
@@ -13210,7 +13211,7 @@ booze NN 4
 bop NN 3
 borates NNS 1
 borax NN 1
-border NN 20
+border NN 20 VB 1
 bordered VBN 2
 bordering VBG 5
 borderlands NNS 1
@@ -14231,6 +14232,7 @@ carnal JJ 2
 carnality NN 1
 carne NN 3
 carnival NN 9
+carnivore NN 1
 carob NN 1
 carousing VBG 1 NN 1
 carpenter NN 6 NP 2

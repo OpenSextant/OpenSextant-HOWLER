@@ -27,68 +27,101 @@ package org.opensextant.howler.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.opensextant.howler.abstraction.Vocabulary;
 import org.semanticweb.owlapi.model.IRI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TextUtils {
 
-  static Map<String, Integer> numbers = new HashMap<String, Integer>();
+    static Map<String, Integer> numbers = new HashMap<String, Integer>();
 
-  static {
-    numbers.put("one", 1);
-    numbers.put("two", 2);
-    numbers.put("three", 3);
-    numbers.put("four", 4);
-    numbers.put("five", 5);
-    numbers.put("six", 6);
-    numbers.put("seven", 7);
-    numbers.put("eight", 8);
-    numbers.put("nine", 9);
-    numbers.put("ten", 10);
-    numbers.put("eleven", 11);
-    numbers.put("twelve", 12);
-  }
-
-  // Log object
-  private static final Logger LOGGER = LoggerFactory.getLogger(TextUtils.class);
-
-  public static Integer convertNumber(String text) {
-
-    try {
-      if (text.matches("[0-9]+")) {
-        int num = Integer.parseInt(text);
-        return num;
-      }
-    } catch (NumberFormatException e) {
-      LOGGER.error("Didn't convert number string to numeric " + text);
-      return 1;
+    static {
+	numbers.put("one", 1);
+	numbers.put("two", 2);
+	numbers.put("three", 3);
+	numbers.put("four", 4);
+	numbers.put("five", 5);
+	numbers.put("six", 6);
+	numbers.put("seven", 7);
+	numbers.put("eight", 8);
+	numbers.put("nine", 9);
+	numbers.put("ten", 10);
+	numbers.put("eleven", 11);
+	numbers.put("twelve", 12);
     }
 
-    if (numbers.containsKey(text.toLowerCase())) {
-      return numbers.get(text);
+    // Log object
+    private static final Logger LOGGER = LoggerFactory.getLogger(TextUtils.class);
+
+    public static Integer convertNumber(String text) {
+
+	try {
+	    if (text.matches("[0-9]+")) {
+		int num = Integer.parseInt(text);
+		return num;
+	    }
+	} catch (NumberFormatException e) {
+	    LOGGER.error("Didn't convert number string to numeric " + text);
+	    return 1;
+	}
+
+	if (numbers.containsKey(text.toLowerCase())) {
+	    return numbers.get(text);
+	}
+
+	LOGGER.error("Didn't convert number string to numeric " + text);
+
+	return 1;
     }
 
-    LOGGER.error("Didn't convert number string to numeric " + text);
+    public static String getLogicalForm(IRI key) {
+	String keyString = key.toString().trim();
 
-    return 1;
-  }
+	String logical = keyString.substring(getLocalNameIndex(keyString));
 
-  public static String getLogicalForm(IRI key) {
-    String shortForm = key.getShortForm();
-    String[] pieces = key.toString().split("[/#]|_:");
-    String lastBit = pieces[pieces.length - 1];
+	if (logical.isEmpty()) {
+	    LOGGER.debug("IRI with empty local name:" + keyString);
+	    String[] pieces = keyString.split("[/#]");
+	    logical = pieces[pieces.length - 1];
+	}
 
-    if (!shortForm.equals(lastBit)) {
-      // LOGGER.warn("Possibly malformed IRI:" + iri + " using " + lastBit);
-      return lastBit;
+	return logical;
     }
-    return shortForm;
-  }
 
-  public static String getNamespace(IRI key) {
-    String keyString = key.toString();
-    return keyString.substring(0, keyString.length() - getLogicalForm(key).length());
-  }
+    public static String getNamespace(IRI key) {
+	String keyString = key.toString().trim();
+
+	String ns = keyString.substring(0, getLocalNameIndex(keyString));
+
+	if (ns.isEmpty()) {
+	    LOGGER.debug("IRI with empty namespace:" + keyString);
+	    return Vocabulary.BUILTIN_NS.toString();
+	}
+
+	return ns;
+    }
+
+    public static int getLocalNameIndex(String uri) {
+	int separatorIdx = uri.indexOf('#');
+
+	if (separatorIdx < 0) {
+	    separatorIdx = uri.lastIndexOf('/');
+	}
+
+	if (separatorIdx < 0) {
+	    separatorIdx = uri.lastIndexOf(':');
+	}
+
+	if (separatorIdx < 0) {
+	    throw new IllegalArgumentException("No separator character founds in URI: " + uri);
+	}
+
+	return separatorIdx + 1;
+    }
+
+    public static String createLogicalFromNormal(String normal) {
+	return normal.replaceAll("\\s+", "_");
+    }
 
 }

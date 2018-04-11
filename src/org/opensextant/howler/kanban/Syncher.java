@@ -43,8 +43,7 @@ import com.keysolutions.ddpclient.DDPClient.DdpMessageType;
 import com.keysolutions.ddpclient.DDPListener;
 
 public class Syncher extends DDPListener implements Observer {
-  private static final org.slf4j.Logger LOGGER = LoggerFactory
-      .getLogger(Syncher.class);
+  private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Syncher.class);
 
   // the Kanban object to be synchronized with Wekan
   private Kanban kanban;
@@ -82,8 +81,7 @@ public class Syncher extends DDPListener implements Observer {
     String id = (String) message.get(DdpMessageField.ID);
 
     // all the variable message fields
-    Map<String, Object> fields = (Map<String, Object>) message
-        .get(DdpMessageField.FIELDS);
+    Map<String, Object> fields = (Map<String, Object>) message.get(DdpMessageField.FIELDS);
 
     // new elements added
     if (msgtype.equals(DdpMessageType.ADDED)) {
@@ -128,24 +126,21 @@ public class Syncher extends DDPListener implements Observer {
         return;
       }
 
-      LOGGER.info("Got a " + msgtype + " message for collection " + collName
-          + " Ignoring.");
+      LOGGER.info("Got a " + msgtype + " message for collection " + collName + " Ignoring.");
       return;
     }
 
     // changed element TODO?
     if (msgtype.equals(DdpMessageType.CHANGED)) {
 
-      LOGGER.info("Got a " + msgtype + " message for collection " + collName
-          + " Ignoring.");
+      LOGGER.info("Got a " + msgtype + " message for collection " + collName + " Ignoring.");
       return;
     }
 
     // removed/deleted element TODO?
     if (msgtype.equals(DdpMessageType.REMOVED)) {
 
-      LOGGER.info("Got a " + msgtype + " message for collection " + collName
-          + " Ignoring.");
+      LOGGER.info("Got a " + msgtype + " message for collection " + collName + " Ignoring.");
       return;
     }
 
@@ -179,8 +174,7 @@ public class Syncher extends DDPListener implements Observer {
         readies.add(Integer.parseInt(i));
       }
 
-      LOGGER.debug(
-          "Got a READY message for subscription(s):" + message.get("subs"));
+      LOGGER.debug("Got a READY message for subscription(s):" + message.get("subs"));
       return;
     }
 

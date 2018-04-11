@@ -1,0 +1,20 @@
+// Relations and characteristic between predicates
+
+[object] employs is associated with.
+[object] employs implies associated with.
+[object] to employs implies to associated with.
+[object] to employ implies to associated with.
+[object] to employ implies to be associated with.
+[object] employs is not owns.
+[object] employs is the inverse of works for.
+[object] employs is the inverse of is employed by.
+[object] runs from  is not runs toward.
+[object] runs from  is the inverse of runs toward.
+[object] runs from  is not moves toward.
+[object] runs from  is the inverse of moves toward.
+[object] to run from  is not  to run toward.
+
+
+[object] employs is transitive.
+[object] employs is reflexive.
+[object] employs is symmetric.

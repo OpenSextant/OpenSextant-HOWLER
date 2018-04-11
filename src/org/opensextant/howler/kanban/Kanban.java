@@ -35,17 +35,17 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.opensextant.howler.convertors.Howler;
+import org.opensextant.howler.Howler;
+import org.opensextant.howler.abstraction.Document;
+import org.opensextant.howler.abstraction.Statement;
+import org.opensextant.howler.abstraction.Word;
+import org.opensextant.howler.abstraction.words.enumerated.WordType;
 import org.opensextant.howler.kanban.elements.Board;
 import org.opensextant.howler.kanban.elements.Card;
-import org.opensextant.howler.kanban.elements.Card.EntityType;
 import org.opensextant.howler.kanban.elements.CardList;
 import org.opensextant.howler.kanban.elements.RawText;
 import org.opensextant.howler.kanban.elements.Sentence;
-import org.opensextant.howler.spo.Document;
-import org.opensextant.howler.spo.Phrase.PhraseType;
-import org.opensextant.howler.spo.SubjectPredicateObject;
-import org.opensextant.howler.spo.Word;
+import org.opensextant.howler.text.TextDocument;
 import org.semanticweb.HermiT.ReasonerFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AxiomType;
@@ -121,11 +121,9 @@ public class Kanban {
   private String user;
   private String pass;
 
-  private static final org.slf4j.Logger LOGGER = LoggerFactory
-      .getLogger(Kanban.class);
+  private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Kanban.class);
 
   public Kanban(Howler howler, String configPath) {
-    
 
     // the Howler, which does all the work
     this.howler = howler;
@@ -147,28 +145,23 @@ public class Kanban {
       // paths are relative to config file
       File baseDir = new File(configPath).getParentFile();
 
-      baseOnto = mgr
-          .loadOntologyFromOntologyDocument(new File(baseDir, baseOntoPath));
-      
+      baseOnto = mgr.loadOntologyFromOntologyDocument(new File(baseDir, baseOntoPath));
+
       String host = props.getProperty("os.howler.kanban.host");
       Integer port = Integer.parseInt(props.getProperty("os.howler.kanban.port"));
-      
+
       this.client = new DDPClient(host, port);
-      
+
       this.syncher = new Syncher(this);
       this.client.addObserver(syncher);
-      
+
       this.user = props.getProperty("os.howler.kanban.user");
       this.pass = props.getProperty("os.howler.kanban.password");
-      
-      
-      
+
     } catch (OWLOntologyCreationException | IOException | URISyntaxException e) {
-      LOGGER.error("Couldn't load base ontology from " + configPath + ". "
-          + e.getMessage());
+      LOGGER.error("Couldn't load base ontology from " + configPath + ". " + e.getMessage());
     }
 
-    
   }
 
   public void addBoard(Board board) {
@@ -289,8 +282,7 @@ public class Kanban {
           fields.remove("cards");
 
           int id = client.collectionInsert("lists", fields);
-          LOGGER.info(
-              "Inserting new default List. ID=" + id + ". " + list.getTitle());
+          LOGGER.info("Inserting new default List. ID=" + id + ". " + list.getTitle());
 
         }
 
@@ -316,68 +308,34 @@ public class Kanban {
     // roundtrip: input text to Document, to ontology, to Document
     Document doc = howler.convertText("dummy", text);
 
-    // get any unparsed sentences
-    for (String unparsed : doc.getUnparsedSentences()) {
-
-      LOGGER.warn("Couldn't parse sentence:" + unparsed);
-
-      Sentence sent = new Sentence();
-      sent.setParseable(false);
-      sent.setText(unparsed);
-      sentences.add(sent);
-    }
-
     // continue round trip: Document to ontology back to Document
-    OWLOntology onto = howler.toOntology(doc);
+    OWLOntology onto = howler.toOntology(doc, true);
     doc = howler.convertOntology(onto);
 
     // loop over each of the SPOs created from the input text
-    for (SubjectPredicateObject spo : doc.getSentences()) {
+    for (Statement spo : doc.getStatements()) {
 
       // all the words used in the SPO
-      Set<Word> words = spo.getWords();
+      // Set<Word> words = spo.getWords();
 
+      // TODO
       // create and populate a Sentence
       Sentence sent = new Sentence();
-      sent.setWords(words);
+      // sent.setWords(words);
       sent.setBoardId(boardId);
       // a sentence is inferred if the raw text was inferred
       sent.setInferred(inferred);
 
       // create the keys based on the words in the sentence
-      // key is of the form: logicalform|entitytype|boardID
-      for (Word w : words) {
-
-        String tmpKey = w.getLogicalForm() + "|";
-        Object pType = w.getPhraseType();
-
-        if (pType == PhraseType.THING) {
-          continue;
-        }
-
-        if (pType == PhraseType.PROPER) {
-          tmpKey = tmpKey + Card.EntityType.INSTANCE;
-        }
-
-        if (pType == PhraseType.VERB) {
-          tmpKey = tmpKey + Card.EntityType.VERB;
-        }
-
-        if (pType == PhraseType.ADJECTIVE) {
-          tmpKey = tmpKey + Card.EntityType.ADJECTIVE;
-        }
-
-        if (pType == PhraseType.NOUN || pType == PhraseType.MASSNOUN) {
-          tmpKey = tmpKey + Card.EntityType.NOUN;
-        }
-
-        tmpKey = tmpKey + "|" + boardId;
-        sent.addKey(tmpKey);
-      }
-
+      // key is of the form: logicalform|wordtype|boardID
+      /*
+       * for (Word w : words) { if (w instanceof Thing || w instanceof Nothing || w instanceof DataValue || w instanceof
+       * AuxiliaryWord || w instanceof BadWord) { continue; } String tmpKey = w.getLogicalForm() + "|" + w.getWordType()
+       * + "|" + boardId; sent.addKey(tmpKey); }
+       */
       // get the clean text from the SPO
-      String cleanText = howler.toText(spo);
-      sent.setText(cleanText);
+      Sentence cleanText = howler.toText(spo);
+      // sent.setText(cleanText);
       sentences.add(sent);
 
     }
@@ -398,9 +356,10 @@ public class Kanban {
           this.sentencesByText.put(textKey, sent);
 
           // null out the quantifiers and relative clauses since not needed
+          // TODO Needed?
           for (Word w : sent.getWords()) {
-            w.setRelativePhrases(null);
-            w.setQuantifier(null);
+            // w.setRelativePhrases(null);
+            // w.setQuantifier(null);
           }
 
           // convert to field map
@@ -409,8 +368,7 @@ public class Kanban {
 
           // send as update or insert
           if (update) {
-            int id = client.collectionUpdate("sentences", sent.get_id(),
-                fields);
+            int id = client.collectionUpdate("sentences", sent.get_id(), fields);
             LOGGER.info("Updating sentence. ID=" + id + ". " + sent.getText());
           } else {
             int id = client.collectionInsert("sentences", fields);
@@ -441,15 +399,14 @@ public class Kanban {
         String[] pieces = key.split("\\|");
 
         // title is the words logical form with part of speech following
-        String title = pieces[0].replaceAll("_", " ") + " ("
-            + pieces[1].toLowerCase() + ")";
+        String title = pieces[0].replaceAll("_", " ") + " (" + pieces[1].toLowerCase() + ")";
 
         // create and populate new card
         Card card = new Card();
 
         card.setTitle(title);
         card.setKey(key);
-        card.setEntityType(EntityType.valueOf(pieces[1]));
+        card.setEntityType(WordType.valueOf(pieces[1]));
         card.setBoardId(boardID);
         // TODO list selected is first list in board. Better choice?
         card.setListId(boards.get(boardID).getLists().get(0).getId());
@@ -484,8 +441,7 @@ public class Kanban {
       LOGGER.info("Added new ontology " + iri);
 
     } catch (OWLOntologyCreationException e) {
-      LOGGER.error("Unable to create ontology for board:" + board.getTitle()
-          + ":" + e.getMessage());
+      LOGGER.error("Unable to create ontology for board:" + board.getTitle() + ":" + e.getMessage());
     }
 
   }
@@ -513,15 +469,14 @@ public class Kanban {
       Document doc = howler.convertText("dummy", sent.getText());
 
       // convert each SPO in Document to owl axiom
-      for (SubjectPredicateObject spo : doc.getSentences()) {
+      for (Statement spo : doc.getStatements()) {
 
-        OWLAxiom axiom = howler.toAxiom(spo);
+        List<OWLAxiom> axioms = howler.toAxiom(spo);
 
         // add to ontology
-        onto.add(axiom);
+        onto.add(axioms);
 
-        LOGGER.info(
-            "Added new axiom " + sent.getText() + "->" + axiom.toString());
+        LOGGER.info("Added new axiom " + sent.getText() + "->" + axioms.toString());
 
       }
 
@@ -533,11 +488,9 @@ public class Kanban {
       if (!reasoner.isConsistent()) {
         LOGGER.error("Ontology is inconsistent");
       } else {
-        Set<OWLClass> unsats = reasoner.getUnsatisfiableClasses()
-            .getEntitiesMinusBottom();
+        Set<OWLClass> unsats = reasoner.getUnsatisfiableClasses().getEntitiesMinusBottom();
         if (!unsats.isEmpty()) {
-          LOGGER.error("Ontology contains " + unsats.size()
-              + " unsatisfiable classes: " + unsats);
+          LOGGER.error("Ontology contains " + unsats.size() + " unsatisfiable classes: " + unsats);
           // TODO mark cards corresponding to this class as broken
 
         } else {
@@ -557,8 +510,7 @@ public class Kanban {
           // gens.add(new InferredSubDataPropertyAxiomGenerator());
           // gens.add(new InferredSubObjectPropertyAxiomGenerator());
 
-          InferredOntologyGenerator inferGenerator = new InferredOntologyGenerator(
-              reasoner, gens);
+          InferredOntologyGenerator inferGenerator = new InferredOntologyGenerator(reasoner, gens);
 
           try {
 
@@ -580,8 +532,7 @@ public class Kanban {
               }
             }
           } catch (OWLOntologyCreationException e) {
-            LOGGER.error("Error when trying to create ontology for inference:"
-                + e.getMessage());
+            LOGGER.error("Error when trying to create ontology for inference:" + e.getMessage());
           }
         }
       }
@@ -593,13 +544,13 @@ public class Kanban {
 
     Document inferDoc = howler.convertAxiom(ax, "dummy");
 
-    List<String> inferences = howler.toText(inferDoc);
+    TextDocument inferences = howler.toText(inferDoc);
 
     // add each inference as raw text
-    for (String inf : inferences) {
+    for (org.opensextant.howler.text.Sentence inf : inferences.getSentences()) {
 
       RawText raw = new RawText();
-      raw.setText(inf);
+      raw.setText(inf.getContents());
       raw.setBoardId(boardId);
       raw.setUserId(userID);
       raw.setInferred(true);
@@ -696,7 +647,5 @@ public class Kanban {
     }
 
   }
-    
- 
 
 }

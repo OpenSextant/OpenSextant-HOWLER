@@ -285,14 +285,14 @@ public class WordManager {
       addWord(wrd);
       return (T) wrd;
     }
-
+/*
     if (wordType.equals(WordType.WORD_TYPE)) {
       LOGGER.warn("Creating an enumerated type in wordManager:" + wordType);
       WordType wrd = WordType.getTypeByNormalName(normal);
       addWord(wrd);
       return (T) wrd;
     }
-
+*/
     /*------------ The Abstract Types -------------------*/
 
     if (wordType.isAbstractType()) {

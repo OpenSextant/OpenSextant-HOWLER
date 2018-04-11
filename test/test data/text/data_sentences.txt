@@ -1,0 +1,25 @@
+//should be parsed as "descriptionStatementData" or "factStatementData"
+
+// Basic data positive and negative fact (assertion) sentences
+Bob weighs 7.
+Bob weighs 7..
+Bob weighs 4.5 .
+Bob doesn't weigh 7.
+Bob doesn't weigh 4.5 .
+Bob says "Life is sorrow".
+Bob doesn't say "Life is a box of chocolates".
+Bob doesn't say "Life is a box of chocolates" but says "Life is a cheeburger".
+Carol has "Wombats, The Untold Story.".
+Carol does "The Watusi" and sings "The Twist".
+
+// Data type definitions
+A social security number is a String that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}" .
+A social_security_number is a String that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}" .
+A SSN is a String that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}" .
+
+// multiple clauses
+A SSN is a String that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}" and a length of 9.
+
+An adult age is an Integer that is greater than 18.
+An adult age is an Integer greater than 18.
+A person name is a String.

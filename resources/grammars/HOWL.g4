@@ -1,7 +1,7 @@
 parser grammar HOWL;
 
 @header {
- package org.opensextant.howler.grammar;
+ package org.opensextant.howler.text.grammar;
 }
 
 options {
@@ -9,459 +9,443 @@ options {
 }
 
 tokens {
-A,
-ABL,
-ABN,
-ABX,
-ALSO,
-AND,
-ANYX,
-AP,
-APOS,
-AT,
-BE,
-BED,
-BEDZ,
-BEG,
-BEM,
-BEN,
-BER,
-BEZ,
-BY,
-CC,
-CD,
-CLOSEPAREN,
-COLON,
+ADJECTIVE,
+BAD,
+NOUN,
+QUOTED_TEXT,
+OPEN,
+CLOSE,
+PERIOD,
 COMMA,
-CS,
-DASH,
-DO,
-DOD,
-DOZ,
-DQUOTE,
-DT,
-DTI,
-DTS,
-DTX,
-EVERY,
-EVERYX,
-EX,
-EXACT,
-GROUPOF,
-HV,
-HVD,
-HVG,
-HVN,
-HVZ,
-IF,
-IN,
-JJ,
-JJR,
-JJS,
-JJT,
-LESS,
-LESSOREQUAL,
-MD,
-MORE,
-MOREOREQUAL,
-MUST,
-NN,
-NNS,
+NUMBER,
+INTEGER,
+DECIMAL,
+DOES,
+HAS,
+PARTICLE,
+IS,
+PROPER,
+PREDICATE,
+AND,
+ONEOF,
+OR,
+BY,
+IS_ONLY,
+ONLY,
+NO,
 NONE,
 NOT,
-NOX,
-NP,
-NPS,
-NR,
-NRS,
-OD,
-ONLY,
-OPENPAREN,
-OR,
-PERIOD,
-PN,
-POSS,
-PPL,
-PPLS,
-PPO,
-PPS,
-PPSS,
-PPx,
-PPxx,
-QL,
-QLP,
-RB,
-RBR,
-RBT,
-RN,
-RP,
-SAMEAS,
+A,
+EVERY,
+EXACT,
+LESS_THAN,
+LESS_THAN_OR_EQUAL,
+MORE_THAN,
+MORE_THAN_OR_EQUAL,
+PATTERN_OF,
+LENGTH_OF,
+MIN_LENGTH_OF,
+MAX_LENGTH_OF,
+TOTAL_DIGITS_OF,
+FRAC_DIGITS_OF,
+LANG_RANGE_OF,
 SOME,
-SOMEX,
-THAT,
 THE,
-THEN,
-THING,
-TIC,
+SAME_AS,
+INVERSE_OF,
+THAT,
+MODAL,
+OBJECT_FLAG,
+DATA_FLAG,
+ANNOTATION_FLAG,
+DATATYPE,
+ITSELF,
 TO,
-QMARK,
-VB,
-VBD,
-VBG,
-VBN,
-VBZ,
-WDT,
-WPO,
-WPS,
-WPx,
-WQL,
-WRB,
-WHATV
+PRED_CHAR,
+QUOTE
 }
 
 // "document" is the top most element in the grammar
 document
 :
 	(
-		 sentence PERIOD
-//		| phraseSet (PERIOD|QMARK) //debug
-		| junk (PERIOD|QMARK) //debug
+		 statement PERIOD
+		 | singlePhrase PERIOD
+		 | debug PERIOD
+
 	)+
 ;
 
-//---------- Sentences --------------
+//---------- Statements (sentences) --------------
 
-sentence
+statement
 :
-	simpleSentence
+	factStatementObject
+	| factStatementData
+	| descriptionStatementObject
+	| descriptionStatementDataType
+	| predicateRelationStatementObject
+	| predicateRelationStatementData
+	| predicateRelationStatementAnnotation
+	| predicateCharacteristicStatementObject
+	| predicateCharacteristicStatementData
+	| predicateCharacteristicStatementAnnotation
+	| annotationStatement
 ;
 
-simpleSentence
-:
-	np vp ( ((AND vp)*) | ((OR vp)*) )
-;
-//---------- Questions --------------
+//debug and catch-all
 
-// ADD QUESTION GRAMMAR HERE
+singlePhrase
+:
+	singlePhraseObject
+	| singlePhraseData
+;
+
+debug
+:
+	catchSet
+	| badSentence
+	| catchAll
+;
+
+// ----- The statements ------
+
+// a statement with a common noun or mixed common/proper noun subject and one or more noun or data value based predicate phrases 
+descriptionStatementObject
+:
+	nounPhraseSubject predicatePhraseNoun //((AND|OR) predicatePhraseMixed)*
+;
+
+descriptionStatementDataType
+:
+	nounPhraseSubject predicatePhraseData //((AND|OR) predicatePhraseData)*
+;
+
+factStatementData
+:
+	properNounPhrase predicatePhraseDataValue  //((AND|OR) predicatePhraseDataValue)*
+;
+
+factStatementObject
+:
+	properNounPhrase predicatePhraseCommonNounOrSet //((AND|OR) predicatePhraseCommonNounOrSet)*
+;
+
+
+predicateRelationStatementObject
+:
+	OPEN OBJECT_FLAG CLOSE (TO IS?)? subj=predicateExpressionVerbObject ( (relIS=IS NOT?) | ( IS (NOT)? relSame=SAME_AS) | (IS (NOT)? relInv=INVERSE_OF) ) (TO IS?)? obj=predicateExpressionVerbObject
+;
+
+predicateRelationStatementData
+:
+	OPEN DATA_FLAG CLOSE (TO IS?)? subj=predicateExpressionVerbData ( (relIS=IS NOT?) | ( IS (NOT)? relSame=SAME_AS) | (IS (NOT)? relInv=INVERSE_OF) ) (TO IS?)? obj=predicateExpressionVerbData
+;
+
+predicateRelationStatementAnnotation
+:
+	OPEN ANNOTATION_FLAG CLOSE (TO IS?)? subj=predicateExpressionVerbAnnotation ( (relIS=IS NOT?) | ( IS (NOT)? relSame=SAME_AS) | (IS (NOT)? relInv=INVERSE_OF) ) (TO IS?)? obj=predicateExpressionVerbAnnotation
+;
+
+
+
+predicateCharacteristicStatementObject
+:
+	OPEN OBJECT_FLAG CLOSE (TO IS?)? predicateExpressionVerbObject IS PRED_CHAR
+;
+
+predicateCharacteristicStatementData
+:
+	OPEN DATA_FLAG CLOSE (TO IS?)? predicateExpressionVerbData IS PRED_CHAR
+;
+
+predicateCharacteristicStatementAnnotation
+:
+	OPEN ANNOTATION_FLAG CLOSE (TO IS?)? predicateExpressionVerbAnnotation IS PRED_CHAR
+;
+
+
+
+
+annotationStatement
+:
+OPEN ANNOTATION_FLAG CLOSE subj=annotationWord rel=predicateExpressionAnnotation (objWord=annotationWord|objValue=dataValue)
+;
 
 //---------- Nouns and Noun Phrases --------------
-np
-:
-	nbar ( ((AND nbar)*) | ((OR nbar)*) )
-;
 
-// proper first due to overlap with a proper embedded in a common
-nbar
-:
-	nbarProper
-	| nbarCommon
-;
 
-nbarProper
-:
-	quantNeg? quant? nProperSequence
-;
+//------- Nouns and Proper nouns ----------
 
-nbarCommon
+/* CategoryPhrase<Noun> with noun/propernoun/dataValue based relative phrases */
+commonNounPhrase
 :
-	quantNeg? quant? adjp?
+	NOT? quant? adjp?
 	(
-		nSimple
-		| nThing
-//		| nProper
-		| nAdj
+		NOUN
+		| ADJECTIVE
+		| PROPER
 	)
-	(THAT vbar (AND THAT vbar)*)?
+	(THAT predicatePhraseMixed (AND THAT predicatePhraseMixed)*)?
 ;
 
-
-nSimple
-:
-	NN
-	| NNS
-;
-
-nProper
-:
-	NP
-	| NPS
-;
-
-nProperSequence
-:
-	adjp? nProper+
-;
-
-nThing
-:
-	THING
-	| SOMEX
-	| EVERYX
-	| ANYX
-	| NOX
-;
-
-
-nAdj
-:
-	JJ
-	| JJR
-	| JJS
-	| JJT
-	| VBG
-	| VBN
-;
-
+// a sequence of modifiers
 adjp
 :
-	(
-		JJ
-		| JJR
-		| JJS
-		| JJT
-		| OD
-		| NP
-		| NPS
-		| POSS
-		| NN
-		| NR
-		| NNS
-		| VBG
-		| VBN
-	)+
+	(ADJECTIVE|NOUN|PROPER|PREDICATE)+
 ;
 
-// TODO add to adjp and np
-//possp: (NN|NNS) POSS;
+/* InstancePhrase<ProperNoun> */
+properNounPhrase
+:
+	THE? nProperSequence
+;
+// a sequence of proper nouns, to be interpreted as a single instance
+nProperSequence
+:
+	PROPER+
+;
+
+// either a commonnoun or proper noun phrase
+nounOrProperNounPhrase:
+	properNounPhrase
+	|commonNounPhrase
+	| oneOfProperNoun
+;
+
+// a set of proper nouns (XOR semantics)
+oneOfProperNoun: ONEOF properNounPhrase ((OR|COMMA) properNounPhrase)+;
+
+// a set of common nouns and/or propernouns  HACK: any nested sets must follow a common noun phrase or oneOf (avoid left-recursion)
+nounSet:  nounOrProperNounPhrase ((AND|OR|COMMA) nounPhraseSubject)+;
+//dataTypeSet: (dataTypePhrase | oneOfData) ((AND|OR|COMMA) dataPhrase)+ ;
+
+// all noun/propernoun phrases and sets
+//nounPhrase:nounOrProperNounPhrase | oneOfProperNoun| nounSet;
+
+// all nounphrases except a single Proper nound (used as subject of Description phrase)
+nounPhraseSubject:commonNounPhrase | nounSet;
+
+nounPhraseCatch: commonNounPhrase | properNounPhrase | oneOfProperNoun | nounSet;
+
+
+
+//--------------------- Data and Data values -----------------
+
+/* CategoryPhrase<DataType> a datatype with datatype based relative clauses (datatype restrictions) */
+dataTypePhrase
+:
+	NOT? A 
+	(
+		DATATYPE
+	)
+	((THAT (IS|HAS))? dataTypeRestriction (AND (THAT (IS|HAS))? dataTypeRestriction)*)?
+;
+
+// individual facet(predicate)-value pair 
+dataTypeRestriction: facet dataValue;
+// the possible facets
+facet: EXACT|LESS_THAN|LESS_THAN_OR_EQUAL|MORE_THAN|MORE_THAN_OR_EQUAL|PATTERN_OF|LENGTH_OF|MIN_LENGTH_OF|MAX_LENGTH_OF|PATTERN_OF|TOTAL_DIGITS_OF|FRAC_DIGITS_OF|LANG_RANGE_OF;
+
+// an instance of data value
+dataValuePhrase
+:
+	NOT? dataValue
+;
+// the type of data values
+dataValue: QUOTED_TEXT | number;
+number: INTEGER | DECIMAL;
+
+// either a datatype or a data value phrase
+//dataTypeOrDataValueSetPhrase: dataTypePhrase|oneOfData;
+
+// a set of data values (XOR semantics?)
+oneOfData : ONEOF dataValue ((OR|COMMA) dataValue)+;
+
+// a set of data types and/or data values HACK: any nested sets must follow a datatype phrase or oneOf (avoid left-recursion)
+dataTypeSet: (dataTypePhrase | oneOfData) ((AND|OR|COMMA) dataPhrase)+ ;
+
+// all datatype and data value-set based phrases (=> OWL DataRange)
+dataPhrase:dataTypePhrase | dataTypeSet | oneOfData;
+
+dataPhraseCatch:dataTypePhrase | dataValuePhrase | oneOfData | dataTypeSet ;
+
+
+// ---------------- Annotation subject and objects -----------
+annotationWord:
+	NOUN|ADJECTIVE|PROPER|PREDICATE|DATATYPE
+;
 
 //---------- Quantifiers --------------
+
 quant
 :
-	quantUniverse
-	| quantExist
-	| quantNumeric
-	| quantA
-	| quantThe
-;
-
-quantNeg
-:
-	NONE
-;
-
-quantThe
-:
-	THE
-;
-
-quantA
-:
 	A
+	| THE
+	| EVERY
+	| SOME
+	| NO
+	| quantNumeric
 ;
 
-quantUniverse
-:
-	EVERY
-;
-
-quantExist
-:
-	SOME
-;
-
+// numeric qualifiers absent modifier=EXACT
 quantNumeric
 :
 	(
-		exact
-		| more
-		| less
-		| moreOrEqual
-		| lessOrEqual
-	)? CD
+		EXACT
+		| MORE_THAN
+		| LESS_THAN
+		| MORE_THAN_OR_EQUAL
+		| LESS_THAN_OR_EQUAL
+	)? INTEGER
 ;
 
-exact
+
+//---------- Predicate Expressions and Predicate Phrases --------------
+
+// scoped predicate expressions
+predicateExpressionObject:predicateExpression;
+predicateExpressionData:predicateExpression;
+predicateExpressionAnnotation:predicateExpression;
+
+// all predicate expressions
+predicateExpression
 :
-	EXACT
-	| ONLY
+	predicateExpressionVerb
+	| predicateExpressionState
 ;
 
-more
+
+predicateExpressionVerbObject:predicateExpressionVerb;
+predicateExpressionVerbData:predicateExpressionVerb;
+predicateExpressionVerbAnnotation:predicateExpressionVerb;
+
+// predicate expressions that includes a "real" verb (i.e. other than "is" or "same as")
+predicateExpressionVerb:
+		predicateExpressionSimple
+		| predicateExpressionParticle
+		| predicateExpressionPassive
+		| predicateExpressionNoun
+		| predicateExpressionHAS
+		| predicateExpressionDO
+		| predicateExpressionHAS_POSS
+;
+
+// predicate indicating either subtype or equivalence
+predicateExpressionState
 :
-	MORE
+	predicateExpressionBE
+	| predicateExpressionSameAs
 ;
 
-less
+// simplest predicate expression verb optionally negated
+predicateExpressionSimple
 :
-	LESS
+	(DOES NOT)? PREDICATE
 ;
 
-moreOrEqual
+// predicate expression with a particle (preposition verb particle)
+predicateExpressionParticle
 :
-	MOREOREQUAL
+	(IS|DOES|HAS)? NOT? PREDICATE PARTICLE
 ;
 
-lessOrEqual
+//TODO passive PREDICATE should be VBN specifically
+// passive form a a predicate expression
+predicateExpressionPassive
 :
-	LESSOREQUAL
+	 IS NOT? PREDICATE PARTICLE? BY
 ;
 
-
-
-//---------- Verbs and Verb Phrases --------------
-vp: vbar;
-
-vbar
+// noun based predicate expression e.g. is president of, has interest in
+predicateExpressionNoun
 :
-	vbarPassive
-	| vbarSimple
-	| vbarAdj
+	(IS|HAS|PREDICATE) NOT? (A|THE)? adjp? PARTICLE
 ;
 
-vbarSimple
+
+// various forms of "to be", intepreted as some form of subtype/subclass
+predicateExpressionBE
 :
-	v np
+	 IS NOT?
 ;
 
-vbarPassive
+// intrepreted as some form of equivalence/disjointness
+predicateExpressionSameAs
 :
-	vPassive np
+	IS? NOT? SAME_AS
 ;
 
-vbarAdj
+// some form of "do"
+predicateExpressionDO
 :
-	vBE adjp
+	DOES NOT?
 ;
 
-v
+// some form of "has"
+predicateExpressionHAS
 :
-	modal?
-	(
-		vSimple
-		| vParticle
-		| vBE
-		| vSameAs
-		| vDO
-		| vHAS
-	) 
+	HAS NOT?
 ;
 
-vSimple
+// other forms of has?
+predicateExpressionHAS_POSS
 :
-	NOT? ONLY? verb ONLY? 
+	DOES? NOT? HAS
 ;
 
-vParticle
-:
-	NOT? ONLY? verb ONLY? 
-	(
-		IN
-		| RP
-	)
-;
+//-------------- Predicate Phrases --------------------------
 
-vPassive
-:
-	modal? verbBE NOT? ONLY? VBN ONLY?  (IN|RP)? BY
-;
+// --- common and proper noun based predicate phrases --------
 
-vBE
-:
-	ONLY? verbBE ONLY? NOT?
-;
+// a predicate phrase with a single common noun as object
+predicatePhraseCommonNoun: predicateExpressionObject commonNounPhrase; 
 
-vSameAs
-:
-	verbBE NOT? SAMEAS
-;
+// a predicate phrase with a single proper noun as object
+predicatePhraseProperNoun: predicateExpressionObject properNounPhrase; 
 
-vDO
-:
-	ONLY? verbDO ONLY? NOT?
-;
+// a predicate phrase with a set of proper nouns as object
+predicatePhraseProperNounSet: predicateExpressionObject oneOfProperNoun; 
 
-vHAS
-:
-	ONLY? verbHAS ONLY? NOT?
-;
+// a predicate phrase with a set of common and/or proper nouns as objects
+predicatePhraseNounSet: predicateExpressionObject nounSet; 
 
-verbBE
-:
-	BE
-	| BED
-	| BEDZ
-	| BEG
-	| BEM
-	| BEN
-	| BER
-	| BEZ
-;
+// a predicate phrase with a common noun or common/proper noun set object
+predicatePhraseCommonNounOrSet: predicatePhraseCommonNoun | predicatePhraseNounSet  ;
 
-verbDO
-:
-	DO
-	| DOD
-	| DOZ
-;
+// special predicate phrase with "itself" as object
+predicatePhraseItself: predicateExpressionObject  ITSELF ;
 
-verbHAS
-:
-	HV
-	| HVD
-	| HVG
-	| HVN
-	| HVZ
-;
+// all common/proper based predicate phrases
+predicatePhraseNoun: predicatePhraseCommonNoun | predicatePhraseProperNoun | predicatePhraseProperNounSet | predicatePhraseNounSet | predicatePhraseItself;
+
+// --- datatype and data value based predicate phrases ------
+
+// a predicate phrase with a single datatype as its object
+predicatePhraseDataType:  predicateExpressionData dataTypePhrase;
+
+// a predicate phrase with a single data value as its object (must have a "real" verb predicate expression)
+predicatePhraseDataValue: predicateExpressionVerbData  dataValuePhrase ;
+
+// a predicate phrase with a set of data values as its object
+predicatePhraseDataValueSet:  predicateExpressionData oneOfData;
+
+// a predicate phrase with a set of datatypes and/or data values as objects
+predicatePhraseDataSet:  predicateExpressionData dataTypeSet;
+
+predicatePhraseData: predicatePhraseDataType | predicatePhraseDataValueSet | predicatePhraseDataSet ;
+
+// a predicate phrase that includes both noun, proper noun, data type and data values as object
+predicatePhraseMixed: predicatePhraseNoun| predicatePhraseDataValue  ;
 
 
-verb
-:
-	VB
-	| VBD
-	| VBZ
-	| VBG
-	| VBN
-;
+//---------- Debug and catch-all stuff --------------
 
-modal
-:
-	(
-		MD
-		| NOT
-		| verbBE
-		| verbHAS
-		| verbDO
-	)+
-;
+singlePhraseObject:nounPhraseCatch|predicatePhraseNoun ;
+singlePhraseData:dataPhraseCatch| predicatePhraseData | predicatePhraseDataValue| dataTypeRestriction;
 
-//---------- Debug stuff --------------
+catchSet: (singlePhraseObject | singlePhraseData | AND|OR|COMMA) +;
 
-phraseSet
-:
-	phrase+
-;
+badSentence: (.*?)BAD+(.*?);
 
-junk
-:
-	j+
-;
-
-j: phrase|catchPhrase;
-
-phrase:np|vp|adjp;
-
-catchPhrase
-:
-	(adjWord|advWord|punctWord|connWord|detWord|modWord|nounWord|verbWord|phraseWord)+?
-;
-
-adjWord:JJ|JJR|JJS|JJT;
-advWord:RB|RBR|RBT|RN|RP;
-connWord:CC|CS|IN;
-detWord:A|ABL|ABN|ABX|AP|AT|DT|DTI|DTS|DTX|PPx|WDT;
-modWord:CD|NOT|OD|POSS|QL|QLP|WQL|WRB;
-nounWord:EX|NN|NNS|NP|NPS|NR|NRS|PN|PPxx|PPL|PPLS|PPO|PPS|PPSS|WPx|WPO|WPS;
-punctWord:APOS|CLOSEPAREN|COLON|COMMA|DASH|DQUOTE|OPENPAREN|PERIOD|TIC;
-verbWord:TO|BE|BED|BEDZ|BEG|BEM|BEN|BER|BEZ|DO|DOD|DOZ|HV|HVD|HVG|HVN|HVZ|MD|VB|VBD|VBG|VBN|VBZ;
-phraseWord:A|ALSO|AND|ANYX|BY|EVERY|EVERYX|EXACT|IF|LESS|MORE|MUST|NONE|NOX|ONLY|OR|SAMEAS|SOME|SOMEX|THAT|THE|THEN|THING|GROUPOF|QMARK;
-
+catchAll: .*?;

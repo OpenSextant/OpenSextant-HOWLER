@@ -24,10 +24,10 @@
  */
 package org.opensextant.howler.examples;
 
-import java.util.List;
-
-import org.opensextant.howler.convertors.Howler;
-import org.opensextant.howler.spo.Document;
+import org.opensextant.howler.Howler;
+import org.opensextant.howler.abstraction.Document;
+import org.opensextant.howler.text.Sentence;
+import org.opensextant.howler.text.TextDocument;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 public class BasicExample {
@@ -49,32 +49,30 @@ public class BasicExample {
     // Sentences to be translated. Must be valid HOWLER grammar sentences.
     String inputText = "A car has 4 wheels.  A motorcycle has 2 wheels.";
 
-    // convert text to SPOs
-    Document spos = howler.convertText(title, inputText);
+    TextDocument textDoc = new TextDocument();
+    textDoc.setTitle(title);
+    //Sentence sampleSent = new Sentence(inputText);
+    //textDoc.addSentence(sampleSent);
 
-    // check spos here for conversion details
-    List<String> unparsed = spos.getUnparsedSentences();
-    if (!unparsed.isEmpty()) {
-      System.out.println("Could not parse " + unparsed.size() + " sentences");
-    }
+    // convert text to SPOs
+    Document spos = howler.convertText(textDoc);
 
     // convert SPOs to Ontology
-    OWLOntology onto = howler.toOntology(spos);
+    OWLOntology onto = howler.toOntology(spos, true);
 
     // do something with ontology here
 
     // convert back to text
-    List<String> sentencesBack = howler.toText(howler.convertOntology(onto));
+    TextDocument sentencesBack = howler.toText(howler.convertOntology(onto));
 
     // do something with sentences here
 
     System.out.println("These converted sentences:");
-    for (String sent : sentencesBack) {
+    for (Sentence sent : sentencesBack.getSentences()) {
       System.out.println("\t\t" + sent);
     }
 
-    System.out.println(
-        "Should look like these original sentences:\n\t\t" + inputText);
+    System.out.println("Should look like these original sentences:\n\t\t" + inputText);
   }
 
 }

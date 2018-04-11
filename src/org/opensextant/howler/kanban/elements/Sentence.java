@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.opensextant.howler.spo.Word;
+import org.opensextant.howler.abstraction.Word;
 
 import com.google.gson.Gson;
 

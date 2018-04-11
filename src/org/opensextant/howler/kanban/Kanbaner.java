@@ -24,7 +24,7 @@
  */
 package org.opensextant.howler.kanban;
 
-import org.opensextant.howler.convertors.Howler;
+import org.opensextant.howler.Howler;
 
 public class Kanbaner {
 

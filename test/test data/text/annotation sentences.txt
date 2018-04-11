@@ -1,0 +1,4 @@
+//Annotation sentences shoudl all be parsed as "annotationStatement"
+[annotation] person comment "includes fictional people too".
+[annotation] person weighs 3.1415.
+[annotation] puppet resembles people. 

@@ -1,0 +1,2 @@
+#Directories containg test text files.  Directories are relative to this file
+text

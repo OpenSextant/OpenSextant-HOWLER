@@ -1,0 +1,69 @@
+// object phrases by themselves should be parsed as "singlePhraseObject"
+
+// simple quantified nouns
+dog.
+a dog.
+any dog.
+exactly 1 dog.
+more than 3 dogs.
+no more than 6 dogs.
+not more than 6 dogs.
+
+// modified quantified nouns
+commercial airport.
+a commercial airport.
+any commercial airport.
+a large international commercial airport.
+
+//nouns with relative phrases
+a commercial airport that has international flights.
+a pilot who has a commercial license.
+
+// complement
+not a dog.
+not every dog.
+
+//sets
+a dog and a bone and a snack.
+a dog,bone and snack.
+a dog or a rabbit or a mongoose.
+a dog,rabbit or mongoose.
+Doug,Steve or Carol.
+Doug,Steve and Carol.
+either Doug,Steve or Carol.
+either Doug or Steve or Carol.
+// mixed sets
+a dog, Doug,Steve and Carol.
+a dog, Doug,Steve or Carol.
+a dog or either Doug,Steve and Carol.
+a dog or either Doug,Steve or Carol.
+
+// predicate phrases
+owns a house.
+owns some house.
+owns some houses.
+owns every house.
+owns no house.
+owns no houses.
+owns 1 house.
+owns 7 houses.
+owns more than 3 houses.
+
+// multipart predicate phrases
+works in an apartment.
+works near an airport.
+
+// noun based predicates
+is president of a club.
+has water in the basement.
+is intended for commercial usage.
+
+// value predicates
+likes Japan.
+is legal in Japan.
+is not legal in Japan.
+is wanted by Japan.
+is not wanted by Japan.
+
+// self predicates
+likes itself.

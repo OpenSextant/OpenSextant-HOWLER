@@ -47,7 +47,7 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenFactory;
 import org.antlr.v4.runtime.TokenSource;
 import org.apache.commons.io.FileUtils;
-import org.opensextant.howler.grammar.HOWL;
+import org.opensextant.howler.text.grammar.HOWL;
 
 import eu.danieldk.nlp.jitar.data.Model;
 import eu.danieldk.nlp.jitar.languagemodel.LanguageModel;

@@ -16,7 +16,6 @@ import org.opensextant.howler.abstraction.words.enumerated.PredicateCharacterist
 import org.opensextant.howler.abstraction.words.enumerated.Quantifier;
 import org.opensextant.howler.abstraction.words.enumerated.RelativeMarker;
 import org.opensextant.howler.abstraction.words.enumerated.Scope;
-import org.opensextant.howler.abstraction.words.enumerated.WordType;
 import org.semanticweb.owlapi.model.IRI;
 
 public class Vocabulary {
@@ -64,33 +63,39 @@ public class Vocabulary {
 
   /*--- Builtin scoped predicates ---*/
   public static final ObjectPredicate IS_Object = new ObjectPredicate("is", getBuiltInKey("is"), PredicateType.IS);
-  public static final ObjectPredicate IS_ONLY_Object = new ObjectPredicate("is only", getBuiltInKey("is only"),PredicateType.IS_ONLY);
-  public static final ObjectPredicate SAME_Object = new ObjectPredicate("is any", getBuiltInKey("same"),PredicateType.SAME_AS);
+  public static final ObjectPredicate IS_ONLY_Object = new ObjectPredicate("is only", getBuiltInKey("is only"),
+      PredicateType.IS_ONLY);
+  public static final ObjectPredicate SAME_Object = new ObjectPredicate("is any", getBuiltInKey("same"),
+      PredicateType.SAME_AS);
 
   public static final DataPredicate IS_Data = new DataPredicate("is", getBuiltInKey("is"), PredicateType.IS);
-  public static final DataPredicate IS_ONLY_Data = new DataPredicate("is only", getBuiltInKey("is only"),PredicateType.IS_ONLY);
-  public static final DataPredicate SAME_Data = new DataPredicate("is any", getBuiltInKey("same"), PredicateType.SAME_AS);
+  public static final DataPredicate IS_ONLY_Data = new DataPredicate("is only", getBuiltInKey("is only"),
+      PredicateType.IS_ONLY);
+  public static final DataPredicate SAME_Data = new DataPredicate("is any", getBuiltInKey("same"),
+      PredicateType.SAME_AS);
 
-  public static final AnnotationPredicate IS_Annotation = new AnnotationPredicate("is", getBuiltInKey("is"),PredicateType.IS);
-  public static final AnnotationPredicate IS_ONLY_Annotation = new AnnotationPredicate("is only", getBuiltInKey("is only"),PredicateType.IS_ONLY);
-  public static final AnnotationPredicate SAME_Annotation = new AnnotationPredicate("same as", getBuiltInKey("same"), PredicateType.SAME_AS);
+  public static final AnnotationPredicate IS_Annotation = new AnnotationPredicate("is", getBuiltInKey("is"),
+      PredicateType.IS);
+  public static final AnnotationPredicate IS_ONLY_Annotation = new AnnotationPredicate("is only",
+      getBuiltInKey("is only"), PredicateType.IS_ONLY);
+  public static final AnnotationPredicate SAME_Annotation = new AnnotationPredicate("same as", getBuiltInKey("same"),
+      PredicateType.SAME_AS);
 
   /*-----Error handling -----*/
   public static final GenericWord ERROR = new GenericWord("ERROR");
   public static final GenericWord EOF = new GenericWord("EOF");
 
-  
   /*----- Markers -----*/
 
   public static final GenericWord NO = new GenericWord("no");
   public static final GenericWord NOT = new GenericWord("not");
   public static final GenericWord THAT = new GenericWord("that");
   public static final GenericWord PASSIVE = new GenericWord("by");
-  
+
   /* ------- parts of predicate expressions ------- */
-   public static final GenericWord IS_AUX = new GenericWord("is");
-   public static final GenericWord DOES_AUX = new GenericWord("does");
-   public static final GenericWord HAS_AUX = new GenericWord("has"); 
+  public static final GenericWord IS_AUX = new GenericWord("is");
+  public static final GenericWord DOES_AUX = new GenericWord("does");
+  public static final GenericWord HAS_AUX = new GenericWord("has");
   // public static final PredicateParticle SAME_AS = new PredicateParticle("the same as");
   // public static final PredicateParticle BY = new PredicateParticle("by");
 
@@ -109,18 +114,27 @@ public class Vocabulary {
     fixedVocabulary.add(NOTHING);
     fixedVocabulary.add(DATATYPE_THING);
     fixedVocabulary.add(ITSELF);
+
     fixedVocabulary.add(TEXT_TYPE);
     fixedVocabulary.add(INTEGER_TYPE);
     fixedVocabulary.add(DOUBLE_TYPE);
+
     fixedVocabulary.add(IS_Object);
     fixedVocabulary.add(IS_ONLY_Object);
     fixedVocabulary.add(SAME_Object);
+
     fixedVocabulary.add(IS_Data);
+    fixedVocabulary.add(IS_ONLY_Data);
     fixedVocabulary.add(SAME_Data);
+
     fixedVocabulary.add(IS_Annotation);
+    fixedVocabulary.add(IS_ONLY_Annotation);
+    fixedVocabulary.add(SAME_Annotation);
+
     fixedVocabulary.add(ERROR);
     fixedVocabulary.add(PERIOD);
 
+    // add the enumerated words by type
     for (BooleanSetType bst : BooleanSetType.values()) {
       fixedVocabulary.add(bst);
     }
@@ -143,10 +157,6 @@ public class Vocabulary {
 
     for (Scope s : Scope.values()) {
       fixedVocabulary.add(s);
-    }
-
-    for (WordType wt : WordType.values()) {
-      fixedVocabulary.add(wt);
     }
 
   }

@@ -1,0 +1,50 @@
+// single phrases by themselves, should be parsed as "singlePhraseData"
+
+// data type expressions
+an integer.
+an integer or a decimal.
+a string or a decimal.
+
+either "What", "Where","Whom".
+either "What", "Where" or "Whom".
+either "What", "Where", "Whom" or 3.14.
+either "What", "Where", "Whom" or 3.14..
+
+an integer greater than 5.
+an integer greater than 5 .
+an integer greater than 5 and less than 10.
+an integer more than 5.
+an integer more than 5 .
+an integer more than 5 and less than 10.
+
+a String that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}".
+a string that has a length of 256.
+a string that is a length of 256.
+a string a length of 256.
+a string that has a maximum length of 256.
+a decimal that has a total digits of 12.
+a decimal that has a fractional digits of 12.
+a string that has a language range of "en".
+
+is an integer greater than 5.
+is an integer greater than 5 and less than 10.
+is an integer more than 5.
+is an integer more than 5 and less than 10.
+is a string that has a length of 256.
+has a name of a string. 
+
+// data predicates
+weighs 7.
+weighs 4.56.
+weighs not 3.14.
+says "Good Morning, all present and accounted for?".
+does not say "Good Morning".
+does not weigh 4.56.
+has a zipcode of 12345.
+has a zipcode of 02345.
+
+
+// data value expressions
+greater than 3.
+more than 3.45.
+at most 45.

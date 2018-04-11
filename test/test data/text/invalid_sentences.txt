@@ -1,0 +1,66 @@
+// all parsed to "catchAll" or "catchSet" or "badSentence". might be parsed as other but the parse in suspicious.
+
+// suspicious parses
+Bob weighs no more than 7 pounds.
+
+// various unsupported sentences
+Russia's government builds missiles.
+Bob flies from London to Paris.
+Bob traveled to Kabul from London. 
+
+Every ballistic missile is a missile and a missile is a weapon and a weapon is a machine and a machine is an tool.
+A group of 7 trucks were seen by Bob.
+A group of cows is called a herd.
+Bob likes most dogs.
+
+
+// is/same_as used with data
+Bob is 3.145.
+Carol is the same as "Wombats".
+
+
+// except (NYI)
+Bob works in every country except France.
+Bob marries nobody except Carol.
+Bob owns nothing except houses.
+
+// Modals not supported
+Every missile must have 1 engine.
+Every missile must have a engine.
+Bob will be a pilot.
+Bob could be a pilot.
+Bob should be a pilot.
+Bob might be a pilot.
+China should build SS25s.
+China should not build SS25s.
+Every missile can only have 1 engine.
+Bob can only marry Carol.
+Every missile can only have 1 engine.
+Bob can only marry Carol.
+The surfing will be good.
+
+// --- There is (existential There) sentences not supported
+There is a missile.
+There are missiles.
+There is a warhead in a missile.
+There are two boosters on a missile.
+There are at least two boosters on a missile.
+There are no pilots on a missile.
+There is no pilot on a missile.
+There is a missile that doesn't fly.
+There is a missile that doesn't fly and that doesn't explode.
+There is a missile that doesn't fly and doesn't explode.
+There is a missile that Russia builds.
+There are seven district in Iran.
+Russia believes that there are missiles.
+Russia believes.
+A missile that explodes is a good missile.
+A missile that never explodes is a bad missile.
+A missile that always explodes is a good missile.
+A missile that sometimes explodes is a flawed missile.
+
+//--- If ... then sentences
+If something has a warhead then it is a missile.
+If something has a warhead it is a missile.
+If something is a missile then it is a weapon.
+If Bob is a car then he is a wombat.
