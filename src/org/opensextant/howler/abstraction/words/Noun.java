@@ -33,11 +33,7 @@ public abstract class Noun extends Category {
   public Noun(String normal, IRI key) {
     super(normal, key);
   }
-/*
-  public Noun(IRI key) {
-    super(key);
-  }
-*/
+
   public Scope getScope() {
     return Scope.OBJECT;
   }

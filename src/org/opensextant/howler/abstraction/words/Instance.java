@@ -8,10 +8,7 @@ public abstract class Instance extends WordBase {
   public Instance(String normal, IRI key) {
     super(normal, key);
   }
-/*
-  public Instance(IRI key) {
-    super(key);  }
-*/
+
   public WordType getWordType() {
     return WordType.INSTANCE;
   }

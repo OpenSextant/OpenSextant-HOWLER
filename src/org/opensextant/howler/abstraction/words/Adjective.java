@@ -32,11 +32,7 @@ public class Adjective extends Noun {
   public Adjective(String normal, IRI key) {
     super(normal, key);
   }
-  /*
-  public Adjective(IRI key) {
-    super(key);
-  }
-  */
+
   public WordType getWordType() {
     return WordType.ADJECTIVE;
   }

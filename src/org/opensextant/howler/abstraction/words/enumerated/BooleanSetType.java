@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import org.opensextant.howler.abstraction.Vocabulary;
 import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.phrases.Footnote;
+import org.opensextant.howler.utils.TextUtils;
 import org.semanticweb.owlapi.model.IRI;
 
 public enum BooleanSetType implements Word {
@@ -14,72 +15,72 @@ public enum BooleanSetType implements Word {
   INTERSECTION("and"),
   ONEOF("one of");
 
-  private final String logicalform;
-  private String normalform;
-  private IRI key;
+    private final String logicalform;
+    private String normalform;
+    private IRI key;
 
-  BooleanSetType(String logicalForm) {
-    this.logicalform = logicalForm;
-    this.normalform = logicalform;
-    this.key = IRI.create(Vocabulary.HOWLER_NS.toString(), logicalform);
-  }
+    BooleanSetType(String normalForm) {
+	this.logicalform = TextUtils.createLogicalFromNormal(normalForm);
+	this.normalform = normalForm;
+	this.key = IRI.create(Vocabulary.BUILTIN_NS.toString(), logicalform);
+    }
 
-  public static BooleanSetType getTypeByNormalName(String normal) {
-    return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(null);
-  }
-  
-  public String getLogicalform() {
-    return logicalform;
-  }
+    public static BooleanSetType getTypeByNormalName(String normal) {
+	return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(null);
+    }
 
-  @Override
-  public String getNormalForm() {
-    return normalform;
-  }
+    public String getLogicalform() {
+	return logicalform;
+    }
 
-  @Override
-  public void setNormalForm(String normalForm) {
-    // ignore
-  }
+    @Override
+    public String getNormalForm() {
+	return normalform;
+    }
 
-  @Override
-  public IRI getKey() {
-    return key;
-  }
+    @Override
+    public void setNormalForm(String normalForm) {
+	// ignore
+    }
 
-  @Override
-  public String getLogicalForm() {
-    return logicalform;
-  }
+    @Override
+    public IRI getKey() {
+	return key;
+    }
 
-  @Override
-  public String getNamespace() {
-    return Vocabulary.HOWLER_NS.toString();
-  }
+    @Override
+    public String getLogicalForm() {
+	return logicalform;
+    }
 
-  @Override
-  public Scope getScope() {
-    return Scope.OBJECT;
-  }
+    @Override
+    public String getNamespace() {
+	return Vocabulary.BUILTIN_NS.toString();
+    }
 
-  @Override
-  public WordType getWordType() {
-    return WordType.BOOLEAN_SET_TYPE;
-  }
+    @Override
+    public Scope getScope() {
+	return Scope.OBJECT;
+    }
 
-  @Override
-  public List<Footnote> getFootnotes() {
-    return new ArrayList<Footnote>();
-  }
+    @Override
+    public WordType getWordType() {
+	return WordType.BOOLEAN_SET_TYPE;
+    }
 
-  @Override
-  public void setFootnotes(List<Footnote> footnotes) {
-    // ignore
-  }
+    @Override
+    public List<Footnote> getFootnotes() {
+	return new ArrayList<Footnote>();
+    }
 
-  @Override
-  public void addFootnote(Footnote footnote) {
-    // ignore
-  }
+    @Override
+    public void setFootnotes(List<Footnote> footnotes) {
+	// ignore
+    }
+
+    @Override
+    public void addFootnote(Footnote footnote) {
+	// ignore
+    }
 
 }

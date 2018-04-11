@@ -109,7 +109,7 @@ public abstract class WordBase implements Word {
     return result;
   }
 
-  // words are equal if they have the same key and class
+  // words are equal if they have the same key and WordType
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
@@ -118,21 +118,23 @@ public abstract class WordBase implements Word {
     if (obj == null) {
       return false;
     }
-    if (!(obj instanceof WordBase)) {
+    if (!(obj instanceof Word)) {
       return false;
     }
 
-    WordBase other = (WordBase) obj;
+    Word other = (Word) obj;
 
-    if (getClass() != obj.getClass()) {
+    // same WordType?
+    if (!this.getWordType().equals(other.getWordType())) {
       return false;
     }
 
+    // same Key?
     if (key == null) {
-      if (other.key != null) {
+      if (other.getKey() != null) {
         return false;
       }
-    } else if (!key.equals(other.key)) {
+    } else if (!key.equals(other.getKey())) {
       return false;
     }
     return true;

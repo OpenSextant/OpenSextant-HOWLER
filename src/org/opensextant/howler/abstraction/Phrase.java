@@ -24,6 +24,8 @@
  */
 package org.opensextant.howler.abstraction;
 
+import java.util.List;
+
 import org.opensextant.howler.abstraction.words.enumerated.Scope;
 
 public interface Phrase {
@@ -43,4 +45,6 @@ public interface Phrase {
   public boolean isAnnotationScope();
 
   public boolean isConsistentScope();
+  
+  public List<Word> getWords();
 }

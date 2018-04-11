@@ -9,11 +9,7 @@ public class GenericWord extends WordBase {
   public GenericWord(String normal, IRI key) {
     super(normal, key);
   }
-/*
-  public GenericWord(IRI key) {
-    super(key);
-  }
-*/
+
   public GenericWord(String normal) {
     super(normal, IRI.create(Vocabulary.BUILTIN_NS.toString(), normal));
   }

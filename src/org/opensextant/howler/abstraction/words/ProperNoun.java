@@ -35,17 +35,9 @@ public class ProperNoun extends Instance {
     super(normal, key);
   }
 
-  /*
-  public ProperNoun(IRI key) {
-    super(key);
-    this.setNormalForm(getDefaultNormalForm(key));
-  }
-*/
   public boolean isAnonymous() {
     return this.getKey().getNamespace().equals(Vocabulary.ANONYMOUS_NS);
   }
-
-
 
   public Scope getScope() {
     return Scope.OBJECT;

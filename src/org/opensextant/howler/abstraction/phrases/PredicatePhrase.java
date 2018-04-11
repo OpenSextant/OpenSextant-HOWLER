@@ -24,7 +24,11 @@
  */
 package org.opensextant.howler.abstraction.phrases;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.opensextant.howler.abstraction.Phrase;
+import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.words.Predicate;
 import org.opensextant.howler.abstraction.words.enumerated.Scope;
 
@@ -89,7 +93,7 @@ public class PredicatePhrase<T extends SubjectObjectPhrase, P extends Predicate>
 
   @Override
   public Scope getScope() {
-    
+
     if (this.isConsistentScope()) {
       return this.getObject().getScope();
     }
@@ -97,7 +101,15 @@ public class PredicatePhrase<T extends SubjectObjectPhrase, P extends Predicate>
   }
 
   public String toString() {
-    return "(" + this.getScope() +") " + predicateExpression.toString() + " " + object.toString();
+    return "(" + this.getScope() + ") " + predicateExpression.toString() + " " + object.toString();
+  }
+
+  @Override
+  public List<Word> getWords() {
+    List<Word> wrds = new ArrayList<Word>();
+    wrds.addAll(this.predicateExpression.getWords());
+    wrds.addAll(this.object.getWords());
+    return wrds;
   }
 
 }

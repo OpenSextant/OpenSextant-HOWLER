@@ -6,7 +6,7 @@ import org.opensextant.howler.abstraction.words.AnnotationPredicate;
 public class Footnote {
 
   private AnnotationPredicate predicate;
-  private Word wordBase;
+  private Word word;
 
   public AnnotationPredicate getPredicate() {
     return predicate;
@@ -17,32 +17,27 @@ public class Footnote {
   }
 
   public Word getWord() {
-    return wordBase;
+    return word;
   }
 
-  public void setWord(Word wordBase) {
-    this.wordBase = wordBase;
+  public void setWord(Word word) {
+    this.word = word;
   }
 
   public String toString() {
-    return predicate.getNormalForm() + "->" + wordBase.getNormalForm();
+    return predicate.getNormalForm() + "->" + word.getNormalForm();
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((predicate == null) ? 0 : predicate.hashCode());
-    result = prime * result + ((wordBase == null) ? 0 : wordBase.hashCode());
+    result = prime * result + ((word == null) ? 0 : word.hashCode());
     return result;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
+  // Footnotes are equal if they have the same predicate and word
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
@@ -54,7 +49,9 @@ public class Footnote {
     if (!(obj instanceof Footnote)) {
       return false;
     }
+
     Footnote other = (Footnote) obj;
+    // same predicate?
     if (predicate == null) {
       if (other.predicate != null) {
         return false;
@@ -62,11 +59,13 @@ public class Footnote {
     } else if (!predicate.equals(other.predicate)) {
       return false;
     }
-    if (wordBase == null) {
-      if (other.wordBase != null) {
+
+    // same Word
+    if (word == null) {
+      if (other.word != null) {
         return false;
       }
-    } else if (!wordBase.equals(other.wordBase)) {
+    } else if (!word.equals(other.word)) {
       return false;
     }
     return true;

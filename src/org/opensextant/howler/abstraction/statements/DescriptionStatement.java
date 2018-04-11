@@ -1,8 +1,10 @@
 package org.opensextant.howler.abstraction.statements;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.opensextant.howler.abstraction.Statement;
+import org.opensextant.howler.abstraction.Vocabulary;
 import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.phrases.PredicatePhrase;
 import org.opensextant.howler.abstraction.phrases.SubjectObjectPhrase;
@@ -59,15 +61,17 @@ public class DescriptionStatement<P extends Predicate> extends Statement {
     return (DescriptionStatement<ObjectPredicate>) this;
   }
 
-
   @Override
   public List<Word> getWords() {
-    // TODO Auto-generated method stub
-    return super.getWords();
+    List<Word> wrds = new ArrayList<Word>();
+    wrds.addAll(this.subject.getWords());
+    wrds.addAll(this.predicatePhrase.getWords());
+    wrds.add(Vocabulary.PERIOD);
+    return wrds;
   }
 
-  public String toString(){
-    return this.subject + " " + this.predicatePhrase.getPredicateExpression() + " " + this.predicatePhrase.getObject(); 
+  public String toString() {
+    return this.subject + " " + this.predicatePhrase.getPredicateExpression() + " " + this.predicatePhrase.getObject();
   }
-  
+
 }

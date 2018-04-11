@@ -7,6 +7,12 @@ import org.opensextant.howler.abstraction.words.enumerated.Scope;
 import org.opensextant.howler.abstraction.words.enumerated.WordType;
 import org.semanticweb.owlapi.model.IRI;
 
+//Words are a vocabulary element consisting of
+//   normalized form of the word (text)
+//   a WordType
+//   a Key
+// A word is uniquely identified by the combination of its Key and WordType 
+
 public interface Word {
 
   String getNormalForm();

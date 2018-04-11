@@ -24,18 +24,20 @@ public abstract class Predicate extends WordBase {
     super(normal, key);
   }
 
+  public Predicate(String normal, IRI key, PredicateType type) {
+    super(normal, key);
+    this.predicateType = type;
+  }
+  
+  /*
   public Predicate(PredicateType type) {
-    super(type.name().toLowerCase(), IRI.create(Vocabulary.BUILTIN_NS.toString(), type.name()));
+    super(type.name().toLowerCase().replaceAll("_", " "), IRI.create(Vocabulary.BUILTIN_NS.toString(), type.name()));
     this.predicateType = type;
   }
 
-  public Predicate(String normal,PredicateType type) {
+  public Predicate(String normal, PredicateType type) {
     super(normal, IRI.create(Vocabulary.BUILTIN_NS.toString(), type.name()));
     this.predicateType = type;
-  }
-  /*
-  public Predicate(IRI key) {
-    super(key);
   }
 */
   public List<PredicateCharacteristic> getCharacteristics() {

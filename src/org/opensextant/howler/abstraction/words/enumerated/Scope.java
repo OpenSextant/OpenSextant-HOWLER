@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import org.opensextant.howler.abstraction.Vocabulary;
 import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.phrases.Footnote;
+import org.opensextant.howler.utils.TextUtils;
 import org.semanticweb.owlapi.model.IRI;
 
 public enum Scope implements Word {
@@ -19,11 +20,11 @@ public enum Scope implements Word {
   private String normalform;
   private IRI key;
 
-  Scope(String logicalForm) {
-    this.logicalform = logicalForm;
-    this.normalform = logicalform;
-    this.key = IRI.create(Vocabulary.HOWLER_NS.toString(), logicalform);
-  }
+	Scope(String normalForm) {
+		this.logicalform = TextUtils.createLogicalFromNormal(normalForm);
+		this.normalform = normalForm;
+		this.key = IRI.create(Vocabulary.BUILTIN_NS.toString(), logicalform);
+	}
 
   public static Scope getTypeByNormalName(String normal) {
     return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(null);
@@ -56,7 +57,7 @@ public enum Scope implements Word {
 
   @Override
   public String getNamespace() {
-    return Vocabulary.HOWLER_NS.toString();
+    return Vocabulary.BUILTIN_NS.toString();
   }
 
   @Override

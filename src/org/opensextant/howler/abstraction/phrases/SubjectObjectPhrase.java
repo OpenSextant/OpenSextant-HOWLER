@@ -27,6 +27,4 @@ public abstract class SubjectObjectPhrase implements Phrase {
     this.quantifierExpression.flipNegative();
   }
 
- 
-
 }

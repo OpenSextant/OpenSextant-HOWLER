@@ -10,18 +10,18 @@ import org.opensextant.howler.abstraction.phrases.Footnote;
 import org.semanticweb.owlapi.model.IRI;
 
 public enum DataFacet implements Word {
-  LENGTH(Vocabulary.XSDNamespace, "length", "has_a_length_of"),
-  MIN_LENGTH(Vocabulary.XSDNamespace, "minLength","has_a_minimum_length_of"),
-  MAX_LENGTH(Vocabulary.XSDNamespace, "maxLength", "has_a_maximum_length_of"),
-  PATTERN(Vocabulary.XSDNamespace, "pattern", "has_a_pattern_of"),
-  MIN_INCLUSIVE(Vocabulary.XSDNamespace,"minInclusive", "is_greater_or_equal_to"),
-  MIN_EXCLUSIVE(Vocabulary.XSDNamespace, "minExclusive","is_greater_than"),
-  MAX_INCLUSIVE(Vocabulary.XSDNamespace, "maxInclusive","is_less_or_equal_to"),
-  MAX_EXCLUSIVE(Vocabulary.XSDNamespace, "maxExclusive","is_less_than"),
-  TOTAL_DIGITS(Vocabulary.XSDNamespace, "totalDigits","has_total_digits_of"),
-  FRACTION_DIGITS(Vocabulary.XSDNamespace, "fractionDigits","has_fraction_digits_of"),
-  LANG_RANGE(Vocabulary.RDFNamespace, "langRange","has_a_language_range_of"),
-  ERROR(Vocabulary.BUILTIN_NS, "error","has_unknown_relation_to");
+  LENGTH(Vocabulary.XSDNamespace, "length", "a length of"),
+  MIN_LENGTH(Vocabulary.XSDNamespace, "minLength","a minimum length of"),
+  MAX_LENGTH(Vocabulary.XSDNamespace, "maxLength", "a maximum length of"),
+  PATTERN(Vocabulary.XSDNamespace, "pattern", "a pattern of"),
+  MIN_INCLUSIVE(Vocabulary.XSDNamespace,"minInclusive", "greater or equal to"),
+  MIN_EXCLUSIVE(Vocabulary.XSDNamespace, "minExclusive","greater than"),
+  MAX_INCLUSIVE(Vocabulary.XSDNamespace, "maxInclusive","less or equal to"),
+  MAX_EXCLUSIVE(Vocabulary.XSDNamespace, "maxExclusive","less than"),
+  TOTAL_DIGITS(Vocabulary.XSDNamespace, "totalDigits","total digits of"),
+  FRACTION_DIGITS(Vocabulary.XSDNamespace, "fractionDigits","fraction digits of"),
+  LANG_RANGE(Vocabulary.RDFNamespace, "langRange","a language range of"),
+  ERROR(Vocabulary.BUILTIN_NS, "error","unknown relation to");
 
   private IRI namespace;
   private String logicalform;
@@ -33,7 +33,7 @@ public enum DataFacet implements Word {
     this.namespace = ns;
     this.logicalform = logicalForm;
     this.normalForm = normalForm;
-    this.key = IRI.create(Vocabulary.HOWLER_NS.toString(), logicalform);
+    this.key = IRI.create(Vocabulary.BUILTIN_NS.toString(), logicalform);
   }
 
   public String getNamespace() {

@@ -1,5 +1,8 @@
 package org.opensextant.howler.abstraction.phrases;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.words.enumerated.Scope;
 
@@ -21,7 +24,7 @@ public class WordPhrase extends SubjectObjectPhrase {
 
   @Override
   public String toString() {
-    return "(" + this.getScope() +") " + head.toString();
+    return "(" + this.getScope() + ") " + head.toString();
   }
 
   @Override
@@ -47,6 +50,14 @@ public class WordPhrase extends SubjectObjectPhrase {
   @Override
   public boolean isConsistentScope() {
     return true;
+  }
+
+  @Override
+  public List<Word> getWords() {
+    List<Word> wrds = new ArrayList<Word>();
+    wrds.addAll(this.getQuantifier().getWords());
+    wrds.add(head);
+    return wrds;
   }
 
 }

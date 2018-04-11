@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.opensextant.howler.abstraction.Vocabulary;
+import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.words.Category;
 import org.opensextant.howler.abstraction.words.DataType;
 import org.opensextant.howler.abstraction.words.Noun;
@@ -57,8 +58,8 @@ public class CategoryPhrase<T extends Category> extends SubjectObjectPhrase {
   }
 
   public boolean isThingThatPhrase() {
-    if ((head.getKey().equals(Vocabulary.THING_IRI) || head.getKey().equals(Vocabulary.DATATYPE_THING_IRI)) && modifiers.isEmpty()
-        && relativePhrases.size() == 1) {
+    if ((head.getKey().equals(Vocabulary.THING_IRI) || head.getKey().equals(Vocabulary.DATATYPE_THING_IRI))
+        && modifiers.isEmpty() && relativePhrases.size() == 1) {
       return true;
     }
 
@@ -146,6 +147,25 @@ public class CategoryPhrase<T extends Category> extends SubjectObjectPhrase {
     }
 
     return bldr.toString();
+  }
+
+  @Override
+  public List<Word> getWords() {
+    List<Word> wrds = new ArrayList<Word>();
+    
+    wrds.addAll(this.getQuantifier().getWords());
+    
+    for (Word a : this.modifiers) {
+      wrds.add(a);
+    }
+    wrds.add(head);
+
+    for (PredicatePhrase<? extends SubjectObjectPhrase, ? extends Predicate> rel : this.relativePhrases) {
+      wrds.add(Vocabulary.THAT);
+      wrds.addAll(rel.getWords());
+    }
+
+    return wrds;
   }
 
 }

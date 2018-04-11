@@ -32,11 +32,7 @@ public class CommonNoun extends Noun {
   public CommonNoun(String normal, IRI key) {
     super(normal, key);
   }
-  /*
-  public CommonNoun(IRI key) {
-    super(key);
-  }
-  */
+
   public WordType getWordType() {
     return WordType.COMMON_NOUN;
   }

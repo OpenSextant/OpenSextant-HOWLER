@@ -8,11 +8,8 @@ import org.opensextant.howler.abstraction.words.CommonNoun;
 import org.opensextant.howler.abstraction.words.DataPredicate;
 import org.opensextant.howler.abstraction.words.DataType;
 import org.opensextant.howler.abstraction.words.GenericWord;
-import org.opensextant.howler.abstraction.words.Negative;
 import org.opensextant.howler.abstraction.words.ObjectPredicate;
 import org.opensextant.howler.abstraction.words.Predicate.PredicateType;
-import org.opensextant.howler.abstraction.words.PredicateParticle;
-import org.opensextant.howler.abstraction.words.UndeterminedPredicate;
 import org.opensextant.howler.abstraction.words.enumerated.BooleanSetType;
 import org.opensextant.howler.abstraction.words.enumerated.DataFacet;
 import org.opensextant.howler.abstraction.words.enumerated.PredicateCharacteristic;
@@ -38,7 +35,8 @@ public class Vocabulary {
   public static final IRI RDFNamespace = IRI.create("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
   public static final IRI XSDNamespace = IRI.create("http://www.w3.org/2001/XMLSchema#");
 
-  // IRI for AnnotationProperties that will be used for creating normal forms of Words
+  // IRI for AnnotationProperties that will be used for creating normal forms
+  // of Words
   public static final IRI RDFS_LABEL = IRI.create("http://www.w3.org/2000/01/rdf-schema#label");
   public static final IRI SKOS_LABEL = IRI.create("http://www.w3.org/2004/02/skos/core#prefLabel");
 
@@ -55,7 +53,7 @@ public class Vocabulary {
   /*--- Nouns ---*/
   public static final CommonNoun THING = new CommonNoun("thing", THING_IRI);
   public static final CommonNoun NOTHING = new CommonNoun("nothing", NOTHING_IRI);
-  public static final DataType DATATYPE_THING = new DataType("topDatatype", DATATYPE_THING_IRI);;
+  public static final DataType DATATYPE_THING = new DataType("topDatatype", DATATYPE_THING_IRI);
   public static final CommonNoun ITSELF = new CommonNoun("itself", ITSELF_IRI);
 
   /*--- Data types ---*/
@@ -64,40 +62,37 @@ public class Vocabulary {
   public static final DataType INTEGER_TYPE = new DataType("integer", IRI.create(XSDNamespace.toString(), "integer"));
   public static final DataType DOUBLE_TYPE = new DataType("double", IRI.create(XSDNamespace.toString(), "double"));
 
-  /*--- Builtin unscoped predicates ---*/
-  public static final UndeterminedPredicate IS_PREDICATE = new UndeterminedPredicate(PredicateType.IS);
-  public static final UndeterminedPredicate IS_ONLY_PREDICATE = new UndeterminedPredicate(PredicateType.IS_ONLY);
-  public static final UndeterminedPredicate SAME_PREDICATE = new UndeterminedPredicate(PredicateType.SAME_AS);
-
   /*--- Builtin scoped predicates ---*/
-  public static final ObjectPredicate IS_Object = new ObjectPredicate(PredicateType.IS);
-  public static final ObjectPredicate IS_ONLY_Object = new ObjectPredicate(PredicateType.IS_ONLY);
-  public static final ObjectPredicate SAME_Object = new ObjectPredicate(PredicateType.SAME_AS);
+  public static final ObjectPredicate IS_Object = new ObjectPredicate("is", getBuiltInKey("is"), PredicateType.IS);
+  public static final ObjectPredicate IS_ONLY_Object = new ObjectPredicate("is only", getBuiltInKey("is only"),PredicateType.IS_ONLY);
+  public static final ObjectPredicate SAME_Object = new ObjectPredicate("is any", getBuiltInKey("same"),PredicateType.SAME_AS);
 
-  public static final DataPredicate IS_Data = new DataPredicate(PredicateType.IS);
-  // public static final DataPredicate IS_ONLY_Data = new DataPredicate(PredicateType.IS_ONLY);
-  public static final DataPredicate SAME_Data = new DataPredicate(PredicateType.SAME_AS);
+  public static final DataPredicate IS_Data = new DataPredicate("is", getBuiltInKey("is"), PredicateType.IS);
+  public static final DataPredicate IS_ONLY_Data = new DataPredicate("is only", getBuiltInKey("is only"),PredicateType.IS_ONLY);
+  public static final DataPredicate SAME_Data = new DataPredicate("is any", getBuiltInKey("same"), PredicateType.SAME_AS);
 
-  public static final AnnotationPredicate IS_Annotation = new AnnotationPredicate(PredicateType.IS);
-  // public static final AnnotationPredicate IS_ONLY_Annotation = new AnnotationPredicate(PredicateType.IS_ONLY);
-  // public static final AnnotationPredicate SAME_Annotation = new AnnotationPredicate(PredicateType.SAME_AS);
+  public static final AnnotationPredicate IS_Annotation = new AnnotationPredicate("is", getBuiltInKey("is"),PredicateType.IS);
+  public static final AnnotationPredicate IS_ONLY_Annotation = new AnnotationPredicate("is only", getBuiltInKey("is only"),PredicateType.IS_ONLY);
+  public static final AnnotationPredicate SAME_Annotation = new AnnotationPredicate("same as", getBuiltInKey("same"), PredicateType.SAME_AS);
 
   /*-----Error handling -----*/
   public static final GenericWord ERROR = new GenericWord("ERROR");
   public static final GenericWord EOF = new GenericWord("EOF");
 
-  /*-----negatives -----*/
-  public static final Negative NONE = new Negative("no");
-  public static final Negative NOT = new Negative("not");
+  
+  /*----- Markers -----*/
 
+  public static final GenericWord NO = new GenericWord("no");
+  public static final GenericWord NOT = new GenericWord("not");
+  public static final GenericWord THAT = new GenericWord("that");
+  public static final GenericWord PASSIVE = new GenericWord("by");
+  
   /* ------- parts of predicate expressions ------- */
-  public static final PredicateParticle IS_AUX = new PredicateParticle("is");
-  public static final PredicateParticle DOES_AUX = new PredicateParticle("does");
-  public static final PredicateParticle SAME_AS = new PredicateParticle("the_same_as");
-  public static final PredicateParticle BY = new PredicateParticle("by");
-
-  /* ----- connectors ---------- */
-  public static final GenericWord ONLY = new GenericWord("only a");
+   public static final GenericWord IS_AUX = new GenericWord("is");
+   public static final GenericWord DOES_AUX = new GenericWord("does");
+   public static final GenericWord HAS_AUX = new GenericWord("has"); 
+  // public static final PredicateParticle SAME_AS = new PredicateParticle("the same as");
+  // public static final PredicateParticle BY = new PredicateParticle("by");
 
   /*-----punctuation -----*/
   public static final GenericWord DQUOTE = new GenericWord("\"");
@@ -124,6 +119,7 @@ public class Vocabulary {
     fixedVocabulary.add(SAME_Data);
     fixedVocabulary.add(IS_Annotation);
     fixedVocabulary.add(ERROR);
+    fixedVocabulary.add(PERIOD);
 
     for (BooleanSetType bst : BooleanSetType.values()) {
       fixedVocabulary.add(bst);
@@ -153,6 +149,10 @@ public class Vocabulary {
       fixedVocabulary.add(wt);
     }
 
+  }
+
+  public static IRI getBuiltInKey(String logical) {
+    return IRI.create(BUILTIN_NS.toString(), logical);
   }
 
 }

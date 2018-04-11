@@ -33,11 +33,7 @@ public class DataType extends Category {
   public DataType(String normal, IRI key) {
     super(normal, key);
   }
-  /*
-  public DataType(IRI key) {
-    super(key);
-  }
-  */
+
   public Scope getScope() {
     return Scope.DATA;
   }

@@ -1,6 +1,12 @@
 package org.opensextant.howler.abstraction.phrases;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.opensextant.howler.abstraction.Vocabulary;
+import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.words.Predicate;
+import org.opensextant.howler.abstraction.words.Predicate.PredicateType;
 import org.opensextant.howler.abstraction.words.enumerated.Scope;
 
 public class PredicateExpression<T extends Predicate> {
@@ -62,7 +68,7 @@ public class PredicateExpression<T extends Predicate> {
 
   public String toString() {
     StringBuilder bldr = new StringBuilder();
-    
+
     if (this.negative) {
       bldr.append("NOT ");
     }
@@ -76,6 +82,55 @@ public class PredicateExpression<T extends Predicate> {
     }
 
     return bldr.toString();
+  }
+
+  public List<Word> getWords() {
+    List<Word> wrds = new ArrayList<Word>();
+
+    if (this.predicate.getPredicateType().equals(PredicateType.IS)) {
+      wrds.add(this.predicate);
+      if (this.negative) {
+        wrds.add(Vocabulary.NOT);
+      }
+    }
+
+    if (this.predicate.getPredicateType().equals(PredicateType.SAME_AS)) {
+      if (this.negative) {
+        wrds.add(Vocabulary.IS_AUX);
+        wrds.add(Vocabulary.NOT);
+      }
+      wrds.add(this.predicate);
+    }
+
+    if (this.predicate.getPredicateType().equals(PredicateType.VERB)) {
+
+      if (this.passive) {
+        wrds.add(Vocabulary.IS_AUX);
+      }
+
+      if (this.negative) {
+        if (!this.passive) {
+          wrds.add(Vocabulary.DOES_AUX);
+        }
+        wrds.add(Vocabulary.NOT);
+      }
+      wrds.add(this.predicate);
+
+      if (this.passive) {
+        wrds.add(Vocabulary.PASSIVE);
+      }
+    }
+
+    if (this.predicate.getPredicateType().equals(PredicateType.FACET)) {
+
+      wrds.add(Vocabulary.IS_AUX);
+      if (this.negative) {
+        wrds.add(Vocabulary.NOT);
+      }
+      wrds.add(this.predicate);
+    }
+
+    return wrds;
   }
 
 }

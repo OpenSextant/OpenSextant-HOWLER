@@ -34,10 +34,14 @@ public class DataValue extends Instance {
   private DataType datatype = Vocabulary.TEXT_TYPE;
   private String language;
 
+  public DataValue(String normal, IRI key) {
+    super(normal, key);
+  }
+
   public DataValue(String normal) {
     super(normal, IRI.create(Vocabulary.VALUE_NS.toString(), normal));
   }
-
+ 
   public DataType getDatatype() {
     return datatype;
   }

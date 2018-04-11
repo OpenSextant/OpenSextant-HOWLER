@@ -3,7 +3,6 @@ package org.opensextant.howler.abstraction.words;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.opensextant.howler.abstraction.Vocabulary;
 import org.opensextant.howler.abstraction.phrases.SubjectObjectPhrase;
 import org.opensextant.howler.abstraction.words.enumerated.Scope;
 import org.opensextant.howler.abstraction.words.enumerated.WordType;
@@ -19,15 +18,11 @@ public class ObjectPredicate extends Predicate {
     super.predicateType = PredicateType.VERB;
   }
 
-  public ObjectPredicate(PredicateType type) {
-    super(type.name().toLowerCase(), IRI.create(Vocabulary.BUILTIN_NS.toString(), type.name()));
+  public ObjectPredicate(String normal, IRI key, PredicateType type) {
+    super(normal, key);
     super.predicateType = type;
   }
-/*
-  public ObjectPredicate(IRI key) {
-    super(key);
-  }
-*/
+  
   public List<SubjectObjectPhrase> getDomain() {
     return domain;
   }

@@ -1,6 +1,11 @@
 package org.opensextant.howler.abstraction.statements;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.opensextant.howler.abstraction.Statement;
+import org.opensextant.howler.abstraction.Vocabulary;
+import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.phrases.PredicateExpression;
 import org.opensextant.howler.abstraction.words.AnnotationPredicate;
 import org.opensextant.howler.abstraction.words.DataPredicate;
@@ -64,4 +69,18 @@ public class PredicateRelationStatement<P extends Predicate> extends Statement {
     return this.subject + " " + this.relation + " " + this.getObject();
   }
 
+  @Override
+  public List<Word> getWords() {
+
+    List<Word> wrds = new ArrayList<Word>();
+    wrds.addAll(this.subject.getWords());
+    wrds.addAll(this.relation.getWords());
+    wrds.addAll(this.object.getWords());
+    wrds.add(Vocabulary.PERIOD);
+    return wrds;
+  }
+
+  
+  
+  
 }

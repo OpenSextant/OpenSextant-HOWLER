@@ -1,5 +1,9 @@
 package org.opensextant.howler.abstraction.phrases;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.words.DataValue;
 import org.opensextant.howler.abstraction.words.Instance;
 import org.opensextant.howler.abstraction.words.ProperNoun;
@@ -23,7 +27,7 @@ public class InstancePhrase<T extends Instance> extends SubjectObjectPhrase {
 
   @Override
   public String toString() {
-    return "(" + this.getScope() +") " + head.toString();
+    return "(" + this.getScope() + ") " + head.toString();
   }
 
   public boolean isObjectScope() {
@@ -47,6 +51,14 @@ public class InstancePhrase<T extends Instance> extends SubjectObjectPhrase {
   @Override
   public boolean isAnnotationScope() {
     return false;
+  }
+
+  @Override
+  public List<Word> getWords() {
+    List<Word> wrds = new ArrayList<Word>();
+    wrds.addAll(this.getQuantifier().getWords());
+    wrds.add(head);
+    return wrds;
   }
 
 }

@@ -7,21 +7,17 @@ import java.util.stream.Stream;
 import org.opensextant.howler.abstraction.Vocabulary;
 import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.phrases.Footnote;
+import org.opensextant.howler.utils.TextUtils;
 import org.semanticweb.owlapi.model.IRI;
 
-public enum WordType implements Word {
-  
+public enum WordType implements Word { 
   GENERIC_WORD("Word",false),
   BADWORD("Badword",false),
-  
   ADJECTIVE("Adjective",false),
   COMMON_NOUN("Common Noun",false),
   PROPER_NOUN("Proper Noun",false),
-  
   DATATYPE("Datatype",false),
   DATAVALUE("Datavalue",false),
-  
-  UNDETERMINED_PREDICATE("Undetermined Predicate",false),
   OBJECT_PREDICATE("Object Predicate",false),
   DATA_PREDICATE("Data Predicate",false),
   ANNOTATION_PREDICATE("Annotation Predicate",false),
@@ -29,19 +25,16 @@ public enum WordType implements Word {
   DATA_FACET("Data Facet",false),
   PREDICATE_PARTICLE("Predicate Particle",false),
   PREDICATE_CHARACTERISTIC("Predicate Characteristic",false),
-  
   INTEGER("Integer",false),
   QUANTIFIER("Quantifier",false),
-
   BOOLEAN_SET_TYPE("Boolean Set Type",false),
   NEGATIVE("Negative",false),
   RELATIVE_MARKER("that",false),
-  
+  PASSIVE_MARKER("by",false),
   NOUN("Noun", true),
   CATEGORY("Category",true),
   INSTANCE("Instance",true),
   PREDICATE("Predicate",true),
-  
   SCOPE("Scope",true),
   WORD_TYPE("Word Type",true);
 
@@ -50,10 +43,10 @@ public enum WordType implements Word {
   private IRI key;
   private boolean abstractType;
 
-  WordType(String logicalForm, boolean abstractType) {
-    this.logicalform = logicalForm;
-    this.normalForm = logicalform;
-    this.key = IRI.create(Vocabulary.HOWLER_NS.toString(), logicalform);
+  WordType(String normalForm, boolean abstractType) {
+	    this.logicalform = TextUtils.createLogicalFromNormal(normalForm);
+	    this.normalForm = normalForm;
+    this.key = IRI.create(Vocabulary.BUILTIN_NS.toString(), logicalform);
     this.abstractType = abstractType;
   }
 
@@ -87,7 +80,7 @@ public enum WordType implements Word {
 
   @Override
   public String getNamespace() {
-    return Vocabulary.HOWLER_NS.toString();
+    return Vocabulary.BUILTIN_NS.toString();
   }
 
   @Override

@@ -27,6 +27,7 @@ package org.opensextant.howler.abstraction.phrases;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.words.enumerated.BooleanSetType;
 import org.opensextant.howler.abstraction.words.enumerated.Scope;
 
@@ -134,6 +135,19 @@ public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhras
       }
     }
     return true;
+  }
+
+  @Override
+  public List<Word> getWords() {
+    List<Word> wrds = new ArrayList<Word>();
+    wrds.addAll(this.getQuantifier().getWords());
+    wrds.addAll(this.phrases.get(0).getWords());
+    for (int i=1; i<this.phrases.size(); i++ ) {
+      wrds.add(this.booleanSetType);
+      wrds.addAll(this.phrases.get(i).getWords());
+    }
+
+    return wrds;
   }
 
 }

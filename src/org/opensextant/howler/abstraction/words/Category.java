@@ -32,11 +32,7 @@ public abstract class Category extends WordBase {
   public Category(String normal, IRI key) {
     super(normal, key);
   }
-/*
-  public Category(IRI key) {
-    super(key);
-  }
-*/
+
   public WordType getWordType() {
     return WordType.CATEGORY;
   }

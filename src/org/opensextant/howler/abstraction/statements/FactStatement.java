@@ -1,6 +1,11 @@
 package org.opensextant.howler.abstraction.statements;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.opensextant.howler.abstraction.Statement;
+import org.opensextant.howler.abstraction.Vocabulary;
+import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.phrases.InstancePhrase;
 import org.opensextant.howler.abstraction.phrases.PredicatePhrase;
 import org.opensextant.howler.abstraction.phrases.SubjectObjectPhrase;
@@ -93,19 +98,36 @@ public class FactStatement<P extends Predicate, O extends Instance> extends Stat
     return (FactStatement<ObjectPredicate, ProperNoun>) this;
   }
 
-  public String toString(){
-    
-    if(this.isInstanceObject()){
-      return this.subject + " " + this.instancePredicatePhrase.getPredicateExpression() + " " + this.instancePredicatePhrase.getObject(); 
+  public String toString() {
+
+    if (this.isInstanceObject()) {
+      return this.subject + " " + this.instancePredicatePhrase.getPredicateExpression() + " "
+          + this.instancePredicatePhrase.getObject();
 
     }
-    if(this.isSubjectObjectObject()){
-      return this.subject + " " + this.subjectObjectPredicatePhrase.getPredicateExpression() + " " + this.subjectObjectPredicatePhrase.getObject(); 
+    if (this.isSubjectObjectObject()) {
+      return this.subject + " " + this.subjectObjectPredicatePhrase.getPredicateExpression() + " "
+          + this.subjectObjectPredicatePhrase.getObject();
+    }
+
+    return this.subject + "? ?";
+
+  }
+
+  @Override
+  public List<Word> getWords() {
+    List<Word> wrds = new ArrayList<Word>();
+    wrds.addAll(this.subject.getWords());
+    
+    if(this.isInstanceObject()){
+      wrds.addAll(this.getInstancePredicatePhrase().getWords());
     }
     
-    return this.subject + "? ?" ;
-    
+    if(this.isSubjectObjectObject()){
+      wrds.addAll(this.getSubjectObjectPredicatePhrase().getWords());
+    }
+    wrds.add(Vocabulary.PERIOD);
+    return wrds;
   }
-  
-  
+
 }

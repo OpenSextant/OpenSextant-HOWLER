@@ -24,7 +24,6 @@
  */
 package org.opensextant.howler.abstraction.words;
 
-import org.opensextant.howler.abstraction.Vocabulary;
 import org.opensextant.howler.abstraction.words.enumerated.Scope;
 import org.opensextant.howler.abstraction.words.enumerated.WordType;
 import org.semanticweb.owlapi.model.IRI;
@@ -35,14 +34,6 @@ public class PredicateParticle extends WordBase {
     super(normal, key);
   }
 
-  /*
-  public PredicateParticle(IRI key) {
-    super(key);
-  }
-*/
-  public PredicateParticle(String normal) {
-    super(normal, IRI.create(Vocabulary.BUILTIN_NS.toString(), normal));
-  }
 
   public Scope getScope() {
     return Scope.OBJECT;
