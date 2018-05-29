@@ -3,7 +3,7 @@ package org.opensextant.howler.text;
 import org.antlr.v4.runtime.CommonToken;
 
 @SuppressWarnings("serial")
-public class HOWLERToken extends CommonToken {
+public class HowlerToken extends CommonToken {
 
   // normalized form of text content
   private String normalForm = "";
@@ -12,20 +12,12 @@ public class HOWLERToken extends CommonToken {
   private String pos = "";
   private String tokenTypeName = "";
 
-  public HOWLERToken(String surfaceForm) {
+  public HowlerToken(String surfaceForm) {
     this(0, surfaceForm);
   }
 
-  public HOWLERToken(int type, String surfaceForm) {
+  public HowlerToken(int type, String surfaceForm) {
     super(type, surfaceForm);
-  }
-
-  public String getSurfaceForm() {
-    return this.getText();
-  }
-
-  public void setSurfaceForm(String surfaceForm) {
-    this.text = surfaceForm;
   }
 
   public String getNormalForm() {

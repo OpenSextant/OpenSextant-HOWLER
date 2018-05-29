@@ -1,5 +1,6 @@
 package org.opensextant.howler.owl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,16 +19,18 @@ import org.opensextant.howler.abstraction.phrases.PredicatePhrase;
 import org.opensextant.howler.abstraction.phrases.QuantifierExpression;
 import org.opensextant.howler.abstraction.phrases.SubjectObjectPhrase;
 import org.opensextant.howler.abstraction.phrases.WordPhrase;
-import org.opensextant.howler.abstraction.statements.WordSequence;
+import org.opensextant.howler.abstraction.statements.DeclarationStatement;
 import org.opensextant.howler.abstraction.statements.DescriptionStatement;
 import org.opensextant.howler.abstraction.statements.FactStatement;
+import org.opensextant.howler.abstraction.statements.PredicateCharacteristicStatement;
 import org.opensextant.howler.abstraction.statements.PredicateRelationStatement;
+import org.opensextant.howler.abstraction.statements.WordSequence;
 import org.opensextant.howler.abstraction.words.AnnotationPredicate;
-import org.opensextant.howler.abstraction.words.Category;
 import org.opensextant.howler.abstraction.words.DataFacetPredicate;
 import org.opensextant.howler.abstraction.words.DataPredicate;
 import org.opensextant.howler.abstraction.words.DataType;
 import org.opensextant.howler.abstraction.words.DataValue;
+import org.opensextant.howler.abstraction.words.Instance;
 import org.opensextant.howler.abstraction.words.Noun;
 import org.opensextant.howler.abstraction.words.ObjectPredicate;
 import org.opensextant.howler.abstraction.words.Predicate;
@@ -38,6 +41,9 @@ import org.opensextant.howler.abstraction.words.enumerated.DataFacet;
 import org.opensextant.howler.abstraction.words.enumerated.PredicateCharacteristic;
 import org.opensextant.howler.abstraction.words.enumerated.Quantifier;
 import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.formats.OWLXMLDocumentFormat;
+import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
+import org.semanticweb.owlapi.io.OWLXMLOntologyFormat;
 import org.semanticweb.owlapi.model.AddImport;
 import org.semanticweb.owlapi.model.AddOntologyAnnotation;
 import org.semanticweb.owlapi.model.ClassExpressionType;
@@ -47,7 +53,6 @@ import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
-import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
@@ -58,6 +63,7 @@ import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLDocumentFormat;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLFacetRestriction;
 import org.semanticweb.owlapi.model.OWLIndividual;
@@ -72,6 +78,7 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import org.semanticweb.owlapi.util.OWLAPIStreamUtils;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 import org.slf4j.Logger;
@@ -86,6 +93,9 @@ public class ToOWL {
   OWLOntologyManager owlOntologyManager;
   OWLDataFactory owlDataFactory;
 
+  // write predicate phrases with a single Proper as HasValue
+  private boolean useHasValue = false;
+
   public ToOWL() {
     // create OWLAPI manager and factory
     owlOntologyManager = OWLManager.createOWLOntologyManager();
@@ -94,6 +104,14 @@ public class ToOWL {
 
   public OWLOntology convert(Document doc) {
     return convert(doc, true);
+  }
+
+  public boolean isUseHasValue() {
+    return useHasValue;
+  }
+
+  public void setUseHasValue(boolean useHasValue) {
+    this.useHasValue = useHasValue;
   }
 
   public OWLOntology convert(Document doc, boolean clear) {
@@ -142,30 +160,7 @@ public class ToOWL {
       }
     }
 
-    // convert the vocabulary
-    for (Word wrd : doc.getVocabulary()) {
-      // convert the word to one or more axioms
-      for (OWLAxiom ax : convertVocabulary(wrd, declare(wrd))) {
-        try {
-          owlOntologyManager.addAxiom(onto, ax);
-        } catch (Exception e) {
-          LOGGER.error("Unable to add axiom to ontology: " + ax + ":" + e.getMessage());
-          continue;
-        }
-      }
-    }
-
     return onto;
-  }
-
-  // TODO rules for declarations
-  private boolean declare(Word wrd) {
-    // don't add built-ins
-    if (wrd.getKey().isReservedVocabulary()) {
-      return false;
-    }
-
-    return true;
   }
 
   public List<OWLAxiom> convert(List<? extends Statement> statements) {
@@ -228,12 +223,58 @@ public class ToOWL {
 
     }
 
+    if (statement instanceof PredicateCharacteristicStatement) {
+
+      if (statement.isObjectStatement()) {
+        return convertObject((PredicateCharacteristicStatement<ObjectPredicate>) statement);
+      }
+
+      if (statement.isDataStatement()) {
+        return convertData((PredicateCharacteristicStatement<DataPredicate>) statement);
+      }
+
+      if (statement.isAnnotationStatement()) {
+        return convertAnnotation((PredicateCharacteristicStatement<AnnotationPredicate>) statement);
+      }
+
+    }
+
+    if (statement instanceof DeclarationStatement) {
+      return convert((DeclarationStatement) statement);
+    }
+
     if (statement instanceof WordSequence) {
       return convert((WordSequence) statement);
     }
 
     LOGGER.error("Could not convert Statement:" + statement);
     return new ArrayList<OWLAxiom>();
+  }
+
+  public void saveOntology(OWLOntology onto, File out) {
+
+    OWLDocumentFormat format = this.owlOntologyManager.getOntologyFormat(onto);
+
+    // TODO allow other formats
+    OWLXMLDocumentFormat newFormat = new OWLXMLDocumentFormat();
+
+    // copy the prefixes if supported by format
+    if (format.isPrefixOWLDocumentFormat()) {
+      newFormat.copyPrefixesFrom(format.asPrefixOWLDocumentFormat());
+    }
+    try {
+      owlOntologyManager.saveOntology(onto, newFormat, IRI.create(out.toURI()));
+    } catch (OWLOntologyStorageException e) {
+      LOGGER.error("Cannot save ontology to file:" + e.getMessage());
+    }
+  }
+
+  public OWLOntologyManager getOwlOntologyManager() {
+    return owlOntologyManager;
+  }
+
+  public void setOwlOntologyManager(OWLOntologyManager owlOntologyManager) {
+    this.owlOntologyManager = owlOntologyManager;
   }
 
   private List<OWLAxiom> convertObject(DescriptionStatement<ObjectPredicate> statement) {
@@ -246,80 +287,95 @@ public class ToOWL {
     // DisjointUnion (is_only)
 
     SubjectObjectPhrase subjPhrase = statement.getSubject();
+    // TODO check quantifier for SOME, force to EVERY? some other form?
 
     PredicateExpression<ObjectPredicate> pExp = statement.getPredicatePhrase().getPredicateExpression();
 
     boolean neg = pExp.isNegative();
     PredicateType predType = pExp.getPredicate().getPredicateType();
-    ObjectPredicate pred = pExp.getPredicate();
 
     SubjectObjectPhrase objPhrase = statement.getPredicatePhrase().getObject();
+
+    // boolean exclusive = objPhrase.getQuantifier().getQuantifierType().equals(Quantifier.EITHER);
 
     OWLObjectPropertyExpression propExp = convertObject(pExp);
 
     OWLClassExpression subjCE = convertObject(subjPhrase);
     OWLClassExpression objCE = convertObject(objPhrase);
 
-    List<OWLClassExpression> ceList = new ArrayList<OWLClassExpression>();
-    ceList.add(subjCE);
-    ceList.add(objCE);
+    List<OWLClassExpression> cePair = new ArrayList<OWLClassExpression>();
+    cePair.add(subjCE);
+    cePair.add(objCE);
 
     List<OWLAnnotation> annos = createAnnotations(statement);
 
-    if (pred.isBuiltinPredicate()) {
-
-      if (predType == PredicateType.IS) {
-        if (neg) {
-          axs.add(owlDataFactory.getOWLDisjointClassesAxiom(ceList, annos));
-        } else {
-          axs.add(owlDataFactory.getOWLSubClassOfAxiom(subjCE, objCE, annos));
-        }
+    if (predType == PredicateType.IS) {
+      if (neg) {
+        axs.add(owlDataFactory.getOWLDisjointClassesAxiom(cePair, annos));
+      } else {
+        axs.add(owlDataFactory.getOWLSubClassOfAxiom(subjCE, objCE, annos));
       }
+      return axs;
+    }
 
-      if (predType == PredicateType.IS_ONLY) {
+    if (predType == PredicateType.SAME_AS) {
 
-        if (subjCE.isOWLClass() && objCE.getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
+      // disjoint union
+      if (subjCE.isOWLClass() && objPhrase instanceof PhraseSet) {
 
+        PhraseSet setPhrase = (PhraseSet) objPhrase;
+
+        if (setPhrase.isDisjoint() && setPhrase.getSetType().equals(BooleanSetType.OR)) {
           OWLObjectUnionOf union = (OWLObjectUnionOf) objCE;
           List<OWLClassExpression> ops = union.getOperandsAsList();
-          if (neg) {
-            axs.add(owlDataFactory.getOWLDisjointClassesAxiom(subjCE, objCE));
-          } else {
-            axs.add(owlDataFactory.getOWLDisjointUnionAxiom(subjCE.asOWLClass(), ops, annos));
-          }
-        } else {
-          LOGGER.warn(
-              "IS ONLY can only be used between a single class(not a classexpression) and a Union of expressions. Treated as IS:"
-                  + statement);
-          if (neg) {
-            axs.add(owlDataFactory.getOWLDisjointClassesAxiom(ceList, annos));
-          } else {
-            axs.add(owlDataFactory.getOWLSubClassOfAxiom(subjCE, objCE, annos));
-          }
-        }
-      }
 
-      if (predType == PredicateType.SAME_AS) {
+          axs.add(owlDataFactory.getOWLDisjointUnionAxiom(subjCE.asOWLClass(), ops, annos));
+          return axs;
+        }
+
         if (neg) {
-          axs.add(owlDataFactory.getOWLDisjointClassesAxiom(ceList, annos));
+          axs.add(owlDataFactory.getOWLDisjointClassesAxiom(cePair, annos));
         } else {
           axs.add(owlDataFactory.getOWLEquivalentClassesAxiom(subjCE, objCE, annos));
         }
+
+      } else {
+
+        if (neg) {
+          axs.add(owlDataFactory.getOWLDisjointClassesAxiom(cePair, annos));
+        } else {
+          axs.add(owlDataFactory.getOWLEquivalentClassesAxiom(subjCE, objCE, annos));
+        }
+        return axs;
       }
-    } else {// must be VERB type predicate
+
+    }
+
+    if (predType == PredicateType.VERB) {
+
+      if (statement.isDomain()) {
+
+        axs.add(owlDataFactory.getOWLObjectPropertyDomainAxiom(propExp, subjCE));
+        return axs;
+      }
+
+      if (statement.isRange()) {
+        axs.add(owlDataFactory.getOWLObjectPropertyRangeAxiom(propExp, objCE));
+        return axs;
+      }
 
       // convert ObjCE to thing that <propertyExpression> ObjCE
       if (neg) {
         axs.add(owlDataFactory.getOWLSubClassOfAxiom(subjCE,
             owlDataFactory.getOWLObjectSomeValuesFrom(propExp, objCE.getObjectComplementOf()), annos));
+        return axs;
       } else {
         axs.add(owlDataFactory.getOWLSubClassOfAxiom(subjCE, owlDataFactory.getOWLObjectSomeValuesFrom(propExp, objCE),
             annos));
-
+        return axs;
       }
 
     }
-
     return axs;
 
   }
@@ -330,62 +386,69 @@ public class ToOWL {
 
     List<OWLAxiom> axs = new ArrayList<OWLAxiom>();
 
-    SubjectObjectPhrase subjPhrase = statement.getSubject();
-    SubjectObjectPhrase objPhrase = statement.getPredicatePhrase().getObject();
     PredicateExpression<DataPredicate> pExp = statement.getPredicatePhrase().getPredicateExpression();
 
     boolean neg = pExp.isNegative();
     PredicateType predType = pExp.getPredicate().getPredicateType();
+    // TODO must be SAME_AS check
     DataPredicate pred = pExp.getPredicate();
 
-    // OWLDataPropertyExpression propExp = convertData(pExp);
+    OWLDataPropertyExpression propExp = convertData(pExp);
 
-    OWLDataRange objDR = convertData(objPhrase);
+    SubjectObjectPhrase subjPhrase = statement.getSubject();
+    // TODO check quantifier for SOME
+    SubjectObjectPhrase objPhrase = statement.getPredicatePhrase().getObject();
 
     List<OWLAnnotation> annos = createAnnotations(statement);
 
-    if (pred.isBuiltinPredicate()) {
+    if (statement.isDomain()) {
+      OWLClassExpression subjCE = convertObject(subjPhrase);
+      axs.add(owlDataFactory.getOWLDataPropertyDomainAxiom(propExp, subjCE));
+      return axs;
+    }
 
-      if (predType == PredicateType.IS) {
+    OWLDataRange objDR = convertData(objPhrase);
+
+    if (statement.isRange()) {
+      axs.add(owlDataFactory.getOWLDataPropertyRangeAxiom(propExp, objDR));
+      return axs;
+    }
+
+    if (predType == PredicateType.IS) {
+      LOGGER.error("Cannot translate IS Datatype statement" + statement);
+      return axs;
+    }
+
+    if (predType == PredicateType.SAME_AS) {
+
+      if (subjPhrase.isDataScope() && subjPhrase instanceof CategoryPhrase
+          && ((CategoryPhrase) subjPhrase).isSimple()) {
+        DataType head = ((CategoryPhrase<DataType>) subjPhrase).getHead();
+        OWLDatatype odt = convertWord(head);
         if (neg) {
-          // axs.add(owlDataFactory.getOWLDisjointClassesAxiom(subjDR, objDR));
+          axs.add(
+              owlDataFactory.getOWLDatatypeDefinitionAxiom(odt, owlDataFactory.getOWLDataComplementOf(objDR), annos));
         } else {
-          // axs.add(owlDataFactory.getOWLSubClassOfAxiom(subjDR, objDR));
+          axs.add(owlDataFactory.getOWLDatatypeDefinitionAxiom(odt, objDR, annos));
         }
+        return axs;
       }
+      LOGGER.error("Cannot translate SAME_AS Datatype statement" + statement);
 
-      if (predType == PredicateType.SAME_AS || predType == PredicateType.IS_ONLY) {
+      return axs;
+    }
 
-        if (predType == PredicateType.IS_ONLY) {
-          LOGGER.warn("Treating IS ONLY like SAME AS for Data Types" + statement);
-        }
+    // must be VERB type predicate
 
-        if (subjPhrase.isDataScope() && subjPhrase instanceof CategoryPhrase
-            && ((CategoryPhrase) subjPhrase).isSimple()) {
-          DataType head = ((CategoryPhrase<DataType>) subjPhrase).getHead();
-          OWLDatatype odt = convertWord(head);
-          if (neg) {
-            axs.add(
-                owlDataFactory.getOWLDatatypeDefinitionAxiom(odt, owlDataFactory.getOWLDataComplementOf(objDR), annos));
-          } else {
-            axs.add(owlDataFactory.getOWLDatatypeDefinitionAxiom(odt, objDR, annos));
-          }
-        }
-
+    if (subjPhrase instanceof CategoryPhrase) {
+      CategoryPhrase<?> subjCat = (CategoryPhrase<?>) subjPhrase;
+      if (subjCat.isSimple() && subjCat.getHead() instanceof DataType) {
+        OWLDatatype dt = convertWord((DataType) subjCat.getHead());
+        axs.add(owlDataFactory.getOWLDatatypeDefinitionAxiom(dt, objDR, annos));
+        return axs;
       }
-    } else {// must be VERB type predicate
-
-      if (subjPhrase instanceof CategoryPhrase) {
-        CategoryPhrase<?> subjCat = (CategoryPhrase<?>) subjPhrase;
-        if (subjCat.isSimple() && subjCat.getHead() instanceof DataType) {
-          OWLDatatype dt = convertWord((DataType) subjCat.getHead());
-          axs.add(owlDataFactory.getOWLDatatypeDefinitionAxiom(dt, objDR, annos));
-        }
-
-      } else {
-        LOGGER.error("Cannot translate complex Datatype statement" + statement);
-      }
-
+    } else {
+      LOGGER.error("Cannot translate complex Datatype statement" + statement);
     }
 
     return axs;
@@ -395,6 +458,7 @@ public class ToOWL {
   private List<OWLAxiom> convertAnnotation(DescriptionStatement<AnnotationPredicate> statement) {
 
     // AnnotationAssertion
+    // AnnotationDomain/Range
 
     List<OWLAxiom> axs = new ArrayList<OWLAxiom>();
 
@@ -404,53 +468,24 @@ public class ToOWL {
     // subject can be any single word except DataValue
     SubjectObjectPhrase subjPhrase = statement.getSubject();
 
-    PredicateExpression<AnnotationPredicate> predExp = statement.getPredicatePhrase().getPredicateExpression();
-
-    // object can be any single word
-    SubjectObjectPhrase objPhrase = statement.getPredicatePhrase().getObject();
-
-    List<OWLAnnotation> annos = createAnnotations(statement);
-
-    if (subjPhrase instanceof PhraseSet || objPhrase instanceof PhraseSet) {
-      LOGGER.error("Cannot annotate a set of things or with a set of things:" + statement);
-      return axs;
-    }
-
-    if (subjPhrase instanceof CategoryPhrase) {
-      if (!((CategoryPhrase<?>) subjPhrase).isSimple()) {
-        LOGGER.error("Cannot annotate a complex expression:" + statement);
-        return axs;
-      } else {
-        subjWord = ((CategoryPhrase<?>) subjPhrase).getHead();
-      }
-    }
-
-    if (subjPhrase instanceof InstancePhrase) {
-      subjWord = ((InstancePhrase<?>) subjPhrase).getHead();
-      if (subjWord instanceof DataValue) {
-        LOGGER.error("Cannot annotate a data value:" + statement);
-        return axs;
-      }
-    }
-
     if (subjPhrase instanceof WordPhrase) {
       subjWord = ((WordPhrase) subjPhrase).getHead();
     }
 
+    if (subjPhrase instanceof CategoryPhrase) {
+      CategoryPhrase catPhrase = (CategoryPhrase) subjPhrase;
+      if (catPhrase.isSimple()) {
+        subjWord = catPhrase.getHead();
+      }
+    }
+
     if (subjWord == null) {
-      LOGGER.error("Could not determine subject of annotation:" + statement);
+      LOGGER.error("Cannot annotate " + subjPhrase + " in " + statement);
       return axs;
     }
 
-    if (objPhrase instanceof CategoryPhrase) {
-      if (!((CategoryPhrase<?>) objPhrase).isSimple()) {
-        LOGGER.error("Cannot annotate with a complex expression:" + statement);
-        return axs;
-      } else {
-        objWord = ((CategoryPhrase<?>) objPhrase).getHead();
-      }
-
-    }
+    // object can be any single word
+    SubjectObjectPhrase objPhrase = statement.getPredicatePhrase().getObject();
 
     if (objPhrase instanceof InstancePhrase) {
       objWord = ((InstancePhrase<?>) objPhrase).getHead();
@@ -460,21 +495,36 @@ public class ToOWL {
       objWord = ((WordPhrase) objPhrase).getHead();
     }
 
+    if (objPhrase instanceof CategoryPhrase) {
+      objWord = ((CategoryPhrase) objPhrase).getHead();
+    }
+
     if (objWord == null) {
       LOGGER.error("Could not determine object of annotation:" + statement);
       return axs;
     }
 
+    PredicateExpression<AnnotationPredicate> predExp = statement.getPredicatePhrase().getPredicateExpression();
+    OWLAnnotationProperty prop = convertAnnotation(predExp);
+
+    if (statement.isDomain()) {
+      axs.add(owlDataFactory.getOWLAnnotationPropertyDomainAxiom(prop, convertWord(subjWord)));
+      return axs;
+    }
+
+    if (statement.isRange()) {
+      axs.add(owlDataFactory.getOWLAnnotationPropertyRangeAxiom(prop, convertWord(objWord)));
+      return axs;
+    }
+
+    List<OWLAnnotation> annos = createAnnotations(statement);
+
     OWLAnnotationSubject subject = convertAnnotationSubject(subjWord);
     OWLAnnotationValue object = convertAnnotationValue(objWord);
 
-    OWLAnnotationProperty prop = convertAnnotation(predExp);
+    axs.add(owlDataFactory.getOWLAnnotationAssertionAxiom(prop, subject, object, annos));
 
-    if (axs.isEmpty()) {
-      axs.add(owlDataFactory.getOWLAnnotationAssertionAxiom(prop, subject, object, annos));
-    }
     return axs;
-
   }
 
   private List<OWLAxiom> convertObject(FactStatement<ObjectPredicate, ProperNoun> statement) {
@@ -508,7 +558,7 @@ public class ToOWL {
           }
         }
 
-        if (predType == PredicateType.IS_ONLY || predType == PredicateType.SAME_AS) {
+        if (predType == PredicateType.SAME_AS) {
           OWLObjectOneOf subjOneOf = owlDataFactory.getOWLObjectOneOf(subject);
           if (neg) {
             List<OWLClassExpression> ceList = new ArrayList<OWLClassExpression>();
@@ -604,10 +654,6 @@ public class ToOWL {
           LOGGER.warn("Treating IS like SAME AS for individuals" + statement);
         }
 
-        if (predType == PredicateType.IS_ONLY) {
-          LOGGER.warn("Treating IS ONLY like SAME AS for individuals" + statement);
-        }
-
       }
 
       if (neg) {
@@ -690,68 +736,60 @@ public class ToOWL {
     // InverseObjectProperties
     List<OWLAxiom> axs = new ArrayList<OWLAxiom>();
 
-    boolean sub = false;
-    boolean disjoint = false;
-    boolean equiv = false;
-
-    PredicateExpression<?> relExp = statement.getRelation();
-    Predicate rel = relExp.getPredicate();
-
-    boolean inverse = relExp.isPassive();
-
-    List<OWLAnnotation> annos = createAnnotations(statement);
-
-    if (!rel.isBuiltinPredicate()) {
-      LOGGER.error("Cannot have arbitrary relation between properties. Assuming IS:" + statement);
-    }
-    boolean is = rel.getPredicateType() == PredicateType.IS || rel.getPredicateType() == PredicateType.IS_ONLY
-        || rel.getPredicateType() == PredicateType.VERB;
-
-    if (is) {
-      if (relExp.isNegative()) {
-        disjoint = true;
-      } else {
-        sub = true;
-      }
-
-    } else {// same as
-      if (relExp.isNegative()) {
-        disjoint = true;
-      } else {
-        equiv = true;
-      }
-
-    }
+    PredicateType rel = statement.getRelationType();
+    boolean negative = statement.isNegative();
+    boolean inverse = statement.isInverse();
 
     PredicateExpression<ObjectPredicate> subjPhrase = statement.getSubject();
     OWLObjectPropertyExpression subjExp = convertObject(subjPhrase);
     PredicateExpression<ObjectPredicate> objPhrase = statement.getObject();
     OWLObjectPropertyExpression objExp = convertObject(objPhrase);
 
-    if (sub) {
+    List<OWLAnnotation> annos = createAnnotations(statement);
+
+    if (rel.equals(PredicateType.VERB) || rel.equals(PredicateType.FACET)) {
+      LOGGER.error("Cannot have arbitrary relation between properties. Assuming IS:" + statement);
+      rel = PredicateType.IS;
+    }
+
+    if (rel.equals(PredicateType.IS)) {
+
       if (inverse) {
-        axs.add(owlDataFactory.getOWLSubObjectPropertyOfAxiom(objExp, subjExp, annos));
+        // TODO should this be interpreted as prop is inverse(prop)?
+        LOGGER.error("Cannot have inverse of a subtype relation. Ignoring Inverse:" + statement);
+      }
+
+      if (negative) {
+        // IS NOT
+        List<OWLObjectPropertyExpression> props = new ArrayList<OWLObjectPropertyExpression>();
+        props.add(subjExp);
+        props.add(objExp);
+        axs.add(owlDataFactory.getOWLDisjointObjectPropertiesAxiom(props, annos));
       } else {
+        // IS
         axs.add(owlDataFactory.getOWLSubObjectPropertyOfAxiom(subjExp, objExp, annos));
       }
     }
 
-    if (equiv) {
-      if (inverse) {
-        axs.add(owlDataFactory.getOWLInverseObjectPropertiesAxiom(subjExp, objExp, annos));
+    if (rel.equals(PredicateType.SAME_AS)) {
+      if (negative) {
+        // NOT SAME_AS
+        LOGGER.error("Interpreting NOT SAME_AS as disjoint properties:" + statement);
+        List<OWLObjectPropertyExpression> props = new ArrayList<OWLObjectPropertyExpression>();
+        props.add(subjExp);
+        props.add(objExp);
+        axs.add(owlDataFactory.getOWLDisjointObjectPropertiesAxiom(props, annos));
       } else {
-        axs.add(owlDataFactory.getOWLEquivalentObjectPropertiesAxiom(subjExp, objExp, annos));
+        if (inverse) {
+          // SAME_AS INVERSE
+          axs.add(owlDataFactory.getOWLInverseObjectPropertiesAxiom(subjExp, objExp, annos));
+        } else {
+          // SAME_AS
+          axs.add(owlDataFactory.getOWLEquivalentObjectPropertiesAxiom(subjExp, objExp, annos));
+        }
       }
-
     }
 
-    if (disjoint) {
-
-      List<OWLObjectPropertyExpression> props = new ArrayList<OWLObjectPropertyExpression>();
-      props.add(subjExp);
-      props.add(objExp);
-      axs.add(owlDataFactory.getOWLDisjointObjectPropertiesAxiom(props, annos));
-    }
     return axs;
   }
 
@@ -760,61 +798,59 @@ public class ToOWL {
     // EquivalentDataProperties
     // SubDataPropertyOf
     List<OWLAxiom> axs = new ArrayList<OWLAxiom>();
-
-    boolean sub = false;
-    boolean disjoint = false;
-    boolean equiv = false;
-
-    PredicateExpression<?> relExp = statement.getRelation();
-    Predicate rel = relExp.getPredicate();
-
-    boolean inverse = relExp.isPassive();
-    List<OWLAnnotation> annos = createAnnotations(statement);
-
-    if (!rel.isBuiltinPredicate()) {
-      LOGGER.error("Cannot have arbitrary relation between properties. Assuming IS:" + statement);
-    }
-    boolean is = rel.getPredicateType() == PredicateType.IS || rel.getPredicateType() == PredicateType.IS_ONLY
-        || rel.getPredicateType() == PredicateType.VERB;
-
-    if (is) {
-      if (relExp.isNegative()) {
-        disjoint = true;
-      } else {
-        sub = true;
-      }
-
-    } else {// same as
-      if (relExp.isNegative()) {
-        disjoint = true;
-      } else {
-        equiv = true;
-      }
-
-    }
+    PredicateType rel = statement.getRelationType();
+    boolean negative = statement.isNegative();
+    boolean inverse = statement.isInverse();
 
     PredicateExpression<DataPredicate> subjPhrase = statement.getSubject();
     OWLDataPropertyExpression subjExp = convertData(subjPhrase);
     PredicateExpression<DataPredicate> objPhrase = statement.getObject();
     OWLDataPropertyExpression objExp = convertData(objPhrase);
 
-    if (sub) {
+    List<OWLAnnotation> annos = createAnnotations(statement);
+
+    if (rel.equals(PredicateType.VERB) || rel.equals(PredicateType.FACET)) {
+      LOGGER.error("Cannot have arbitrary relation between properties. Assuming IS:" + statement);
+      rel = PredicateType.IS;
+    }
+
+    if (rel.equals(PredicateType.IS)) {
+
       if (inverse) {
-        axs.add(owlDataFactory.getOWLSubDataPropertyOfAxiom(objExp, subjExp, annos));
+        // TODO should this be interpreted as prop is inverse(prop)?
+        LOGGER.error("Cannot have inverse of a subtype relation. Ignoring Inverse:" + statement);
+      }
+
+      if (negative) {
+        // IS NOT
+        List<OWLDataPropertyExpression> props = new ArrayList<OWLDataPropertyExpression>();
+        props.add(subjExp);
+        props.add(objExp);
+        axs.add(owlDataFactory.getOWLDisjointDataPropertiesAxiom(props, annos));
       } else {
+        // IS
         axs.add(owlDataFactory.getOWLSubDataPropertyOfAxiom(subjExp, objExp, annos));
       }
     }
 
-    if (equiv) {
-      axs.add(owlDataFactory.getOWLEquivalentDataPropertiesAxiom(subjExp, objExp, annos));
-    }
-
-    if (disjoint) {
-      List<OWLDataPropertyExpression> props = new ArrayList<OWLDataPropertyExpression>();
-      props.add(subjExp);
-      props.add(objExp);
-      axs.add(owlDataFactory.getOWLDisjointDataPropertiesAxiom(props, annos));
+    if (rel.equals(PredicateType.SAME_AS)) {
+      if (negative) {
+        // NOT SAME_AS
+        LOGGER.error("Interpreting NOT SAME_AS as disjoint properties:" + statement);
+        List<OWLDataPropertyExpression> props = new ArrayList<OWLDataPropertyExpression>();
+        props.add(subjExp);
+        props.add(objExp);
+        axs.add(owlDataFactory.getOWLDisjointDataPropertiesAxiom(props, annos));
+      } else {
+        if (inverse) {
+          // SAME_AS INVERSE
+          LOGGER.error("No such thing as an inverse data property. Interpreting as Equivalent:" + statement);
+          axs.add(owlDataFactory.getOWLEquivalentDataPropertiesAxiom(subjExp, objExp, annos));
+        } else {
+          // SAME_AS
+          axs.add(owlDataFactory.getOWLEquivalentDataPropertiesAxiom(subjExp, objExp, annos));
+        }
+      }
     }
 
     return axs;
@@ -825,253 +861,143 @@ public class ToOWL {
     // SubAnnotationPropertyOf
     List<OWLAxiom> axs = new ArrayList<OWLAxiom>();
 
-    OWLAnnotationProperty subjExp = convertAnnotation(statement.getSubject());
-    OWLAnnotationProperty objExp = convertAnnotation(statement.getObject());
+    PredicateType rel = statement.getRelationType();
 
-    PredicateExpression<?> relExp = statement.getRelation();
-    Predicate rel = relExp.getPredicate();
-    PredicateType predType = rel.getPredicateType();
-    boolean inverse = relExp.isPassive();
+    if (statement.isInverse()) {
+      LOGGER.warn("Annotation property relations cannot be inverse.Ignoring:" + statement);
+    }
+
+    if (statement.isNegative()) {
+      LOGGER.warn("Annotation property relations cannot be negated.Ignoring:" + statement);
+    }
+
+    if (!rel.equals(PredicateType.IS)) {
+      LOGGER.warn("Annotation relations can only be subtype, assuming subtype" + statement);
+    }
+
+    PredicateExpression<AnnotationPredicate> subjPhrase = statement.getSubject();
+    OWLAnnotationProperty subjExp = convertAnnotation(subjPhrase);
+
+    PredicateExpression<AnnotationPredicate> objPhrase = statement.getObject();
+    OWLAnnotationProperty objExp = convertAnnotation(objPhrase);
+
     List<OWLAnnotation> annos = createAnnotations(statement);
 
-    if (predType != PredicateType.IS) {
-      LOGGER.error("Annotation properties can only be subproperties:" + statement);
-      if (rel.isBuiltinPredicate()) {
-        LOGGER.warn("Treating predicate " + predType + " as IS:" + statement);
-      } else {
-        LOGGER.error("Cannot have arbitrary relation between properties. Assuming IS:" + statement);
-      }
-    }
+    axs.add(owlDataFactory.getOWLSubAnnotationPropertyOfAxiom(subjExp, objExp, annos));
+    return axs;
+  }
 
-    if (relExp.isNegative()) {
-      LOGGER.error("Cannot have negated relation between properties. Ignoring ngative:" + statement);
-    }
+  private List<OWLAxiom> convertAnnotation(PredicateCharacteristicStatement<AnnotationPredicate> statement) {
+    LOGGER.warn("No such thing as a PredicateCharacteristic on an Annotation Predicate" + statement);
+    return new ArrayList<OWLAxiom>();
+  }
 
-    if (inverse) {
-      axs.add(owlDataFactory.getOWLSubAnnotationPropertyOfAxiom(objExp, subjExp, annos));
+  private List<OWLAxiom> convertData(PredicateCharacteristicStatement<DataPredicate> statement) {
+    List<OWLAxiom> axs = new ArrayList<OWLAxiom>();
+
+    OWLDataPropertyExpression propExp = convertData(statement.getSubject());
+    PredicateCharacteristic ch = statement.getCharacteristic();
+
+    if (ch.equals(PredicateCharacteristic.FUNCTIONAL)) {
+      axs.add(owlDataFactory.getOWLFunctionalDataPropertyAxiom(propExp));
     } else {
-      axs.add(owlDataFactory.getOWLSubAnnotationPropertyOfAxiom(subjExp, objExp, annos));
+      LOGGER.warn("Cannot have a " + ch + " property PredicateCharacteristic on a Data Predicate:" + statement);
     }
 
     return axs;
-
   }
 
-  private List<OWLAxiom> convertVocabulary(Word wrd, boolean declare) {
-
+  private List<OWLAxiom> convertObject(PredicateCharacteristicStatement<ObjectPredicate> statement) {
     List<OWLAxiom> axs = new ArrayList<OWLAxiom>();
 
+    OWLObjectPropertyExpression propExp = convertObject(statement.getSubject());
+    PredicateCharacteristic character = statement.getCharacteristic();
+
+    if (character == PredicateCharacteristic.FUNCTIONAL) {
+      axs.add(owlDataFactory.getOWLFunctionalObjectPropertyAxiom(propExp));
+    }
+
+    if (character == PredicateCharacteristic.SYMMETRIC) {
+      axs.add(owlDataFactory.getOWLSymmetricObjectPropertyAxiom(propExp));
+    }
+
+    if (character == PredicateCharacteristic.ASYMMETRIC) {
+      axs.add(owlDataFactory.getOWLAsymmetricObjectPropertyAxiom(propExp));
+    }
+
+    if (character == PredicateCharacteristic.REFLEXIVE) {
+      axs.add(owlDataFactory.getOWLReflexiveObjectPropertyAxiom(propExp));
+    }
+
+    if (character == PredicateCharacteristic.TRANSITIVE) {
+      axs.add(owlDataFactory.getOWLTransitiveObjectPropertyAxiom(propExp));
+    }
+
+    if (character == PredicateCharacteristic.INVERSE_FUNCTIONAL) {
+      axs.add(owlDataFactory.getOWLInverseFunctionalObjectPropertyAxiom(propExp));
+    }
+
+    if (character == PredicateCharacteristic.IRREFLEXIVE) {
+      axs.add(owlDataFactory.getOWLIrreflexiveObjectPropertyAxiom(propExp));
+    }
+
+    return axs;
+  }
+
+  private List<OWLAxiom> convert(DeclarationStatement statement) {
+    if (statement.isDerived()) {
+      return new ArrayList<OWLAxiom>();
+    }
+    return convertVocabulary(statement.getWord());
+  }
+
+  private List<OWLAxiom> convertVocabulary(Word wrd) {
+
+    List<OWLAxiom> axs = new ArrayList<OWLAxiom>();
+    OWLEntity ent = null;
     if (wrd instanceof Noun) {
-      OWLEntity ent = convertWord((Noun) wrd);
-      if (declare) {
-        axs.add(owlDataFactory.getOWLDeclarationAxiom(ent));
-      }
-      axs.addAll(addAnnotationAsserts(wrd, ent));
-      return axs;
+      ent = convertWord((Noun) wrd);
     }
 
     if (wrd instanceof DataType) {
-      OWLEntity ent = convertWord((DataType) wrd);
-      if (declare) {
-        axs.add(owlDataFactory.getOWLDeclarationAxiom(ent));
-      }
-      axs.addAll(addAnnotationAsserts(wrd, ent));
-      return axs;
+      ent = convertWord((DataType) wrd);
     }
 
     if (wrd instanceof ProperNoun) {
       OWLIndividual ind = convertWord((ProperNoun) wrd);
 
-      if (ind.isAnonymous()) {
-        // no declaration for anonymous
-        axs.addAll(addAnnotations(wrd, ind.asOWLAnonymousIndividual()));
+      if (ind.isNamed()) {
+        ent = ind.asOWLNamedIndividual();
       } else {
-        OWLEntity ent = ind.asOWLNamedIndividual();
-        if (declare) {
-          axs.add(owlDataFactory.getOWLDeclarationAxiom(ent));
-        }
-        axs.addAll(addAnnotationAsserts(wrd, ent));
+        LOGGER.warn("Can't declare an anonymous Individual:" + wrd);
+        return axs;
       }
-      return axs;
     }
 
     if (wrd instanceof ObjectPredicate) {
-      ObjectPredicate oPred = (ObjectPredicate) wrd;
-      OWLObjectProperty oProp = convertWord(oPred);
-      if (declare) {
-        axs.add(owlDataFactory.getOWLDeclarationAxiom(oProp));
-      }
-      axs.addAll(addAnnotationAsserts(wrd, oProp));
-
-      for (SubjectObjectPhrase domain : oPred.getDomain()) {
-        axs.add(owlDataFactory.getOWLObjectPropertyDomainAxiom(oProp, convertObject(domain)));
-      }
-
-      for (SubjectObjectPhrase range : oPred.getRange()) {
-        axs.add(owlDataFactory.getOWLObjectPropertyRangeAxiom(oProp, convertObject(range)));
-      }
-
-      for (PredicateCharacteristic character : oPred.getCharacteristics()) {
-
-        if (character == PredicateCharacteristic.FUNCTIONAL) {
-          axs.add(owlDataFactory.getOWLFunctionalObjectPropertyAxiom(oProp));
-          continue;
-        }
-
-        if (character == PredicateCharacteristic.SYMMETRIC) {
-          axs.add(owlDataFactory.getOWLSymmetricObjectPropertyAxiom(oProp));
-          continue;
-        }
-
-        if (character == PredicateCharacteristic.ASYMMETRIC) {
-          axs.add(owlDataFactory.getOWLAsymmetricObjectPropertyAxiom(oProp));
-          continue;
-        }
-
-        if (character == PredicateCharacteristic.REFLEXIVE) {
-          axs.add(owlDataFactory.getOWLReflexiveObjectPropertyAxiom(oProp));
-          continue;
-        }
-
-        if (character == PredicateCharacteristic.TRANSITIVE) {
-          axs.add(owlDataFactory.getOWLTransitiveObjectPropertyAxiom(oProp));
-          continue;
-        }
-
-        if (character == PredicateCharacteristic.INVERSE_FUNCTIONAL) {
-          axs.add(owlDataFactory.getOWLInverseFunctionalObjectPropertyAxiom(oProp));
-          continue;
-        }
-
-        if (character == PredicateCharacteristic.IRREFLEXIVE) {
-          axs.add(owlDataFactory.getOWLIrreflexiveObjectPropertyAxiom(oProp));
-          continue;
-        }
-
-        if (character == PredicateCharacteristic.FUNCTIONAL_OF_INVERSE) {
-          axs.add(owlDataFactory.getOWLFunctionalObjectPropertyAxiom(oProp.getInverseProperty()));
-          continue;
-        }
-
-        if (character == PredicateCharacteristic.SYMMETRIC_OF_INVERSE) {
-          axs.add(owlDataFactory.getOWLSymmetricObjectPropertyAxiom(oProp.getInverseProperty()));
-          continue;
-        }
-
-        if (character == PredicateCharacteristic.ASYMMETRIC_OF_INVERSE) {
-          axs.add(owlDataFactory.getOWLAsymmetricObjectPropertyAxiom(oProp.getInverseProperty()));
-          continue;
-        }
-
-        if (character == PredicateCharacteristic.REFLEXIVE_OF_INVERSE) {
-          axs.add(owlDataFactory.getOWLReflexiveObjectPropertyAxiom(oProp.getInverseProperty()));
-          continue;
-        }
-
-        if (character == PredicateCharacteristic.TRANSITIVE_OF_INVERSE) {
-          axs.add(owlDataFactory.getOWLTransitiveObjectPropertyAxiom(oProp.getInverseProperty()));
-          continue;
-        }
-
-        if (character == PredicateCharacteristic.INVERSE_FUNCTIONAL_OF_INVERSE) {
-          axs.add(owlDataFactory.getOWLInverseFunctionalObjectPropertyAxiom(oProp.getInverseProperty()));
-          continue;
-        }
-
-        if (character == PredicateCharacteristic.IRREFLEXIVE_OF_INVERSE) {
-          axs.add(owlDataFactory.getOWLIrreflexiveObjectPropertyAxiom(oProp.getInverseProperty()));
-          continue;
-        }
-
-      }
-      return axs;
-
+      ent = convertWord((ObjectPredicate) wrd);
     }
 
     if (wrd instanceof DataPredicate) {
-      DataPredicate dpred = (DataPredicate) wrd;
-      OWLDataProperty dProp = convertWord(dpred);
-      if (declare) {
-        axs.add(owlDataFactory.getOWLDeclarationAxiom(dProp));
-      }
-      axs.addAll(addAnnotationAsserts(wrd, dProp));
-
-      for (SubjectObjectPhrase domain : dpred.getDomain()) {
-        axs.add(owlDataFactory.getOWLDataPropertyDomainAxiom(dProp, convertObject(domain)));
-      }
-
-      for (SubjectObjectPhrase range : dpred.getRange()) {
-        axs.add(owlDataFactory.getOWLDataPropertyRangeAxiom(dProp, convertData(range)));
-      }
-
-      for (PredicateCharacteristic character : dpred.getCharacteristics()) {
-        if (character == PredicateCharacteristic.FUNCTIONAL) {
-          axs.add(owlDataFactory.getOWLFunctionalDataPropertyAxiom(dProp));
-        } else {
-          LOGGER.error("Data Property cannot be " + character + ":");
-        }
-      }
-      return axs;
+      ent = convertWord((DataPredicate) wrd);
     }
 
     if (wrd instanceof AnnotationPredicate) {
-      AnnotationPredicate apred = (AnnotationPredicate) wrd;
-      OWLAnnotationProperty aProp = convertWord(apred);
-      if (declare) {
-        axs.add(owlDataFactory.getOWLDeclarationAxiom(aProp));
-      }
-      axs.addAll(addAnnotationAsserts(wrd, aProp));
-
-      for (Word domain : apred.getDomain()) {
-        axs.add(owlDataFactory.getOWLAnnotationPropertyDomainAxiom(aProp, convertWord(domain)));
-      }
-
-      for (Word range : apred.getRange()) {
-        axs.add(owlDataFactory.getOWLAnnotationPropertyRangeAxiom(aProp, convertWord(range)));
-      }
-
-      for (PredicateCharacteristic character : apred.getCharacteristics()) {
-        LOGGER.error("Annotation Property cannot be " + character + ":");
-      }
-      return axs;
+      ent = convertWord((AnnotationPredicate) wrd);
     }
 
-    if (wrd instanceof Word) {
-      for (Footnote foot : wrd.getFootnotes()) {
-        OWLAnnotation an = convertAnnotation(foot);
-        axs.add(owlDataFactory.getOWLAnnotationAssertionAxiom(wrd.getKey(), an));
-      }
-      return axs;
+    if (ent != null) {
+      axs.add(owlDataFactory.getOWLDeclarationAxiom(ent));
+    } else {
+      LOGGER.warn("Couldn't translate Declaration Statement for:" + wrd);
     }
 
-    LOGGER.warn("Couldn't translate VocabularyStatement:");
     return axs;
 
-  }
-
-  private List<OWLAxiom> addAnnotations(Word wrd, OWLAnonymousIndividual ind) {
-    List<OWLAxiom> axs = new ArrayList<OWLAxiom>();
-    for (Footnote foot : wrd.getFootnotes()) {
-      OWLAnnotation an = convertAnnotation(foot);
-      axs.add(owlDataFactory.getOWLAnnotationAssertionAxiom(ind, an));
-    }
-    return axs;
-  }
-
-  private List<OWLAxiom> addAnnotationAsserts(Word wrd, OWLEntity ent) {
-    List<OWLAxiom> axs = new ArrayList<OWLAxiom>();
-    for (Footnote foot : wrd.getFootnotes()) {
-      OWLAnnotation an = convertAnnotation(foot);
-      axs.add(owlDataFactory.getOWLAnnotationAssertionAxiom(ent.getIRI(), an));
-    }
-    return axs;
   }
 
   private List<OWLAxiom> convert(WordSequence statement) {
-    LOGGER.error("Cannot convert a BadStatement to OWL" + statement);
-
-    // List<OWLAnnotation> annos = createAnnotations(statement);
-
+    LOGGER.error("Cannot convert a BadStatement to OWL:" + statement.getWords());
     return new ArrayList<OWLAxiom>();
   }
 
@@ -1099,11 +1025,11 @@ public class ToOWL {
         OWLLiteral lit = convertData((InstancePhrase<DataValue>) ph);
         if (ph.isNegative()) {
           OWLDataComplementOf negDoo = owlDataFactory.getOWLDataComplementOf(owlDataFactory.getOWLDataOneOf(lit));
-          LOGGER.info("Converted a Literal as a Negative DataOneOf:" + ph);
+          LOGGER.info("Converted a single Literal as a Negative DataOneOf:" + ph);
           return negDoo;
         } else {
           OWLDataOneOf doo = owlDataFactory.getOWLDataOneOf(lit);
-          LOGGER.info("Converted a Literal as a DataOneOf:" + ph);
+          LOGGER.info("Converted a single Literal as a DataOneOf:" + ph);
           return doo;
         }
 
@@ -1136,7 +1062,7 @@ public class ToOWL {
     DataType h = ph.getHead();
     OWLDatatype headDatatype = convertWord(h);
 
-    boolean neg = ph.getQuantifier().isNegative();
+    boolean neg = ph.getQuantifierExpression().isNegative();
 
     if (ph.isSimple()) {
       if (neg) {
@@ -1237,7 +1163,7 @@ public class ToOWL {
 
       } else {
         LOGGER.warn("Data OneOf contains non-instance(s), converted as Union:" + phSet);
-        booleanSetType = BooleanSetType.UNION;
+        booleanSetType = BooleanSetType.OR;
       }
     }
 
@@ -1248,7 +1174,8 @@ public class ToOWL {
       drList.add(dr);
     }
 
-    if (booleanSetType == BooleanSetType.INTERSECTION) {
+    if (booleanSetType == BooleanSetType.AND) {
+
       if (neg) {
         return owlDataFactory.getOWLDataComplementOf(owlDataFactory.getOWLDataIntersectionOf(drList));
       } else {
@@ -1257,7 +1184,7 @@ public class ToOWL {
 
     }
 
-    if (booleanSetType == BooleanSetType.UNION) {
+    if (booleanSetType == BooleanSetType.OR) {
       if (neg) {
         return owlDataFactory.getOWLDataComplementOf(owlDataFactory.getOWLDataUnionOf(drList));
       } else {
@@ -1279,19 +1206,34 @@ public class ToOWL {
   private OWLClassExpression convertData(PredicatePhrase<SubjectObjectPhrase, DataPredicate> ph) {
 
     OWLDataPropertyExpression propExp = convertData(ph.getPredicateExpression());
+
+    if (ph.getObject() instanceof InstancePhrase) {
+      InstancePhrase ip = (InstancePhrase) ph.getObject();
+      Instance h = ip.getHead();
+      if (h instanceof DataValue) {
+        OWLLiteral lit = convertWord((DataValue) h);
+        return owlDataFactory.getOWLDataHasValue(propExp, lit);
+      }
+
+    }
+
     OWLDataRange obj = convertData(ph.getObject());
 
-    QuantifierExpression quant = ph.getObject().getQuantifier();
+    QuantifierExpression quant = ph.getObject().getQuantifierExpression();
     Quantifier qType = quant.getQuantifierType();
     boolean neg = ph.getPredicateExpression().isNegative();
 
+    if(neg){
+      obj = owlDataFactory.getOWLDataComplementOf(obj);
+    }
+    
     OWLClassExpression finalCE = null;
 
     // NO = NOT EVERY
     if (qType == Quantifier.NO) {
       finalCE = owlDataFactory.getOWLDataAllValuesFrom(propExp, owlDataFactory.getOWLDataComplementOf(obj));
     }
-    
+
     if (qType == Quantifier.SOME) {
       finalCE = owlDataFactory.getOWLDataSomeValuesFrom(propExp, obj);
     }
@@ -1301,28 +1243,22 @@ public class ToOWL {
     }
 
     if (qType == Quantifier.ONLY) {
-      LOGGER.debug("Data Quantifier " + qType + " converted as EVERY");
-      finalCE = owlDataFactory.getOWLDataAllValuesFrom(propExp, obj);
-    }
-
-    if (qType == Quantifier.NULL) {
-      LOGGER.debug("Data Quantifier " + qType + " converted as EVERY");
       finalCE = owlDataFactory.getOWLDataAllValuesFrom(propExp, obj);
     }
 
     // "A" and "THE" should be used with instance(s)
-    if (qType == Quantifier.A || qType == Quantifier.THE) {
+    if (qType == Quantifier.A || qType == Quantifier.THE || qType == Quantifier.NULL) {
       if (obj.getDataRangeType() == DataRangeType.DATA_ONE_OF) {
         OWLDataOneOf dof = (OWLDataOneOf) obj;
         List<OWLLiteral> lits = OWLAPIStreamUtils.asList(dof.values());
-        if (lits.size() == 1) {
+        if (lits.size() == 1 && useHasValue) {
           finalCE = owlDataFactory.getOWLDataHasValue(propExp, lits.get(0));
         } else {
           finalCE = owlDataFactory.getOWLDataSomeValuesFrom(propExp, obj);
         }
       } else {
-        LOGGER.warn("Data Quantifier " + qType + " converted as SOME");
-        finalCE = owlDataFactory.getOWLDataSomeValuesFrom(propExp, obj);
+        LOGGER.trace("Data Quantifier " + qType + " converted as EVERY");
+        finalCE = owlDataFactory.getOWLDataAllValuesFrom(propExp, obj);
       }
 
     }
@@ -1350,11 +1286,11 @@ public class ToOWL {
     }
 
     if (finalCE != null) {
-      if (neg) {
-        return finalCE.getObjectComplementOf();
-      } else {
+     // if (neg) {
+     //   return finalCE.getObjectComplementOf();
+     // } else {
         return finalCE;
-      }
+    //  }
     }
 
     LOGGER.warn("Couldn't convert Data Phrase:" + ph);
@@ -1410,7 +1346,7 @@ public class ToOWL {
       return convertObject((SubjectObjectPhrase) ph);
     }
 
-    LOGGER.error("Could not convert Object Phrase:" + ph);
+    LOGGER.error("Could not convert Object Phrase. Not predicate or subject phrase:" + ph);
     return convertObject(new CategoryPhrase<Noun>(Vocabulary.THING));
   }
 
@@ -1439,7 +1375,7 @@ public class ToOWL {
       return convertObject((WordPhrase) ph);
     }
 
-    LOGGER.error("Could not convert Object Phrase:" + ph);
+    LOGGER.error("Could not convert Object Phrase. Not category, instance, set or word phrase:" + ph);
     return convertObject(new CategoryPhrase<Noun>(Vocabulary.THING));
   }
 
@@ -1547,7 +1483,7 @@ public class ToOWL {
 
       } else {
         LOGGER.warn("Object OneOf contains non-instance(s), converted as Union:" + phSet);
-        booleanSetType = BooleanSetType.UNION;
+        booleanSetType = BooleanSetType.OR;
       }
     }
 
@@ -1558,7 +1494,7 @@ public class ToOWL {
       ceList.add(ce);
     }
 
-    if (booleanSetType == BooleanSetType.INTERSECTION) {
+    if (booleanSetType == BooleanSetType.AND) {
       if (neg) {
         return owlDataFactory.getOWLObjectIntersectionOf(ceList).getObjectComplementOf();
       } else {
@@ -1566,7 +1502,7 @@ public class ToOWL {
       }
     }
 
-    if (booleanSetType == BooleanSetType.UNION) {
+    if (booleanSetType == BooleanSetType.OR) {
       if (neg) {
         return owlDataFactory.getOWLObjectUnionOf(ceList).getObjectComplementOf();
       } else {
@@ -1589,8 +1525,6 @@ public class ToOWL {
     boolean neg = ph.getPredicateExpression().isNegative();
 
     SubjectObjectPhrase objPhrase = ph.getObject();
-    // TODO check
-    // if(objPhrase.isNegative()){ neg = !neg;}
 
     OWLClassExpression finalCE = null;
 
@@ -1604,10 +1538,14 @@ public class ToOWL {
 
     OWLClassExpression obj = convertObject(objPhrase);
 
-    QuantifierExpression quant = ph.getObject().getQuantifier();
+    if(neg){
+      obj=obj.getObjectComplementOf();
+    }
+    
+    QuantifierExpression quant = ph.getObject().getQuantifierExpression();
     Quantifier qType = quant.getQuantifierType();
 
-    //NO = NOT every
+    // NO = NOT every
     if (qType == Quantifier.NO) {
       finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp, obj.getObjectComplementOf());
     }
@@ -1621,32 +1559,26 @@ public class ToOWL {
     }
 
     if (qType == Quantifier.ONLY) {
-      LOGGER.debug("Object Quantifier " + qType + " converted as EVERY");
       finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp, obj);
     }
 
-    if (qType == Quantifier.NULL) {
-      LOGGER.debug("Object Quantifier " + qType + " converted as EVERY");
-      finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp, obj);
-    }
-
-    if (qType == Quantifier.A || qType == Quantifier.THE) {
+    if (qType == Quantifier.A || qType == Quantifier.THE || qType == Quantifier.NULL) {
 
       // check for single individual
       if (obj.getClassExpressionType() == ClassExpressionType.OBJECT_ONE_OF) {
         OWLObjectOneOf oof = (OWLObjectOneOf) obj;
         List<OWLIndividual> inds = OWLAPIStreamUtils.asList(oof.individuals());
-        if (inds.size() == 1) {
+        if (inds.size() == 1 && useHasValue) {
           finalCE = owlDataFactory.getOWLObjectHasValue(propExp, inds.get(0));
         } else {
-          finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, obj);
+          finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, oof);
         }
       } else {
         if (builtin) {
           finalCE = obj;
         } else {
-          LOGGER.warn("Object Quantifier " + qType + " converted as SOME");
-          finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, obj);
+          LOGGER.trace("Object Quantifier " + qType + " converted as EVERY");
+          finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp, obj);
         }
       }
     }
@@ -1674,11 +1606,11 @@ public class ToOWL {
     }
 
     if (finalCE != null) {
-      if (neg) {
-        return finalCE.getObjectComplementOf();
-      } else {
+   //   if (neg) {
+        //return finalCE.getObjectComplementOf();
+   //   } else {
         return finalCE;
-      }
+    //  }
     }
 
     LOGGER.warn("Couldn't convert Object Phrase:" + ph);
@@ -1687,19 +1619,11 @@ public class ToOWL {
 
   private OWLObjectPropertyExpression convertObject(PredicateExpression<ObjectPredicate> exp) {
 
-    ObjectPredicate pred;
-    if (!exp.isObjectExpression()) {
-      LOGGER.warn(
-          "Tried to convert a " + exp.getScope() + " predicate as an Object predicate. Forcing to Object predicate");
-      Predicate notObjPred = exp.getPredicate();
-      pred = new ObjectPredicate(notObjPred.getNormalForm(), notObjPred.getKey());
-    } else {
-      pred = exp.getPredicate();
-    }
+    ObjectPredicate pred = exp.getPredicate();
 
     OWLObjectProperty prop = convertWord(pred);
 
-    if (exp.isPassive()) {
+    if (exp.isInverse()) {
       return owlDataFactory.getOWLObjectInverseOf(prop);
     } else {
       return prop;
@@ -1815,8 +1739,9 @@ public class ToOWL {
     String value = wrd.getNormalForm();
 
     if (!lang.isEmpty()) {
-      value = value + "@" + lang;
+      return owlDataFactory.getOWLLiteral(value, lang);
     }
+
     return owlDataFactory.getOWLLiteral(value, dt);
   }
 
@@ -1834,7 +1759,7 @@ public class ToOWL {
 
   private OWLFacet convertWord(DataFacet wrd) {
 
-    String logical = wrd.getLogicalform();
+    String logical = wrd.getLogicalForm();
     OWLFacet facet = OWLFacet.getFacetByShortName(logical);
 
     if (facet == null) {
@@ -1858,10 +1783,7 @@ public class ToOWL {
   private boolean isItself(SubjectObjectPhrase ph) {
 
     if (ph instanceof CategoryPhrase) {
-      Category catHead = ((CategoryPhrase) ph).getHead();
-      if (catHead.getKey().equals(Vocabulary.ITSELF_IRI)) {
-        return true;
-      }
+      return ((CategoryPhrase) ph).isItself();
     }
     return false;
   }

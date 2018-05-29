@@ -1,5 +1,8 @@
 package org.opensextant.howler.abstraction.phrases;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.words.AnnotationPredicate;
 
@@ -22,6 +25,13 @@ public class Footnote {
 
   public void setWord(Word word) {
     this.word = word;
+  }
+
+  public List<Word> getWords() {
+    List<Word> wrds = new ArrayList<Word>();
+    wrds.add(this.predicate);
+    wrds.add(this.word);
+    return wrds;
   }
 
   public String toString() {

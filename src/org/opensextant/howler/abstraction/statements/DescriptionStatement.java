@@ -15,6 +15,9 @@ import org.opensextant.howler.abstraction.words.Predicate;
 
 public class DescriptionStatement<P extends Predicate> extends Statement {
 
+  private boolean domain = false;
+  private boolean range = false;
+
   private SubjectObjectPhrase subject;
   private PredicatePhrase<SubjectObjectPhrase, P> predicatePhrase;
 
@@ -47,6 +50,22 @@ public class DescriptionStatement<P extends Predicate> extends Statement {
   @Override
   public boolean isAnnotationStatement() {
     return predicatePhrase.getPredicateExpression().getPredicate() instanceof AnnotationPredicate;
+  }
+
+  public boolean isDomain() {
+    return domain;
+  }
+
+  public void setDomain(boolean domain) {
+    this.domain = domain;
+  }
+
+  public boolean isRange() {
+    return range;
+  }
+
+  public void setRange(boolean range) {
+    this.range = range;
   }
 
   public DescriptionStatement<AnnotationPredicate> asAnnotationStatement() {

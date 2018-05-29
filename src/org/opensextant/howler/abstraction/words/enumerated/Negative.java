@@ -1,17 +1,13 @@
 package org.opensextant.howler.abstraction.words.enumerated;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.opensextant.howler.abstraction.Vocabulary;
 import org.opensextant.howler.abstraction.Word;
-import org.opensextant.howler.abstraction.phrases.Footnote;
 import org.opensextant.howler.utils.TextUtils;
 import org.semanticweb.owlapi.model.IRI;
 
 public enum Negative implements Word {
-	NO("no"),
   NOT("not"),
   NONE("none");
 
@@ -26,12 +22,10 @@ public enum Negative implements Word {
 	}
 
 	public static Negative getTypeByNormalName(String normal) {
-		return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(null);
+		return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(NOT);
 	}
 
-	public String getLogicalform() {
-		return logicalform;
-	}
+
 
 	@Override
 	public String getNormalForm() {
@@ -50,17 +44,17 @@ public enum Negative implements Word {
 
 	@Override
 	public String getLogicalForm() {
-		return logicalform;
+	  return this.name();
 	}
 
 	@Override
-	public String getNamespace() {
-		return Vocabulary.BUILTIN_NS.toString();
+	public IRI getNamespace() {
+		return Vocabulary.BUILTIN_NS;
 	}
 
 	@Override
 	public Scope getScope() {
-		return Scope.GENERAL;
+		return Scope.GENERAL_SCOPE;
 	}
 
 	@Override
@@ -68,19 +62,25 @@ public enum Negative implements Word {
 		return WordType.NEGATIVE;
 	}
 
-	@Override
-	public List<Footnote> getFootnotes() {
-		return new ArrayList<Footnote>();
-	}
+	
+  @Override
+  public String getPOS() {
+    return this.getClass().getSimpleName();
+  }
 
-	@Override
-	public void setFootnotes(List<Footnote> footnotes) {
-		// ignore
-	}
+  @Override
+  public void setPOS(String pos) {
+    //ignore
+  }
+  
+  @Override
+  public String getPrefix() {
+    return Vocabulary.BUILTIN_PREFIX;
+  }
 
-	@Override
-	public void addFootnote(Footnote footnote) {
-		// ignore
-	}
-
+  @Override
+  public void setPrefix(String prefix) {
+    //ignore
+  }
+  
 }

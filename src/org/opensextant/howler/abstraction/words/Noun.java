@@ -35,7 +35,7 @@ public abstract class Noun extends Category {
   }
 
   public Scope getScope() {
-    return Scope.OBJECT;
+    return Scope.OBJECT_SCOPE;
   }
   public WordType getWordType() {
     return WordType.NOUN;

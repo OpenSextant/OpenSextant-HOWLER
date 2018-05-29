@@ -40,7 +40,7 @@ public class ProperNoun extends Instance {
   }
 
   public Scope getScope() {
-    return Scope.OBJECT;
+    return Scope.OBJECT_SCOPE;
   }
 
   public WordType getWordType() {

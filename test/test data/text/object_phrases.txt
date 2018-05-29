@@ -37,6 +37,7 @@ a dog, Doug,Steve and Carol.
 a dog, Doug,Steve or Carol.
 a dog or either Doug,Steve and Carol.
 a dog or either Doug,Steve or Carol.
+either a dog, a rabbit or a moose.
 
 // predicate phrases
 owns a house.
@@ -49,9 +50,25 @@ owns 1 house.
 owns 7 houses.
 owns more than 3 houses.
 
+is.
+is the same as.
+is not.
+is not the same as.
+
+
+//tokenizer patterns
+the United Nations.
+the UnitedNations.
+the United_Nations.
+the United-Nations.
+
 // multipart predicate phrases
 works in an apartment.
 works near an airport.
+
+works for.
+works on.
+
 
 // noun based predicates
 is president of a club.

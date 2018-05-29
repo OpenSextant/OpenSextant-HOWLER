@@ -30,16 +30,16 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
+import org.opensextant.howler.abstraction.Document;
+import org.opensextant.howler.abstraction.Statement;
+import org.opensextant.howler.abstraction.Word;
+import org.opensextant.howler.abstraction.WordManager;
 import org.opensextant.howler.text.DocumentFactory;
 import org.opensextant.howler.text.DocumentFactory.FileStructure;
 import org.opensextant.howler.text.FromText;
-import org.opensextant.howler.text.HOWLERToken;
-import org.opensextant.howler.text.HowlerLexer;
-import org.opensextant.howler.text.grammar.HOWL;
-import org.opensextant.howler.text.grammar.HOWL.DocumentContext;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 public class ParserTest {
@@ -53,28 +53,23 @@ public class ParserTest {
 
     File posDir = new File(resourceDir, "pos");
 
-    List<String> textDirs = FileUtils.readLines(inputDirsFile);
+    List<String> textDirs = FileUtils.readLines(inputDirsFile, "UTF-8");
 
     File lexFile = new File(posDir, "lexicon.txt");
     File gramFile = new File(posDir, "ngrams.txt");
     File typeInfoFile = new File(resourceDir, "typeInfo.txt");
     File phraseFile = new File(resourceDir, "phrases.txt");
-    File wordTypeInfoFile = new File(resourceDir, "wordTypeInfo.txt");
-    
-    HowlerLexer lexer = new HowlerLexer(lexFile, gramFile, typeInfoFile, phraseFile);
-    FromText from = new FromText(lexFile, gramFile, typeInfoFile, phraseFile,wordTypeInfoFile);
-    
-    File typeReport = new File(resultsDir, "ParserTypeReport.txt");
-    from.generateTypeReport(lexFile, typeReport);
-    
-    File results = new File(resultsDir, "ParserSentences.txt");
 
+    // FromText from = new FromText(lexFile, gramFile, typeInfoFile, phraseFile);
+
+    File parseResults = new File(resultsDir, "ParserSentences.txt");
     File baseTextTestDir = inputDirsFile.getParentFile();
 
-    // write header to results
-    FileUtils.writeStringToFile(results,
-        "File\tGood Lex\tGood Parse\tOriginal text\tTree\tTokenized Text\tNormalized\tPOS and Phrase tags\tToken Types\tBAD Tokens\n",
-        false);
+    // File to the total set of Words seen
+    File wDump = new File(resultsDir, "wordDump.txt");
+
+    FileUtils.writeStringToFile(parseResults, "File\toriginal text\tParse Type\tParse\tNormalized text\tPOS sequence\n",
+        "UTF-8", false);
 
     for (String textDir : textDirs) {
 
@@ -93,6 +88,9 @@ public class ParserTest {
       for (File textFile : textFiles) {
         String txtFileName = textFile.getName();
 
+        WordManager.getWordManager().reset();
+        FromText from = new FromText(lexFile, gramFile, typeInfoFile, phraseFile);
+
         System.out.println();
         System.out.println("Loading Text File " + textFile);
         List<String> originalTextDocs = DocumentFactory.createTextDocument(textFile, fileMode);
@@ -105,78 +103,58 @@ public class ParserTest {
             continue;
           }
 
-          // run the text through the lexer
-          lexer.setInput(originalTextDoc);
-          // create a buffer of tokens pulled from the lexer
-          CommonTokenStream tokens = new CommonTokenStream(lexer);
+          // convert and convert the document
+          IRI docIRI = IRI.create("http://example.org", "testDocument");
 
-          // now parse the tokens
-          HOWL parser = new HOWL(tokens);
+          Document doc = from.convertText(originalTextDoc, docIRI, "testDocument");
 
-          // walk the parse tree
-          HowlWalker walker = new HowlWalker();
-          // grab the top of the tree and flatten tree to list of nodes (Strings)
-          DocumentContext doc = parser.document();
-          String tree = doc.toStringTree(parser);
-          List<String> nodes = Arrays.asList(tree.split("[\\(\\)]+"));
+          // get the statements
+          List<Statement> statements = doc.getStatements();
 
-          // get document as list of tokens
-          List<HOWLERToken> backtokens = walker.visit(doc);
+          // for each statement in converted document
+          for (Statement statement : statements) {
 
-          // create sequence of views of the token sequence
-          StringBuilder textBldr = new StringBuilder();
-          StringBuilder posBldr = new StringBuilder();
-          StringBuilder normBldr = new StringBuilder();
-          StringBuilder tokenTypeBldr = new StringBuilder();
-          StringBuilder badBldr = new StringBuilder();
+            // create sequence of views of the token sequence
+            StringBuilder posBldr = new StringBuilder();
+            StringBuilder normBldr = new StringBuilder();
 
-          for (HOWLERToken tok : backtokens) {
+            for (Word w : statement.getWords()) {
+              normBldr.append(w.getNormalForm());
+              normBldr.append(" ");
 
-            if (tok.getTokenTypeName().equals("BAD")) {
-              badBldr.append(tok.getText() + " (" + tok.getPos() + ")");
-              badBldr.append(" ");
+              posBldr.append(w.getPOS());
+              posBldr.append(" ");
             }
 
-            textBldr.append(tok.getText());
-            textBldr.append("|");
+            String normSeq = normBldr.toString().trim();
+            String posSeq = posBldr.toString().trim();
 
-            posBldr.append(tok.getPos());
-            posBldr.append(" ");
+            String tree = statement.getSource();
+            // flatten tree to list of nodes (Strings)
+            List<String> nodes = Arrays.asList(tree.split(" +"));
 
-            normBldr.append(tok.getNormalForm());
-            normBldr.append(" ");
+            // see how the statement was parsed
+            String parseType = nodes.get(0);
+            String typeString = "";
+            for (String t : nodes.subList(1, nodes.size())) {
+              typeString = typeString + " " + t;
+            }
 
-            tokenTypeBldr.append(tok.getTokenTypeName());
-            tokenTypeBldr.append(" ");
+            // write the details to results
+            String txt = "";
+            if (fileMode.equals(FileStructure.DOCUMENT_PER_LINE)) {
+              txt = originalTextDoc;
+            }
+
+            FileUtils.writeStringToFile(parseResults, txtFileName + "\t" + txt + "\t" + parseType + "\t"
+                + typeString.trim() + "\t" + normSeq + "\t" + posSeq + "\n", "UTF-8", true);
           }
-
-          String textSeq = textBldr.toString().trim();
-          String normSeq = normBldr.toString().trim();
-          String posSeq = posBldr.toString().trim();
-          String typeSeq = tokenTypeBldr.toString().trim();
-          String badSeq = badBldr.toString().trim();
-
-          // did the result contain a token mapped to the BAD type?
-          boolean goodLex = badSeq.isEmpty();
-
-          // see how the document was parsed
-          String parseType = "No Parse";
-          if (nodes.size() > 3) {
-            parseType = nodes.get(3).split(" +")[0];
-            nodes = nodes.subList(4, nodes.size() - 1);
-          }
-
-          // write the details to results
-          FileUtils.writeStringToFile(results, txtFileName + "\t" + goodLex + "\t" + parseType + "\t" + originalTextDoc
-              + "\t" + nodes + "\t" + textSeq + "\t" + normSeq + "\t" + posSeq + "\t" + typeSeq + "\t" + badSeq + "\n",
-              true);
 
         }
-
+       // WordManager.getWordManager().reset();
       }
     }
+    //WordManager.getWordManager().dumpWordsToFile(wDump);
   }
-
-  // }
 
 }

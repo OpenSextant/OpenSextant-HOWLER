@@ -27,7 +27,10 @@ package org.opensextant.howler.abstraction;
 import java.util.List;
 
 import org.opensextant.howler.abstraction.words.enumerated.Scope;
-
+/**
+ * Phrase represents a combination of Words, used for a specific purposes or role. Each of the subtypes of Phrase,
+ * defines the specific combination of Words
+ */
 public interface Phrase {
 
   public boolean isNegative();
@@ -45,6 +48,6 @@ public interface Phrase {
   public boolean isAnnotationScope();
 
   public boolean isConsistentScope();
-  
+
   public List<Word> getWords();
 }

@@ -1,20 +1,31 @@
 // Relations and characteristic between predicates
 
-[object] employs is associated with.
-[object] employs implies associated with.
-[object] to employs implies to associated with.
-[object] to employ implies to associated with.
-[object] to employ implies to be associated with.
-[object] employs is not owns.
-[object] employs is the inverse of works for.
-[object] employs is the inverse of is employed by.
-[object] runs from  is not runs toward.
-[object] runs from  is the inverse of runs toward.
-[object] runs from  is not moves toward.
-[object] runs from  is the inverse of moves toward.
-[object] to run from  is not  to run toward.
+The employs object predicate is the associated with.
+The employs object predicate is the not owns.
+The employs object predicate is the inverse of the works for.
+The employs object predicate is the inverse of the is employed by.
+The runs from object predicate is not the runs toward.
+The runs from object predicate is the inverse of the runs toward.
+The runs from object predicate is not the moves toward.
+The runs from object predicate is the inverse of the moves toward.
+The to run from object predicate is not the to run toward.
+
+The employs object predicate is the associated with object predicate.
+The employs object predicate is the inverse of the works for object predicate.
+The employs object predicate is the inverse of the is employed by object predicate.
+The runs from object predicate is the inverse of the runs toward object predicate.
+The runs from object predicate is the inverse of the moves toward object predicate.
 
 
-[object] employs is transitive.
-[object] employs is reflexive.
-[object] employs is symmetric.
+The employs object predicate is transitive.
+The employs object predicate is reflexive.
+The employs object predicate is symmetric.
+
+// predicate characteristics
+The weighs data predicate is functional.
+// should cause an warning/error
+the weighs data predicate is symmetric.
+
+
+// should cause a warning/error since annotation predicates don't have charateristics 
+The works for annotation predicate is symmetric.

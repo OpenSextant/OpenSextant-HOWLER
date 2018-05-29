@@ -1,2 +1,3 @@
 #Directories containg test text files.  Directories are relative to this file
-text
+#text
+../results/OWL2Text\byOnto

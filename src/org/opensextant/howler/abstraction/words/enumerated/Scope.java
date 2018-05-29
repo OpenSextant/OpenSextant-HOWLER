@@ -1,39 +1,30 @@
 package org.opensextant.howler.abstraction.words.enumerated;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.opensextant.howler.abstraction.Vocabulary;
 import org.opensextant.howler.abstraction.Word;
-import org.opensextant.howler.abstraction.phrases.Footnote;
 import org.opensextant.howler.utils.TextUtils;
 import org.semanticweb.owlapi.model.IRI;
 
 public enum Scope implements Word {
-  OBJECT("Object"),
-  DATA("Data"),
-  ANNOTATION("Annotation"),
-  GENERAL("General");
+  OBJECT_SCOPE("object"), DATA_SCOPE("data"), ANNOTATION_SCOPE("annotation"), GENERAL_SCOPE("general");
 
   private final String logicalform;
   private String normalform;
   private IRI key;
 
-	Scope(String normalForm) {
-		this.logicalform = TextUtils.createLogicalFromNormal(normalForm);
-		this.normalform = normalForm;
-		this.key = IRI.create(Vocabulary.BUILTIN_NS.toString(), logicalform);
-	}
+  Scope(String normalForm) {
+    this.logicalform = TextUtils.createLogicalFromNormal(normalForm);
+    this.normalform = normalForm;
+    this.key = IRI.create(Vocabulary.BUILTIN_NS.toString(), logicalform);
+  }
 
   public static Scope getTypeByNormalName(String normal) {
-    return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(null);
+    return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(OBJECT_SCOPE);
   }
-  
-  
-  public String getLogicalform() {
-    return logicalform;
-  }
+
+
 
   @Override
   public String getNormalForm() {
@@ -52,17 +43,17 @@ public enum Scope implements Word {
 
   @Override
   public String getLogicalForm() {
-    return logicalform;
+    return this.name();
   }
 
   @Override
-  public String getNamespace() {
-    return Vocabulary.BUILTIN_NS.toString();
+  public IRI getNamespace() {
+    return Vocabulary.BUILTIN_NS;
   }
 
   @Override
   public Scope getScope() {
-    return Scope.OBJECT;
+    return Scope.OBJECT_SCOPE;
   }
 
   @Override
@@ -71,18 +62,24 @@ public enum Scope implements Word {
   }
 
   @Override
-  public List<Footnote> getFootnotes() {
-    return new ArrayList<Footnote>();
+  public String getPOS() {
+    return this.getClass().getSimpleName();
   }
 
   @Override
-  public void setFootnotes(List<Footnote> footnotes) {
+  public void setPOS(String pos) {
     // ignore
   }
 
   @Override
-  public void addFootnote(Footnote footnote) {
-    // ignore
+  public String getPrefix() {
+    return Vocabulary.BUILTIN_PREFIX;
   }
 
+  @Override
+  public void setPrefix(String prefix) {
+    //ignore
+  }
+  
+  
 }

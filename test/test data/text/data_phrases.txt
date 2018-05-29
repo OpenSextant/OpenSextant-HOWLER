@@ -1,37 +1,37 @@
 // single phrases by themselves, should be parsed as "singlePhraseData"
 
 // data type expressions
-an integer.
-an integer or a decimal.
-a string or a decimal.
+an integer datatype.
+an integer datatype or a decimal datatype.
+a String datatype or a decimal datatype.
 
 either "What", "Where","Whom".
 either "What", "Where" or "Whom".
 either "What", "Where", "Whom" or 3.14.
 either "What", "Where", "Whom" or 3.14..
 
-an integer greater than 5.
-an integer greater than 5 .
-an integer greater than 5 and less than 10.
-an integer more than 5.
-an integer more than 5 .
-an integer more than 5 and less than 10.
+an integer datatype greater than 5.
+an integer datatype greater than 5 .
+an integer datatype greater than 5 and less than 10.
+an integer datatype more than 5.
+an integer datatype more than 5 .
+an integer datatype more than 5 and less than 10.
 
-a String that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}".
-a string that has a length of 256.
-a string that is a length of 256.
-a string a length of 256.
-a string that has a maximum length of 256.
-a decimal that has a total digits of 12.
-a decimal that has a fractional digits of 12.
-a string that has a language range of "en".
+a String datatype that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}".
+a String datatype that has a length of 256.
+a String datatype that is a length of 256.
+a String datatype a length of 256.
+a String datatype that has a maximum length of 256.
+a decimal datatype that has a total digits of 12.
+a decimal datatype that has a fractional digits of 12.
+a String datatype that has a language range of "en".
 
-is an integer greater than 5.
-is an integer greater than 5 and less than 10.
-is an integer more than 5.
-is an integer more than 5 and less than 10.
-is a string that has a length of 256.
-has a name of a string. 
+is an integer datatype greater than 5.
+is an integer datatype greater than 5 and less than 10.
+is an integer datatype more than 5.
+is an integer datatype more than 5 and less than 10.
+is a String datatype that has a length of 256.
+has a name of a String datatype. 
 
 // data predicates
 weighs 7.

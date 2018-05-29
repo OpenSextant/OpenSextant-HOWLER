@@ -52,8 +52,8 @@ Every missile is the same as a military rocket.
 Every missile is not the same as a military rocket.
 
 // ---------------- numerical quantities ---------------- 
-Every missile has 1 warhead.
 Every missile has 1 engine.
+Every missile has exactly 1 engine.
 Every missile has a engine.
 A missile has at least 1 engine.
 A missile has at most 3 warheads.
@@ -116,18 +116,10 @@ Bad is not good.
 A bad thing is not a good thing.
 
 // ------- (non)equivalence --------------
-A commercial pilot is any pilot that has a commercial license.  
-A commercial pilot is the same as pilot that has a commercial license.
+A commercial pilot is the same as a pilot that has a commercial license.
 A commercial pilot is defined as a pilot that has a commercial license.
-A private pilot is any a pilot that does not have a commercial license. 
 A private pilot is not a pilot that has a commercial license.  
-
-// ------ multiple clauses --------
-Every missile is a weapon and is a projectile.
-Every missile is a nuclear missile or is a conventional missile.
-Every missile has a nuclear warhead or has a conventional warhead.
-Every nuclear missile has a nuclear warhead and has a booster.
-
+A private pilot is a pilot that doesnt have a commercial license.  
 
 // ------- Mixed Object and Data objects ----
 Bob bought a house that costs 100.0.
@@ -145,8 +137,6 @@ Bob is the same as Roberto.
 
 // -------- verb predicates with Proper objects ----------------
 Bob works for Acme.
-Bob works for Acme Corp..
-Bob works for Acme Corp. .
 Acme employs Bob.
 Acme doesn't employ Bob.
 Acme doesnt employ Bob.
@@ -166,10 +156,12 @@ Bob was not taken up by London.
 Bob traveled to Kabul.
 Bob is married to Carol.
 Bob is employed by Acme.
-Bob has worked for Acme.
 Bob does work for Acme.
 Bob does not work for Acme.
 Kabul is located near Wazi.
+Bob works on a project.
+Bob works with Steve.
+
 
 // ---------------- noun based predicate phrases and Proper objects ---------------- 
 Bob is president of a club.
@@ -179,6 +171,11 @@ Bob owns a house in Japan.
 Carol is the wife of Bob.
 Carol is a friend of Steve.
 
+
+// ---------- Abbreviations --------
+Bob went to the UN.
+UN troops moved into Kabul.
+IBM is the same as International-Business-Machines.
 
 // ------------- verb predicate w/ noun objects ---------------
 Bob owns a house.
@@ -235,10 +232,28 @@ The Red_Skull_League is a criminal organization.
 The Red Skull League is a criminal organization.
 The Red Headed League is a criminal organization.
 
-// ---------------- multi-clause  ---------------- 
-The United Nations is an international organization and is headquartered in Switzerland.
+// Domain/range statements
+A thing manages only some person.
 
+// predicate characteristics
+The builds object property is functional.
+The builds object property is symmetric.
+The builds object property is asymmetric.
+The builds object property is reflexive.
+The builds object property is transitive.
+The builds object property is inverse functional.
+The builds object property is irreflexive.
 
+// declarations
+people is a noun.
+big is an adjective.
+commercial airliner is a noun.
+Bob is a proper noun.
+The United Nations is a proper noun.
+owns is a object verb.
+is owned by is an object verb.
+lives in is an object verb.
+ 
 // ----- mass nouns -----------
 Bob drinks water.
 Bob drinks the water.
@@ -248,16 +263,19 @@ Bob drinks water.
 Bob is drinking water.
 Bob is made of water.
 
+//predicate characteristic
+The works for object predicate is transitive.
+The works for object predicate is symmetric.
+The works for data predicate is symmetric.
+The works for annotation predicate is symmetric.
+
+
+
 // ------------  Some questionable ones ---------------------
 Bob saw a group of 7 trucks.
-Bob does go to Kabul.
 China does not build SS25s.
 China doesn't build SS25s.
 China does not build the SS25.
 China doesn't build the SS25.
-Bob is going to Kabul.
-Bob has gone to Kabul.
-Bob has not gone to Kabul.
-Bob was a pilot.
 Bob owns many dogs.
 

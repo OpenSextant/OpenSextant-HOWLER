@@ -10,8 +10,9 @@ public class GenericWord extends WordBase {
     super(normal, key);
   }
 
-  public GenericWord(String normal) {
+  public GenericWord(String normal, String pos) {
     super(normal, IRI.create(Vocabulary.BUILTIN_NS.toString(), normal));
+    this.setPOS(pos);
   }
 
   public WordType getWordType() {

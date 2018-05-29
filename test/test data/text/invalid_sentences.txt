@@ -11,20 +11,15 @@ Bob traveled to Kabul from London.
 Every ballistic missile is a missile and a missile is a weapon and a weapon is a machine and a machine is an tool.
 A group of 7 trucks were seen by Bob.
 A group of cows is called a herd.
-Bob likes most dogs.
 
 
-// is/same_as used with data
+
+// is/same_as used with data 
 Bob is 3.145.
 Carol is the same as "Wombats".
 
 
-// except (NYI)
-Bob works in every country except France.
-Bob marries nobody except Carol.
-Bob owns nothing except houses.
-
-// Modals not supported
+// Modals/tense/other qualifiers not supported
 Every missile must have 1 engine.
 Every missile must have a engine.
 Bob will be a pilot.
@@ -38,6 +33,15 @@ Bob can only marry Carol.
 Every missile can only have 1 engine.
 Bob can only marry Carol.
 The surfing will be good.
+Bob likes most dogs.
+// --- past/future tense -----
+Bob is going to Kabul.
+Bob has gone to Kabul.
+Bob has not gone to Kabul.
+Bob was a pilot.
+Bob does go to Kabul.
+Bob has worked for Acme.
+
 
 // --- There is (existential There) sentences not supported
 There is a missile.

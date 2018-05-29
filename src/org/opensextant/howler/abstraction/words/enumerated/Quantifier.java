@@ -1,13 +1,9 @@
 package org.opensextant.howler.abstraction.words.enumerated;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.opensextant.howler.abstraction.Vocabulary;
 import org.opensextant.howler.abstraction.Word;
-import org.opensextant.howler.abstraction.phrases.Footnote;
-import org.opensextant.howler.utils.TextUtils;
 import org.semanticweb.owlapi.model.IRI;
 
 public enum Quantifier implements Word {
@@ -15,87 +11,88 @@ public enum Quantifier implements Word {
   NO("no", false),
   EVERY("every", false),
   SOME("some", false),
-  ONLY("only", false),
+  ONLY("only a", false),
   A("a", false),
-  THE("the",false),
+  THE("the", false),
   EXACT("exactly", true),
   MORE_THAN("more than", true),
   LESS_THAN("less than",true),
   MORE_THAN_OR_EQUAL("at least", true),
   LESS_THAN_OR_EQUAL("at most", true);
 
-    private final String logicalform;
-    private boolean numeric;
-    private String normalform;
-    private IRI key;
+  private boolean numeric;
+  private String normalform;
+  private IRI key;
 
-    Quantifier(String normalForm, boolean numeric) {
-	this.logicalform = TextUtils.createLogicalFromNormal(normalForm);
-	this.normalform = normalForm;
-	this.numeric = numeric;
-	this.key = IRI.create(Vocabulary.BUILTIN_NS.toString(), logicalform);
-    }
+  Quantifier(String normalForm, boolean numeric) {
+    this.normalform = normalForm;
+    this.numeric = numeric;
+    this.key = IRI.create(Vocabulary.BUILTIN_NS.toString(), this.name());
+  }
 
-    public static Quantifier getTypeByNormalName(String normal) {
-	return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(null);
-    }
+  public static Quantifier getTypeByNormalName(String normal) {
+    return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(NULL);
+  }
 
-    public String getLogicalform() {
-	return logicalform;
-    }
+ 
 
-    public boolean isNumeric() {
-	return numeric;
-    }
+  public boolean isNumeric() {
+    return numeric;
+  }
 
-    @Override
-    public String getNormalForm() {
-	return normalform;
-    }
+  @Override
+  public String getNormalForm() {
+    return normalform;
+  }
 
-    @Override
-    public void setNormalForm(String normalForm) {
-	// ignore
-    }
+  @Override
+  public void setNormalForm(String normalForm) {
+    // ignore
+  }
 
-    @Override
-    public IRI getKey() {
-	return key;
-    }
+  @Override
+  public IRI getKey() {
+    return key;
+  }
 
-    @Override
-    public String getLogicalForm() {
-	return logicalform;
-    }
+  @Override
+  public String getLogicalForm() {
+    return this.name();
+  }
 
-    @Override
-    public String getNamespace() {
-	return Vocabulary.BUILTIN_NS.toString();
-    }
+  @Override
+  public IRI getNamespace() {
+    return Vocabulary.BUILTIN_NS;
+  }
 
-    @Override
-    public Scope getScope() {
-	return Scope.OBJECT;
-    }
+  @Override
+  public Scope getScope() {
+    return Scope.OBJECT_SCOPE;
+  }
 
-    @Override
-    public WordType getWordType() {
-	return WordType.QUANTIFIER;
-    }
+  @Override
+  public WordType getWordType() {
+    return WordType.QUANTIFIER;
+  }
 
-    @Override
-    public List<Footnote> getFootnotes() {
-	return new ArrayList<Footnote>();
-    }
+  @Override
+  public String getPOS() {
+    return this.getClass().getSimpleName();
+  }
 
-    @Override
-    public void setFootnotes(List<Footnote> footnotes) {
-	// ignore
-    }
+  @Override
+  public void setPOS(String pos) {
+    // ignore
+  }
 
-    @Override
-    public void addFootnote(Footnote footnote) {
-	// ignore
-    }
+  @Override
+  public String getPrefix() {
+    return Vocabulary.BUILTIN_PREFIX;
+  }
 
+  @Override
+  public void setPrefix(String prefix) {
+    //ignore
+  }
+  
 }

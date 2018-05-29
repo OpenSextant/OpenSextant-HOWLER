@@ -31,8 +31,8 @@ import org.semanticweb.owlapi.model.IRI;
 
 public class DataValue extends Instance {
 
-  private DataType datatype = Vocabulary.TEXT_TYPE;
-  private String language;
+  private DataType datatype = Vocabulary.STRING_TYPE;
+  private String language = "";
 
   public DataValue(String normal, IRI key) {
     super(normal, key);
@@ -41,7 +41,12 @@ public class DataValue extends Instance {
   public DataValue(String normal) {
     super(normal, IRI.create(Vocabulary.VALUE_NS.toString(), normal));
   }
- 
+
+  @Override
+  public String getNormalForm() {
+    return normalForm;
+  }
+
   public DataType getDatatype() {
     return datatype;
   }
@@ -59,7 +64,7 @@ public class DataValue extends Instance {
   }
 
   public Scope getScope() {
-    return Scope.DATA;
+    return Scope.DATA_SCOPE;
   }
 
   public WordType getWordType() {

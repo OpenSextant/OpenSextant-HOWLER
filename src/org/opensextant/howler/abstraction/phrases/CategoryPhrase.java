@@ -33,6 +33,7 @@ import org.opensextant.howler.abstraction.words.Category;
 import org.opensextant.howler.abstraction.words.DataType;
 import org.opensextant.howler.abstraction.words.Noun;
 import org.opensextant.howler.abstraction.words.Predicate;
+import org.opensextant.howler.abstraction.words.enumerated.RelativeMarker;
 import org.opensextant.howler.abstraction.words.enumerated.Scope;
 
 public class CategoryPhrase<T extends Category> extends SubjectObjectPhrase {
@@ -54,9 +55,10 @@ public class CategoryPhrase<T extends Category> extends SubjectObjectPhrase {
   }
 
   public boolean isSimple() {
-    return modifiers.isEmpty() && relativePhrases.isEmpty() && !this.getQuantifier().isNegative();
+    return modifiers.isEmpty() && relativePhrases.isEmpty() && !this.getQuantifierExpression().isNegative();
   }
 
+  // is pattern "thing that predicate object"
   public boolean isThingThatPhrase() {
     if ((head.getKey().equals(Vocabulary.THING_IRI) || head.getKey().equals(Vocabulary.DATATYPE_THING_IRI))
         && modifiers.isEmpty() && relativePhrases.size() == 1) {
@@ -64,6 +66,11 @@ public class CategoryPhrase<T extends Category> extends SubjectObjectPhrase {
     }
 
     return false;
+  }
+
+  // just "itself"
+  public boolean isItself() {
+    return head.getKey().equals(Vocabulary.ITSELF_IRI);
   }
 
   public List<T> getModifiers() {
@@ -124,7 +131,8 @@ public class CategoryPhrase<T extends Category> extends SubjectObjectPhrase {
   public String toString() {
     StringBuilder bldr = new StringBuilder();
 
-    bldr.append("(" + this.getScope() + ") ");
+    bldr.append(this.getQuantifierExpression());
+    bldr.append(" ");
 
     if (!this.modifiers.isEmpty()) {
       for (T w : this.modifiers) {
@@ -152,16 +160,16 @@ public class CategoryPhrase<T extends Category> extends SubjectObjectPhrase {
   @Override
   public List<Word> getWords() {
     List<Word> wrds = new ArrayList<Word>();
-    
-    wrds.addAll(this.getQuantifier().getWords());
-    
+
+    wrds.addAll(this.getQuantifierExpression().getWords());
+
     for (Word a : this.modifiers) {
       wrds.add(a);
     }
     wrds.add(head);
 
     for (PredicatePhrase<? extends SubjectObjectPhrase, ? extends Predicate> rel : this.relativePhrases) {
-      wrds.add(Vocabulary.THAT);
+      wrds.add(RelativeMarker.THAT);
       wrds.addAll(rel.getWords());
     }
 

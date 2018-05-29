@@ -23,4 +23,9 @@ public class TextFootnote {
     this.content = content;
   }
 
+  public String toString(){
+    return "Footnote:" +this.noteType.getNormalForm() + "->" + this.content.getNormalForm();
+  }
+  
+  
 }

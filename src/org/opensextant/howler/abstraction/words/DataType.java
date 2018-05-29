@@ -30,15 +30,30 @@ import org.semanticweb.owlapi.model.IRI;
 
 public class DataType extends Category {
 
-  public DataType(String normal, IRI key) {
+  public enum DataTypeCategory {
+    NUMERIC, TEXT, DATE, OTHER
+  }
+
+  private DataTypeCategory category = DataTypeCategory.OTHER;
+
+  public DataType(String normal, IRI key, DataTypeCategory cat) {
     super(normal, key);
+    this.category = cat;
   }
 
   public Scope getScope() {
-    return Scope.DATA;
+    return Scope.DATA_SCOPE;
   }
 
   public WordType getWordType() {
     return WordType.DATATYPE;
+  }
+
+  public DataTypeCategory getCategory() {
+    return category;
+  }
+
+  public void setCategory(DataTypeCategory category) {
+    this.category = category;
   }
 }

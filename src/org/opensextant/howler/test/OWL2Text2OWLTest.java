@@ -35,6 +35,8 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.opensextant.howler.abstraction.WordManager;
 import org.opensextant.howler.owl.FromOWL;
 import org.opensextant.howler.owl.ToOWL;
+import org.opensextant.howler.text.FromText;
+import org.opensextant.howler.text.ToText;
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -44,34 +46,40 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.RemoveAxiom;
-import org.semanticweb.owlapi.util.AutoIRIMapper;
 import org.semanticweb.owlapi.util.OWLAPIStreamUtils;
 
 /**
  * The Class OWLTest does a round trip from OWL to Abstraction back to OWL and compares the original to converted.
  */
-public class OWLTest {
+public class OWL2Text2OWLTest {
+
   public static void main(String[] args) throws IOException, OWLOntologyCreationException {
 
     File inputDirsFile = new File(args[0]);
     File resultsDir = new File(args[1]);
     boolean ignoreBadImports = Boolean.valueOf(args[2]);
+    File resourceDir = new File(args[3]);
+
+    File posDir = new File(resourceDir, "pos");
+
+    File lexFile = new File(posDir, "lexicon.txt");
+    File gramFile = new File(posDir, "ngrams.txt");
+    File typeInfoFile = new File(resourceDir, "typeInfo.txt");
+    File phraseFile = new File(resourceDir, "phrases.txt");
 
     // the to and from converters
-    FromOWL fromOWL = new FromOWL(ignoreBadImports);
     ToOWL toOWL = new ToOWL();
-    // use same manager for both to and from
-    toOWL.setOwlOntologyManager(fromOWL.getOntologyManager());
+    FromOWL fromOWL = new FromOWL(ignoreBadImports);
 
-    // expand n-ary axioms including all pairs
-    fromOWL.setMaxPairs(-1);
-    // rewrite Domain/Ranges to subclass axioms?
-    fromOWL.setRewriteDomainRanges(false);
-
-    // rewrite all axioms as subclass axioms?
     fromOWL.setRewriteAllAsSubclass(false);
+    fromOWL.setMaxPairs(-1);
+    fromOWL.setRewriteDomainRanges(false);
+    fromOWL.setFlattenSingleSet(false);
+    fromOWL.setNegNormal(false);
 
-    toOWL.setUseHasValue(true);
+    ToText toText = new ToText();
+    FromText fromText = new FromText(lexFile, gramFile, typeInfoFile, phraseFile);
+
     List<String> ontoDirs = FileUtils.readLines(inputDirsFile, "UTF-8");
 
     // create and write header to Summary file
@@ -81,8 +89,10 @@ public class OWLTest {
 
     File baseOntoTestDir = inputDirsFile.getParentFile();
     // File to the total set of Words seen
-    File wDump = new File(resultsDir, "wordDump.txt");
 
+    File totalResults = new File(resultsDir, "total_AxiomCompare.txt");
+
+    FileUtils.writeStringToFile(totalResults, "Ontology Name\tStatus\tAxiom Type\tAxiom" + "\n", "UTF-8", false);
     for (String ontoDir : ontoDirs) {
 
       // skip comments
@@ -98,27 +108,24 @@ public class OWLTest {
       File[] ontos = inputDir.listFiles(filter);
 
       File results = new File(resultsDir, inputDir.getName() + "_AxiomCompare.txt");
-
+      File wDump = new File(resultsDir, inputDir.getName() + "_wordDump.txt");
       // write header to result files
       FileUtils.writeStringToFile(results, "Ontology Name\tStatus\tAxiom Type\tAxiom" + "\n", "UTF-8", false);
-
       for (File ontoFile : ontos) {
         String ontoName = ontoFile.getName();
 
+        
+
         System.out.println();
         System.out.println("Loading Ontology\t" + ontoFile);
-        AutoIRIMapper mapper = new AutoIRIMapper(ontoFile.getParentFile(), true);
-        fromOWL.getOntologyManager().getIRIMappers().add(mapper);
-        OWLOntology originalOnto = fromOWL.getOntologyManager().loadOntologyFromOntologyDocument(ontoFile);
+        OWLOntology originalOnto = fromOWL.loadOWL(ontoFile);
+
         // expand the nary axioms to pairwise (which is what the
         // conversion does)
         expandNary(originalOnto);
+        // convert ontology to text and back to ontology
+        OWLOntology backOnto = toOWL.convert(fromText.convertText(toText.convert(fromOWL.convertOWL(originalOnto))));
         OWLOntologyID origID = originalOnto.getOntologyID();
-
-        // convert ontology to abstraction and back to ontology
-        OWLOntology backOnto = toOWL.convert(fromOWL.convertOWL(originalOnto));
-
-
 
         int axiomErrorsMissing = 0;
         int axiomErrorsExtra = 0;
@@ -134,9 +141,14 @@ public class OWLTest {
               axiomErrorsNYI++;
               FileUtils.writeStringToFile(results,
                   ontoName + "\t" + "NYI" + "\t" + originalAx.getAxiomType() + "\t" + originalAx + "\n", "UTF-8", true);
+              FileUtils.writeStringToFile(totalResults,
+                  ontoName + "\t" + "NYI" + "\t" + originalAx.getAxiomType() + "\t" + originalAx + "\n", "UTF-8", true);
             } else {
               axiomErrorsMissing++;
               FileUtils.writeStringToFile(results,
+                  ontoName + "\t" + "Missing" + "\t" + originalAx.getAxiomType() + "\t" + originalAx + "\n", "UTF-8",
+                  true);
+              FileUtils.writeStringToFile(totalResults,
                   ontoName + "\t" + "Missing" + "\t" + originalAx.getAxiomType() + "\t" + originalAx + "\n", "UTF-8",
                   true);
             }
@@ -150,6 +162,8 @@ public class OWLTest {
             axiomErrorsExtra++;
             FileUtils.writeStringToFile(results,
                 ontoName + "\t" + "Extra" + "\t" + backAx.getAxiomType() + "\t" + backAx + "\n", "UTF-8", true);
+            FileUtils.writeStringToFile(totalResults,
+                ontoName + "\t" + "Extra" + "\t" + backAx.getAxiomType() + "\t" + backAx + "\n", "UTF-8", true);
           }
         }
 
@@ -160,9 +174,11 @@ public class OWLTest {
                     + "\t" + axiomErrorsMissing + "\t" + axiomErrorsExtra + "\t" + axiomErrorsNYI + "\n",
                 "UTF-8", true);
       }
+      // dump the vocabulary from the WordManager
+      WordManager.getWordManager().dumpWordsToFile(wDump);
+      WordManager.getWordManager().reset();
     }
-    // dump the vocabulary from the WordManager
-    WordManager.getWordManager().dumpWordsToFile(wDump);
+
   }
 
   // catch the axioms that are not yet implmeneted by the converters

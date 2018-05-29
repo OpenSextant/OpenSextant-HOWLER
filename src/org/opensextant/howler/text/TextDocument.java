@@ -1,10 +1,13 @@
 package org.opensextant.howler.text;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.opensextant.howler.abstraction.Vocabulary;
 import org.opensextant.howler.abstraction.Word;
+import org.opensextant.howler.text.Sentence.SentenceType;
 import org.semanticweb.owlapi.model.IRI;
 
 public class TextDocument {
@@ -15,7 +18,7 @@ public class TextDocument {
 
   private List<Word> words = new ArrayList<Word>();
   private List<Sentence> sentences = new ArrayList<Sentence>();
-  private List<Word> vocabulary = new ArrayList<Word>();
+  private Set<Word> vocabulary = new HashSet<Word>();
   private List<TextFootnote> textFootnotes = new ArrayList<TextFootnote>();
 
   public String getTitle() {
@@ -66,11 +69,11 @@ public class TextDocument {
     this.sentences.add(sentence);
   }
 
-  public List<Word> getVocabulary() {
+  public Set<Word> getVocabulary() {
     return vocabulary;
   }
 
-  public void setVocabulary(List<Word> vocabulary) {
+  public void setVocabulary(Set<Word> vocabulary) {
     this.vocabulary = vocabulary;
   }
 
@@ -91,7 +94,23 @@ public class TextDocument {
   }
 
   public String toString() {
-    return title + ":" + sentences;
+    StringBuilder bldr = new StringBuilder();
+
+    for (Sentence s : this.sentences) {
+      if (s.getSentenceType().equals(SentenceType.DECLARATION)) {
+        bldr.append(s.toString());
+        bldr.append("\n");
+      }
+    }
+
+    for (Sentence s : this.sentences) {
+      if (!s.getSentenceType().equals(SentenceType.DECLARATION)) {
+        bldr.append(s.toString());
+        bldr.append("\n");
+      }
+    }
+
+    return bldr.toString();
   }
 
 }

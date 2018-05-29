@@ -1,4 +1,6 @@
-//Annotation sentences shoudl all be parsed as "annotationStatement"
-[annotation] person comment "includes fictional people too".
-[annotation] person weighs 3.1415.
-[annotation] puppet resembles people. 
+//Annotation sentences should all be parsed as "annotationStatement"
+* person : comment : "includes fictional people too".
+* person : weighs : 3.1415.
+* puppet : resembles : dog. 
+* puppet : resembles : people. 
+* person : defined in : person\.html. 

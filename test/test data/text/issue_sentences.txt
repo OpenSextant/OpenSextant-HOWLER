@@ -1,40 +1,87 @@
 //// all parsed to "catchAll" or "catchSet" or "badSentence" or "NoParse". includes not yet implemented patterns
 
+
+
 Bob weighs 34.56 or -35.67 or 17 or +56.00.
 Every missile has at least one warhead.
 Every missile has at most five warheads.
+// rewrite possessives
 Russia's government builds misiles.
+A government of Russia builds missiles.
 // but = AND nothing/body but => no thing AND 
 Bob marries nobody but Carol.
 Bob owns nothing but houses.
 Bob is in first place.
 // Dashes
 Carol is a match-maker.
+Bob lives in a dangerous-nice-expensive house.
+Bob works for a London-based company that does big-business.
 A SS25 is a big dangerous Soviet-era mobile intercontinental ballistic missile.
 Bob-Brown is a pilot.
 The United-Nations is an international organization.
 
-// Misc (bad POS tags?)
+// ----  trailing period Special tokenizer rule for abbrevs? ---------
+Bob works for Acme Corp. 
+Bob works for Acme Corp..
+Bob works for Acme Corp. .
+Bob works for Acme Corp.
+
+// SOME in Subjects
+Some people are pilots.
+Some people live in houses.
+
+// embedded/escaped quotes
+Bob says "embedded quote " here ".
+Bob says "another embedded quote" here".
+Bob says "even multiple" embedded quotes"  here".
+Bob says "odd multiple" embedded quotes  here".
+
+// alternate same-as
+A private pilot is any pilot that does not have a commercial license. 
+A commercial pilot is any pilot that has a commercial license.  
+
+// sort of domain/range combined
+Only people buy houses.
+Only people and companies buy houses.
+Only things are bought by people. 
+Only an aircraft that are owned by airlines operate from commercial airports.
+
+// ---- NYI ------
+Bob doesn't say "Life is a box of chocolates" but says "Life is a cheeburger".
+Carol does "The Watusi" and sings "The Twist".
+
+// except (NYI)
+Bob works in every country except France.
+Bob marries nobody except Carol.
+Bob owns nothing except houses.
+
+
+// ------ NYI multiple clauses --------
+Every missile is a weapon and is a projectile.
+Every missile is a nuclear missile or is a conventional missile.
+Every missile has a nuclear warhead or has a conventional warhead.
+Every nuclear missile has a nuclear warhead and has a booster.
+The United Nations is an international organization and is headquartered in Switzerland.
+
+// other types of predicate expressions
 A pizza is only available as small, medium or large.
-lives in an apartment.
-lives near an airport.
-lives near Dulles.
-like themselves.
 
 // either-or with nouns (not propers) and clauses (XOR semantics?)
 Every missile is either a nuclear missile or is a conventional missile.
 Every missile is either a nuclear missile or a conventional missile.
 Every quality is either small or medium or large.
 Every missile is either a SA1 or a SA6 or a SA25.
-either a dog, a rabbit or a moose.
+
 
 
 // predicate expression of IS adjective (no particle)
 Bob owns a house that is worth 100.0.
 
+// passive vs particle confusion
+Bob works by the airport.
 
-// ---------- Special tokenizer rule for abbrevs? ---------
-Bob works for Acme Corp.
+
+
 
 //------- numbers as word -----------
 Every missile has one warhead.
@@ -57,4 +104,9 @@ A pizza is only available in small, medium or large.
 A pizza only has a size of small, medium or large.
 
 
-
+// sentence, periods, url and quote issues
+Germany owns http://example.com/germany.
+France owns http://example.com/france.html.
+Bob has opened stuff.html.
+Bob owns a house. Bob says "Hurray".
+Bob owns a car

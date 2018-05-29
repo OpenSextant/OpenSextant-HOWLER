@@ -27896,7 +27896,7 @@ liver NN 16
 liveried JJ 1
 livers NNS 1
 livery NN 5
-lives NNS 51 VBZ 30
+lives NNS 49 VBZ 50
 livestock NN 19
 livid JJ 1
 living VBG 170 NN 24

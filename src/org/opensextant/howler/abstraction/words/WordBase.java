@@ -24,11 +24,7 @@
  */
 package org.opensextant.howler.abstraction.words;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.opensextant.howler.abstraction.Word;
-import org.opensextant.howler.abstraction.phrases.Footnote;
 import org.opensextant.howler.abstraction.words.enumerated.Scope;
 import org.opensextant.howler.abstraction.words.enumerated.WordType;
 import org.opensextant.howler.utils.TextUtils;
@@ -37,8 +33,9 @@ import org.semanticweb.owlapi.model.IRI;
 public abstract class WordBase implements Word {
 
   protected String normalForm;
+  private String pos = "";
   private IRI key;
-  private List<Footnote> footnotes = new ArrayList<Footnote>();
+  private String prefix = "";
 
   public WordBase(String normal, IRI key) {
     this.normalForm = normal;
@@ -56,43 +53,48 @@ public abstract class WordBase implements Word {
   }
 
   @Override
+  public String getPOS() {
+    return pos;
+  }
+
+  @Override
+  public void setPOS(String pos) {
+    this.pos = pos;
+  }
+
+  @Override
   public IRI getKey() {
     return key;
   }
 
   @Override
-  public String getLogicalForm() {
-    return TextUtils.getLogicalForm(this.key);
+  public String getPrefix() {
+    return prefix;
   }
 
   @Override
-  public String getNamespace() {
+  public void setPrefix(String prefix) {
+    this.prefix = prefix;
+  }
+
+  @Override
+  public String getLogicalForm() {
+    return TextUtils.getLocalName(this.key);
+  }
+
+  @Override
+  public IRI getNamespace() {
     return TextUtils.getNamespace(this.key);
   }
 
   @Override
   public Scope getScope() {
-    return Scope.ANNOTATION;
+    return Scope.ANNOTATION_SCOPE;
   }
 
   @Override
   public WordType getWordType() {
     return WordType.GENERIC_WORD;
-  }
-
-  @Override
-  public List<Footnote> getFootnotes() {
-    return footnotes;
-  }
-
-  @Override
-  public void setFootnotes(List<Footnote> footnotes) {
-    this.footnotes = footnotes;
-  }
-
-  @Override
-  public void addFootnote(Footnote footnote) {
-    this.footnotes.add(footnote);
   }
 
   public String toString() {

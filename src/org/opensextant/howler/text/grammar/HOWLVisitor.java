@@ -25,29 +25,11 @@ public interface HOWLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(HOWL.StatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#singlePhrase}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSinglePhrase(HOWL.SinglePhraseContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link HOWL#debug}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitDebug(HOWL.DebugContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#descriptionStatementObject}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDescriptionStatementObject(HOWL.DescriptionStatementObjectContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#descriptionStatementDataType}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDescriptionStatementDataType(HOWL.DescriptionStatementDataTypeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link HOWL#factStatementData}.
 	 * @param ctx the parse tree
@@ -61,41 +43,65 @@ public interface HOWLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFactStatementObject(HOWL.FactStatementObjectContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#predicateRelationStatementObject}.
+	 * Visit a parse tree produced by {@link HOWL#descriptionStatementObject}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPredicateRelationStatementObject(HOWL.PredicateRelationStatementObjectContext ctx);
+	T visitDescriptionStatementObject(HOWL.DescriptionStatementObjectContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#predicateRelationStatementData}.
+	 * Visit a parse tree produced by {@link HOWL#descriptionStatementDataType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPredicateRelationStatementData(HOWL.PredicateRelationStatementDataContext ctx);
+	T visitDescriptionStatementDataType(HOWL.DescriptionStatementDataTypeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#predicateRelationStatementAnnotation}.
+	 * Visit a parse tree produced by {@link HOWL#domainStatementDataType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPredicateRelationStatementAnnotation(HOWL.PredicateRelationStatementAnnotationContext ctx);
+	T visitDomainStatementDataType(HOWL.DomainStatementDataTypeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#predicateCharacteristicStatementObject}.
+	 * Visit a parse tree produced by {@link HOWL#domainStatementObject}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPredicateCharacteristicStatementObject(HOWL.PredicateCharacteristicStatementObjectContext ctx);
+	T visitDomainStatementObject(HOWL.DomainStatementObjectContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#predicateCharacteristicStatementData}.
+	 * Visit a parse tree produced by {@link HOWL#domainStatementAnnotation}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPredicateCharacteristicStatementData(HOWL.PredicateCharacteristicStatementDataContext ctx);
+	T visitDomainStatementAnnotation(HOWL.DomainStatementAnnotationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#predicateCharacteristicStatementAnnotation}.
+	 * Visit a parse tree produced by {@link HOWL#rangeStatementDataType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPredicateCharacteristicStatementAnnotation(HOWL.PredicateCharacteristicStatementAnnotationContext ctx);
+	T visitRangeStatementDataType(HOWL.RangeStatementDataTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link HOWL#rangeStatementObject}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRangeStatementObject(HOWL.RangeStatementObjectContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link HOWL#rangeStatementAnnotation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRangeStatementAnnotation(HOWL.RangeStatementAnnotationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link HOWL#predicateCharacteristicStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPredicateCharacteristicStatement(HOWL.PredicateCharacteristicStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link HOWL#predicateRelationStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPredicateRelationStatement(HOWL.PredicateRelationStatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link HOWL#annotationStatement}.
 	 * @param ctx the parse tree
@@ -103,17 +109,23 @@ public interface HOWLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAnnotationStatement(HOWL.AnnotationStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#commonNounPhrase}.
+	 * Visit a parse tree produced by {@link HOWL#declarationStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCommonNounPhrase(HOWL.CommonNounPhraseContext ctx);
+	T visitDeclarationStatement(HOWL.DeclarationStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#adjp}.
+	 * Visit a parse tree produced by {@link HOWL#nounPhrase}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAdjp(HOWL.AdjpContext ctx);
+	T visitNounPhrase(HOWL.NounPhraseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link HOWL#compoundNounPhrase}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCompoundNounPhrase(HOWL.CompoundNounPhraseContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link HOWL#properNounPhrase}.
 	 * @param ctx the parse tree
@@ -127,41 +139,23 @@ public interface HOWLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNProperSequence(HOWL.NProperSequenceContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#nounOrProperNounPhrase}.
+	 * Visit a parse tree produced by {@link HOWL#commonNounPhrase}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNounOrProperNounPhrase(HOWL.NounOrProperNounPhraseContext ctx);
+	T visitCommonNounPhrase(HOWL.CommonNounPhraseContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#oneOfProperNoun}.
+	 * Visit a parse tree produced by {@link HOWL#adjp}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOneOfProperNoun(HOWL.OneOfProperNounContext ctx);
+	T visitAdjp(HOWL.AdjpContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#nounSet}.
+	 * Visit a parse tree produced by {@link HOWL#dataTypeExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNounSet(HOWL.NounSetContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#nounPhraseSubject}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNounPhraseSubject(HOWL.NounPhraseSubjectContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#nounPhraseCatch}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNounPhraseCatch(HOWL.NounPhraseCatchContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#dataTypePhrase}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDataTypePhrase(HOWL.DataTypePhraseContext ctx);
+	T visitDataTypeExpression(HOWL.DataTypeExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link HOWL#dataTypeRestriction}.
 	 * @param ctx the parse tree
@@ -169,11 +163,11 @@ public interface HOWLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDataTypeRestriction(HOWL.DataTypeRestrictionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#facet}.
+	 * Visit a parse tree produced by {@link HOWL#dataFacetExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFacet(HOWL.FacetContext ctx);
+	T visitDataFacetExpression(HOWL.DataFacetExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link HOWL#dataValuePhrase}.
 	 * @param ctx the parse tree
@@ -187,41 +181,11 @@ public interface HOWLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDataValue(HOWL.DataValueContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#number}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNumber(HOWL.NumberContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link HOWL#oneOfData}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitOneOfData(HOWL.OneOfDataContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#dataTypeSet}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDataTypeSet(HOWL.DataTypeSetContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#dataPhrase}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDataPhrase(HOWL.DataPhraseContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#dataPhraseCatch}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDataPhraseCatch(HOWL.DataPhraseCatchContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#annotationWord}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAnnotationWord(HOWL.AnnotationWordContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link HOWL#quant}.
 	 * @param ctx the parse tree
@@ -234,6 +198,12 @@ public interface HOWLVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitQuantNumeric(HOWL.QuantNumericContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link HOWL#quantNumericExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitQuantNumericExpression(HOWL.QuantNumericExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link HOWL#predicateExpressionObject}.
 	 * @param ctx the parse tree
@@ -253,29 +223,17 @@ public interface HOWLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPredicateExpressionAnnotation(HOWL.PredicateExpressionAnnotationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#predicateExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPredicateExpression(HOWL.PredicateExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#predicateExpressionVerbObject}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPredicateExpressionVerbObject(HOWL.PredicateExpressionVerbObjectContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link HOWL#predicateExpressionVerbData}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitPredicateExpressionVerbData(HOWL.PredicateExpressionVerbDataContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#predicateExpressionVerbAnnotation}.
+	 * Visit a parse tree produced by {@link HOWL#predicateExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPredicateExpressionVerbAnnotation(HOWL.PredicateExpressionVerbAnnotationContext ctx);
+	T visitPredicateExpression(HOWL.PredicateExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link HOWL#predicateExpressionVerb}.
 	 * @param ctx the parse tree
@@ -313,17 +271,17 @@ public interface HOWLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPredicateExpressionNoun(HOWL.PredicateExpressionNounContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#predicateExpressionBE}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPredicateExpressionBE(HOWL.PredicateExpressionBEContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link HOWL#predicateExpressionSameAs}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitPredicateExpressionSameAs(HOWL.PredicateExpressionSameAsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link HOWL#predicateExpressionBE}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPredicateExpressionBE(HOWL.PredicateExpressionBEContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link HOWL#predicateExpressionDO}.
 	 * @param ctx the parse tree
@@ -337,47 +295,11 @@ public interface HOWLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPredicateExpressionHAS(HOWL.PredicateExpressionHASContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#predicateExpressionHAS_POSS}.
+	 * Visit a parse tree produced by {@link HOWL#predicate}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPredicateExpressionHAS_POSS(HOWL.PredicateExpressionHAS_POSSContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#predicatePhraseCommonNoun}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPredicatePhraseCommonNoun(HOWL.PredicatePhraseCommonNounContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#predicatePhraseProperNoun}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPredicatePhraseProperNoun(HOWL.PredicatePhraseProperNounContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#predicatePhraseProperNounSet}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPredicatePhraseProperNounSet(HOWL.PredicatePhraseProperNounSetContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#predicatePhraseNounSet}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPredicatePhraseNounSet(HOWL.PredicatePhraseNounSetContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#predicatePhraseCommonNounOrSet}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPredicatePhraseCommonNounOrSet(HOWL.PredicatePhraseCommonNounOrSetContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#predicatePhraseItself}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPredicatePhraseItself(HOWL.PredicatePhraseItselfContext ctx);
+	T visitPredicate(HOWL.PredicateContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link HOWL#predicatePhraseNoun}.
 	 * @param ctx the parse tree
@@ -397,29 +319,11 @@ public interface HOWLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPredicatePhraseDataValue(HOWL.PredicatePhraseDataValueContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#predicatePhraseDataValueSet}.
+	 * Visit a parse tree produced by {@link HOWL#predicatePhrase}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPredicatePhraseDataValueSet(HOWL.PredicatePhraseDataValueSetContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#predicatePhraseDataSet}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPredicatePhraseDataSet(HOWL.PredicatePhraseDataSetContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#predicatePhraseData}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPredicatePhraseData(HOWL.PredicatePhraseDataContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#predicatePhraseMixed}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPredicatePhraseMixed(HOWL.PredicatePhraseMixedContext ctx);
+	T visitPredicatePhrase(HOWL.PredicatePhraseContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link HOWL#singlePhraseObject}.
 	 * @param ctx the parse tree
@@ -445,9 +349,21 @@ public interface HOWLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBadSentence(HOWL.BadSentenceContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#catchAll}.
+	 * Visit a parse tree produced by {@link HOWL#wordSequence}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCatchAll(HOWL.CatchAllContext ctx);
+	T visitWordSequence(HOWL.WordSequenceContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link HOWL#declareWordSequence}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDeclareWordSequence(HOWL.DeclareWordSequenceContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link HOWL#debugWordSequence}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDebugWordSequence(HOWL.DebugWordSequenceContext ctx);
 }

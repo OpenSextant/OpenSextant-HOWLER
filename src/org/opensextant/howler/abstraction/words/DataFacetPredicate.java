@@ -19,7 +19,7 @@ public class DataFacetPredicate extends Predicate {
   }
 
   public Scope getScope() {
-    return Scope.DATA;
+    return Scope.DATA_SCOPE;
   }
   public WordType getWordType() {
     return WordType.DATA_FACET_PREDICATE;

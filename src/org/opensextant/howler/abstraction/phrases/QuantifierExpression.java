@@ -27,9 +27,9 @@ package org.opensextant.howler.abstraction.phrases;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.opensextant.howler.abstraction.Vocabulary;
 import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.words.GenericWord;
+import org.opensextant.howler.abstraction.words.enumerated.Negative;
 import org.opensextant.howler.abstraction.words.enumerated.Quantifier;
 
 public class QuantifierExpression {
@@ -98,13 +98,13 @@ public class QuantifierExpression {
     List<Word> wrds = new ArrayList<Word>();
 
     if (negative) {
-      wrds.add(Vocabulary.NOT);
+      wrds.add(Negative.NOT);
     }
     
     if(! this.quantifier.equals(Quantifier.NULL)){
       wrds.add(this.quantifier);
       if (quantifier.isNumeric()) {
-        wrds.add(new GenericWord(this.quantity.toString()));
+        wrds.add(new GenericWord(this.quantity.toString(),"CD"));
       }
     }
 

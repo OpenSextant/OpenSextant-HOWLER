@@ -8,30 +8,31 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.ahocorasick.trie.Emit;
 import org.ahocorasick.trie.Trie;
 import org.ahocorasick.trie.Trie.TrieBuilder;
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenFactory;
 import org.antlr.v4.runtime.TokenSource;
 import org.antlr.v4.runtime.misc.Pair;
 import org.apache.commons.io.FileUtils;
 import org.opensextant.howler.abstraction.Vocabulary;
+import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.WordManager;
+import org.opensextant.howler.abstraction.words.Predicate;
+import org.opensextant.howler.abstraction.words.enumerated.WordType;
 import org.opensextant.howler.text.grammar.HOWL;
-import org.semanticweb.owlapi.model.IRI;
+import org.opensextant.howler.utils.TextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.emory.mathcs.nlp.component.morph.english.EnglishMorphAnalyzer;
 import edu.emory.mathcs.nlp.tokenization.EnglishTokenizer;
-import edu.emory.mathcs.nlp.tokenization.Tokenizer;
 import eu.danieldk.nlp.jitar.data.Model;
 import eu.danieldk.nlp.jitar.languagemodel.LanguageModel;
 import eu.danieldk.nlp.jitar.languagemodel.LinearInterpolationLM;
@@ -45,32 +46,36 @@ public class HowlerLexer implements TokenSource {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(HowlerLexer.class);
 
+  // the text to be lexed
   private String input = "";
+  // a stream that contains the text
+  private CharStream stream = CharStreams.fromString("");
 
-  private final List<HOWLERToken> tokens = new ArrayList<HOWLERToken>();
+  // the final list of tokens to be parsed
+  private final List<HowlerToken> tokens = new ArrayList<HowlerToken>();
+
   // index into tokens list
-  private int i = 0;
+  private int tokenIndex = 0;
+  // sentence index
+  int sentIndex = 1;
 
-  private TokenFactory<HOWLERToken> tokenFactory = new HOWLERTokenFactory();
-  private String sourceName = "HOWLER LIST";
+  // where the tokens are created
+  private TokenFactory<HowlerToken> tokenFactory = new HowlerTokenFactory();
+  private String sourceName = "HOWLER Lexer";
 
   // the part of speech tagger and its model
   private HMMTagger tagger;
   private Model model = null;
 
-  private IRI currentNamespace = IRI.create(Vocabulary.HOWLER_DEFAULT_NS.toString(), "NewDocument");
-
+  // the manage that handles all the Word creation and lookups
   private WordManager wm = WordManager.getWordManager();
 
   // the tokenizer
-  private static Tokenizer tokenizer = new EnglishTokenizer();
+  private static EnglishTokenizer tokenizer = new EnglishTokenizer();
   private static EnglishMorphAnalyzer lemmatizer = new EnglishMorphAnalyzer();
 
   // Mapping between the POS tag and the token type name
   private Map<String, String> tokenTypeMap = new HashMap<String, String>();
-
-  // mapping between a phrase and the token type name
-  private Map<String, String> phraseTypeMap = new HashMap<String, String>();
 
   // mapping between the token type name and its integer ID
   private Map<String, Integer> tokenIDMap = new HashMap<String, Integer>();
@@ -78,13 +83,15 @@ public class HowlerLexer implements TokenSource {
   // mapping between a alternate surface forms of phrases and their normalized forms
   private Map<String, String> phraseNormalMap = new HashMap<String, String>();
 
-  // the set of multiword phrases to be considered a single token
-  Set<String> multiphrases = new HashSet<String>();
+  // fixed vocbulary and previously seen phrases to be considered a single token and their TokenType name
+  Map<String, String> knownPhrases = new HashMap<String, String>();
 
   // the phrase tagger, used for finding multiword phrases
   private Trie phraser;
 
-  private HOWLERToken eofToken;
+  private HowlerToken eofToken;
+
+  private String quotedTextTypeName = "QUOTED_TEXT";
 
   public HowlerLexer(File lexiconFile, File ngramFile, File typeInfoFile, File phraseFile) {
 
@@ -99,200 +106,332 @@ public class HowlerLexer implements TokenSource {
     // initialize the type mappings
     initTypeMap(typeInfoFile);
     // initialize the fixed phrase info
-    initPhraseMap(phraseFile);
+    initKnownPhraseMap(phraseFile);
     // initialize the phrase finder
     initPhraser();
 
   }
 
-  private void initPhraser() {
-
-    TrieBuilder builder = Trie.builder();
-    builder.caseInsensitive().onlyWholeWords().removeOverlaps();
-
-    // add all the multiword phrases to the phraser
-    for (String phrase : multiphrases) {
-      builder.addKeyword(phrase);
-    }
-
-    phraser = builder.build();
-
-  }
-
-  public void setInput(String input) {
+  public void setInput(String txt) {
     reset();
-    this.input = input;
+    input = clean(txt);
+    stream = CharStreams.fromString(input);
     processInput();
   }
 
   private void reset() {
     tokens.clear();
     eofToken = null;
-    i = 0;
+    tokenIndex = 0;
+    sentIndex = 1;
   }
 
   // Do all the work to convert input text to List of HOWLERTokens
   private void processInput() {
 
-    // normalize whitespace and join multiword phrases
-    String cleanInput = clean(input);
+    // tokenize, create HowlerToken, set text,start/stop indices
+    List<HowlerToken> toks = tokenize(input);
 
-    // tokenize and sentence-ize the input
-    List<List<HOWLERToken>> sentences = tokenize(cleanInput);
+    // merge quoted text into single token, set text,start/stop, tokenType= QUOTED_TEXT
+    mergeQuotedString(toks, input);
 
-    for (List<HOWLERToken> sentence : sentences) {
+    // merge dashed words into single token set text,start/stop
+    mergeDashes(toks);
 
-      // run each sentence through part-of-speech tagger
+    // ensure that PERIODs are marked
+    addStops(toks);
+
+    // split tokens into sentences
+    List<List<HowlerToken>> sentences = sentenceize(toks);
+
+    for (List<HowlerToken> sentence : sentences) {
+
+      matchKnownPhrases(sentence, input);
+
+      // set POS for each token not already set
       posTag(sentence);
 
-      // add the normal form to each token
+      // add the normal form to each token based on POS and surface form
       normalize(sentence);
 
-      // adjust the POS for multiword phrases based on normal form
-      adjustPOS(sentence);
-
-      // add the various bits of type info to token
-      addTypeInfo(sentence);
-
-      // merge a quoted string into a single token
-      mergeQuotedString(sentence);
+      // set token type based on POS if not already set
+      setTokenType(sentence);
 
       this.tokens.addAll(sentence);
     }
 
   }
 
-  // tokenize and split into sentences
-  public List<List<HOWLERToken>> tokenize(String input) {
+  private void addStops(List<HowlerToken> tokens) {
 
-    List<List<HOWLERToken>> sentences = new ArrayList<List<HOWLERToken>>();
-
-    List<List<edu.emory.mathcs.nlp.tokenization.Token>> segs = tokenizer.segmentize(input);
-
-    int sentIndex = 0;
-    for (List<edu.emory.mathcs.nlp.tokenization.Token> seg : segs) {
-      sentIndex++;
-      List<HOWLERToken> sentence = new ArrayList<HOWLERToken>();
-      for (edu.emory.mathcs.nlp.tokenization.Token tok : seg) {
-
-        // create HOWLERToken based only on surface form
-        HOWLERToken howlToken = tokenFactory.create(0, tok.getWordForm().replaceAll("_", " "));
-        howlToken.setStartIndex(tok.getStartOffset());
-        howlToken.setStopIndex(tok.getEndOffset());
-        howlToken.setLine(sentIndex);
-
-        sentence.add(howlToken);
-
+    for (HowlerToken tok : tokens) {
+      if (tok.getText().equals(".") || tok.getText().equals("..")) {
+        tok.setType(HOWL.PERIOD);
+        tok.setTokenTypeName("PERIOD");
+        tok.setPos("PERIOD");
       }
-      sentences.add(sentence);
-      sentence = new ArrayList<HOWLERToken>();
     }
-
-    return sentences;
   }
 
-  private void mergeQuotedString(List<HOWLERToken> sentence) {
-
-    List<Integer> qs = containsQuote(sentence);
-
-    if (qs.isEmpty()) {
-      return;
-    }
-
-    if (qs.size() % 2 != 0) {
-      LOGGER.warn("Ambigous Quotes in " + sentence);
-    }
-
-    int shift = 0;
-
-    for (int p = 0; p < qs.size(); p = p + 2) {
-
-      int firstQuote = qs.get(p) - shift;
-      int lastQuote = qs.get(p + 1) - shift;
-      shift = shift + lastQuote - firstQuote;
-
-      List<HOWLERToken> quoteTokens = sentence.subList(firstQuote + 1, lastQuote);
-
-      StringBuilder bldr = new StringBuilder();
-      for (HOWLERToken tok : quoteTokens) {
-        bldr.append(tok.getText());
-        bldr.append(" ");
-      }
-      String qText = bldr.toString().trim();
-
-      int id = tokenIDMap.get("QUOTED_TEXT");
-      HOWLERToken quoteToken = new HOWLERToken(id, qText);
-      quoteToken.setTokenTypeName("QUOTED_TEXT");
-      quoteToken.setPos("QUOTED TEXT");
-      quoteToken.setNormalForm(qText);
-      quoteToken.setStartIndex(quoteTokens.get(0).getStartIndex());
-      quoteToken.setStopIndex(quoteTokens.get(quoteTokens.size() - 1).getStopIndex());
-
-      for (int i = firstQuote; i <= lastQuote; i++) {
-        sentence.remove(firstQuote);
-      }
-
-      sentence.add(firstQuote, quoteToken);
-
-    }
-
-  }
-
-  private List<Integer> containsQuote(List<HOWLERToken> sentence) {
-
-    ArrayList<Integer> qs = new ArrayList<Integer>();
-
-    for (int i = 0; i < sentence.size(); i++) {
-      boolean q = sentence.get(i).getTokenTypeName().equals("QUOTE");
-
-      if (q) {
-        qs.add(i);
-      }
-
-    }
-
-    return qs;
-  }
-
-  // some cleanup and joining multitoken phrases with underbars
+  // some cleanup of input text
   private String clean(String input) {
 
-    String orig = input;
-    // split periods away from integers at end of sentence
-    String cleanSurface = input.replaceAll("( [0-9]+)\\.([^0-9]|$)", "$1 .$2");
+    String cleanSurface = input;
+    // split periods away from integers
+    cleanSurface = cleanSurface.replaceAll("( [0-9]+)\\.([^0-9]|$)", "$1 .$2");
 
-    // normalize whitespace
-    cleanSurface = cleanSurface.replaceAll("[\\s]+", " ").trim();
+    // TODO HACK, tokenizer is not tokenizing some quoted phrases correctly
+    // add space before unescaped quotes
+    cleanSurface = cleanSurface.replaceAll("([^\\\\])\"", "$1 \"");
+    cleanSurface = cleanSurface.replaceAll("\\+", " + ");
 
     // split some single token quantified things to multiple tokens
     cleanSurface = cleanSurface.replaceAll("(Any|Every|No|Some|any|every|no|some)(body|one|thing|where)", "$1 thing");
 
-    // join multiword phrases with underbars
-    Collection<Emit> matches = phraser.parseText(cleanSurface);
-
-    for (Emit e : matches) {
-      int start = e.getStart();
-      int end = e.getEnd();
-      String before = cleanSurface.substring(0, start);
-      String mid = cleanSurface.substring(start, end + 1).replaceAll(" ", "_");
-      String after = cleanSurface.substring(end + 1);
-      cleanSurface = before + mid + after;
-    }
-
-    if (!cleanSurface.equals(orig)) {
-      LOGGER.info("Cleaned sentence" + orig + "=>" + cleanSurface);
+    if (!cleanSurface.equals(input)) {
+      LOGGER.trace("Cleaned sentence:\t" + input + "\t" + cleanSurface);
     }
 
     return cleanSurface;
   }
 
-  // add the part of speech tag to each token
-  private void posTag(List<HOWLERToken> sentence) {
+  private List<HowlerToken> tokenize(String input) {
+
+    List<HowlerToken> hTokens = new ArrayList<HowlerToken>();
+
+    List<edu.emory.mathcs.nlp.tokenization.Token> toks = tokenizer.tokenize(input);
+
+    for (edu.emory.mathcs.nlp.tokenization.Token tok : toks) {
+
+      // create HOWLERToken based only on surface form
+      int start = tok.getStartOffset();
+      int stop = tok.getEndOffset() - 1;
+      HowlerToken howlToken = tokenFactory.create(new Pair<TokenSource, CharStream>(this, getInputStream()), 0,
+          tok.getWordForm(), Token.DEFAULT_CHANNEL, start, stop, getLine(), getCharPositionInLine());
+
+      hTokens.add(howlToken);
+    }
+
+    return hTokens;
+  }
+
+  private void mergeQuotedString(List<HowlerToken> sentence, String txt) {
+
+    List<Integer> quoteTokenIndices = containsQuote(sentence);
+
+    if (quoteTokenIndices.isEmpty()) {
+      return;
+    }
+
+    if (quoteTokenIndices.size() % 2 != 0) {
+      LOGGER.debug("Ambigous Quotes in " + txt);
+      int first = quoteTokenIndices.get(0);
+      int last = quoteTokenIndices.get(quoteTokenIndices.size()-1);
+      quoteTokenIndices.clear();
+      quoteTokenIndices.add(first);
+      quoteTokenIndices.add(last);
+    }
+
+    int shift = 0;
+    int id = idForTokenTypeName(quotedTextTypeName);
+    for (int p = 0; p < quoteTokenIndices.size(); p = p + 2) {
+
+      int firstQuoteIndex = quoteTokenIndices.get(p) - shift;
+      int lastQuoteIndex = quoteTokenIndices.get(p + 1) - shift;
+      int firstCharIndex = sentence.get(firstQuoteIndex).getStartIndex();
+      int lastCharIndex = sentence.get(lastQuoteIndex).getStopIndex();
+
+      String quoteText = txt.substring(firstCharIndex + 1, lastCharIndex - 1);
+
+      shift = shift + lastQuoteIndex - firstQuoteIndex;
+
+      if (quoteText.isEmpty()) {
+        LOGGER.warn("Unbalanced or empty Quotes?" + sentence);
+        continue;
+      }
+
+      HowlerToken quoteToken = new HowlerToken(id, quoteText);
+      quoteToken.setTokenTypeName(quotedTextTypeName);
+      quoteToken.setText(quoteText);
+      // quoteToken.setNormalForm(quoteText);
+      quoteToken.setStartIndex(firstCharIndex);
+      quoteToken.setStopIndex(lastCharIndex);
+
+      // remove the tokens that have been merged
+      for (int i = firstQuoteIndex; i <= lastQuoteIndex; i++) {
+        sentence.remove(firstQuoteIndex);
+      }
+      // add the quoted text token
+      sentence.add(firstQuoteIndex, quoteToken);
+    }
+
+  }
+
+  private void mergeDashes(List<HowlerToken> sentence) {
+    // token index pairs to be merged
+    List<List<Integer>> pairs = new ArrayList<List<Integer>>();
+
+    int i = 0;
+    while (i < sentence.size() - 1) {
+      List<Integer> pair = new ArrayList<Integer>();
+      if (isDash(sentence.get(i))) {
+        pair.add(i - 1);
+        pair.add(i + 1);
+        pairs.add(pair);
+        i = i + 2;
+
+        if (isDash(sentence.get(i))) {
+          pair.remove(1);
+          pair.add(i + 1);
+        } else {
+          pair = new ArrayList<Integer>();
+        }
+
+      }
+
+      i++;
+    }
+
+    if (pairs.isEmpty()) {
+      return;
+    }
+
+    int shift = 0;
+    for (List<Integer> pair : pairs) {
+
+      List<HowlerToken> seq = new ArrayList<HowlerToken>(
+          sentence.subList(pair.get(0) - shift, pair.get(1) + 1 - shift));
+      // merge tokens from pair(0) to pair(1)
+      StringBuilder bldr = new StringBuilder();
+      StringBuilder normBldr = new StringBuilder();
+
+      for (HowlerToken tok : seq) {
+        bldr.append(tok.getText());
+        normBldr.append(tok.getText());
+      }
+
+      String dashText = bldr.toString().trim();
+      HowlerToken dashToken = new HowlerToken(0, dashText);
+      dashToken.setStartIndex(seq.get(0).getStartIndex());
+      dashToken.setStopIndex(seq.get(seq.size() - 1).getStopIndex());
+      sentence.subList(pair.get(0) - shift, pair.get(1) + 1 - shift).clear();
+      sentence.add(pair.get(0) - shift, dashToken);
+      shift = shift + pair.get(1) - pair.get(0);
+    }
+
+  }
+
+  private void matchKnownPhrases(List<HowlerToken> tokens, String cleanString) {
+
+    int first = tokens.get(0).getStartIndex();
+    int last = tokens.get(tokens.size() - 1).getStopIndex() + 1;
+    String cleanSentence = cleanString.substring(first, last);
+ 
+    Collection<Emit> matches = phraser.parseText(cleanSentence);
+
+    for (Emit e : matches) {
+
+      int start = e.getStart() + first;
+      int end = e.getEnd() + first;
+
+      int tokenStartIndex = tokenAtStart(tokens, start);
+      int tokenStopIndex = tokenAtStop(tokens, end);
+
+      // match is not aligned to tokens
+      if (tokenStartIndex == -1 || tokenStopIndex == -1) {
+        LOGGER.trace("Overlapping phrase match:" + e + "\t" + cleanString);
+        continue;
+      }
+
+      // match is exactly 1 token
+      if (tokenStartIndex == tokenStopIndex) {
+        HowlerToken tok = tokens.get(tokenStartIndex);
+        String key = tok.getText().toLowerCase();
+        if (this.knownPhrases.containsKey(key)) {
+          String name = knownPhrases.get(key);
+          tok.setTokenTypeName(name);
+          tok.setType(this.idForTokenTypeName(name));
+        }
+        continue;
+      }
+
+      // create new token from phrase matched
+      String txt = e.getKeyword();
+
+      HowlerToken phraseToken = tokenFactory.create(new Pair<TokenSource, CharStream>(this, getInputStream()), 0, txt,
+          Token.DEFAULT_CHANNEL, start, end, getLine(), getCharPositionInLine());
+
+      if (this.knownPhrases.containsKey(txt.toLowerCase())) {
+        String tokenTypeName = knownPhrases.get(txt.toLowerCase());
+        Integer tID = this.idForTokenTypeName(tokenTypeName);
+
+        phraseToken.setTokenTypeName(tokenTypeName);
+        phraseToken.setType(tID);
+      } else {
+        LOGGER.error("Known phrase with no TokenType:" + txt + " " + cleanString);
+        continue;
+      }
+
+      // remove merged tokens
+      for (int i = tokenStartIndex; i < tokenStopIndex + 1; i++) {
+        tokens.remove(tokenStartIndex);
+      }
+
+      // add phrase token
+      tokens.add(tokenStartIndex, phraseToken);
+
+    }
+
+  }
+
+  private List<List<HowlerToken>> sentenceize(List<HowlerToken> tokens) {
+
+    List<List<HowlerToken>> sentences = new ArrayList<List<HowlerToken>>();
+
+    List<HowlerToken> sentence = new ArrayList<HowlerToken>();
+    for (HowlerToken tok : tokens) {
+      sentIndex++;
+      tok.setLine(sentIndex);
+
+      if (isStop(tok)) {
+        sentence.add(tok);
+        sentences.add(sentence);
+        sentence = new ArrayList<HowlerToken>();
+      } else {
+        sentence.add(tok);
+      }
+
+    }
+
+    if (!sentence.isEmpty()) {
+      LOGGER.warn("Sentence with no final period:" + tokens);
+
+      int start = -1;
+      if (tokens.size() > 0) {
+        int previousStop = tokens.get(tokens.size() - 1).getStopIndex();
+        if (previousStop != -1) {
+          start = previousStop + 1;
+        }
+      }
+
+      int stop = Math.max(-1, start - 1);
+      HowlerToken period = tokenFactory.create(new Pair<TokenSource, CharStream>(this, getInputStream()), HOWL.PERIOD,
+          "PERIOD", Token.DEFAULT_CHANNEL, start, stop, getLine(), getCharPositionInLine());
+      period.setPos("PERIOD");
+      sentence.add(period);
+      sentences.add(sentence);
+    }
+
+    return sentences;
+  }
+
+  // add the part of speech tag and token type to each token
+  private void posTag(List<HowlerToken> sentence) {
 
     // create list of surface forms for the pos tagger
     List<String> stringTokens = new ArrayList<String>();
 
-    for (HOWLERToken t : sentence) {
+    for (HowlerToken t : sentence) {
       stringTokens.add(t.getText());
     }
 
@@ -312,43 +451,191 @@ public class HowlerLexer implements TokenSource {
           + " " + sentence);
     }
 
-    // set the POS tag
+    // set the POS tag and token type on each token
     for (int i = 0; i < sentence.size(); i++) {
-      HOWLERToken tok = sentence.get(i);
-      String pos = tags.get(i + 2);
-      tok.setPos(pos);
-    }
 
+      HowlerToken tok = sentence.get(i);
+      String txt = sentence.get(i).getText();
+      String pos = tags.get(i + 2);
+
+      // has digits but not tagged as number
+      if (containsDigits(txt) && !pos.equals("CD")) {
+        // if not already tagged as noun
+        if (!pos.startsWith("N")) {
+          // does it look like an abbreviation?
+          if (isAbbrev(txt)) {
+            pos = "NP";
+          } else {
+            pos = "NN";
+          }
+        }
+
+      }
+
+      if (isURL(tok)) {
+        pos = "NP";
+      }
+
+      // if not already set, set POS
+      if (tok.getPos().isEmpty()) {
+        tok.setPos(pos);
+      }
+
+    }
   }
 
-  private void normalize(List<HOWLERToken> sentence) {
-
-    for (HOWLERToken tok : sentence) {
-      String surfaceForm = tok.getText();
-      String pos = tok.getPos();
-
-      // get normal form based on surface form and part of speech
-      String normal = surfaceForm;
-
-      if (pos.startsWith("BE")) {
-        normal = "is";
-      } else if (pos.startsWith("DO")) {
-        normal = "does";
-      } else if (pos.startsWith("HV")) {
-        normal = "has";
-      } else if (pos.startsWith("VB")) {
-        String base = lemmatizer.lemmatize(surfaceForm, pos);
-        normal = thirdSingularVerb(base);
-      } else if (pos.startsWith("NN")) {
-        normal = lemmatizer.lemmatize(surfaceForm, pos);
-      }
-
-      if (phraseNormalMap.containsKey(surfaceForm.toLowerCase())) {
-        normal = phraseNormalMap.get(surfaceForm.toLowerCase());
-      }
-
-      tok.setNormalForm(normal);
+  private void normalize(List<HowlerToken> sentence) {
+    for (HowlerToken tok : sentence) {
+      normalize(tok);
     }
+  }
+
+  private void normalize(HowlerToken token) {
+    String surfaceForm = token.getText();
+    String pos = token.getPos();
+
+
+    
+    // create normal form based on surface form and part of speech
+    String normal = surfaceForm;
+
+    if(!token.getTokenTypeName().isEmpty()){
+      token.setNormalForm(normal);
+      return;
+    }
+    
+    
+    if (pos.startsWith("BE")) {
+      normal = "is";
+    } else if (pos.startsWith("DO")) {
+      normal = "does";
+    } else if (pos.startsWith("HV")) {
+      normal = "has";
+    } else if (pos.startsWith("VB")) {
+
+      String base = lemmatizer.lemmatize(surfaceForm, pos);
+
+      // uninflected present tense
+      if (pos.equals("VB")) {
+        // normal = thirdSingularVerb(base);
+      }
+      // past tense
+      if (pos.equals("VBD")) {
+        // normal = thirdSingularVerb(base);
+      }
+      // present participle or gerund
+      if (pos.equals("VBG")) {
+        // normal = thirdSingularVerb(base);
+      }
+
+      // past participle
+      if (pos.equals("VBN")) {
+        // normal = thirdSingularVerb(base);
+      }
+
+      // present tense, 3rd person singular
+      if (pos.equals("VBZ")) {
+
+      }
+
+    } else if (pos.startsWith("NN")) {
+      normal = lemmatizer.lemmatize(surfaceForm, pos);
+    } else if (pos.startsWith("NOT")) {
+      normal = "not";
+    } else if (pos.startsWith("CD")) {
+      normal = TextUtils.convertNumber(surfaceForm);
+    }
+
+    if (phraseNormalMap.containsKey(surfaceForm.toLowerCase())) {
+      normal = phraseNormalMap.get(surfaceForm.toLowerCase());
+    }
+
+    token.setNormalForm(normal);
+    return;
+  }
+
+  private void setTokenType(List<HowlerToken> tokens) {
+    for (HowlerToken tok : tokens) {
+      setTokenType(tok);
+    }
+  }
+
+  // determine and set the token type based on POS and content
+  private void setTokenType(HowlerToken tok) {
+
+    String pos = tok.getPos();
+
+    // set token type name and ID
+
+    // if already set e.g. already seen, quoted text ...
+    if (!tok.getTokenTypeName().isEmpty()) {
+      LOGGER.trace("Token Type name already set of token:" + tok + "\t" + tok.getTokenTypeName());
+      return;
+    } else {
+      LOGGER.trace("Token not previously seen:" + tok);
+    }
+
+    String tokenTypeName = "BADWORD";
+
+    // get the token type based on POS
+    if (tokenTypeMap.containsKey(pos)) {
+      tokenTypeName = tokenTypeMap.get(pos);
+    } else {
+      LOGGER.warn("No token type mapping for POS: " + pos + " " + tok);
+    }
+
+    // split integers and decimals numbers
+    if (tokenTypeName.equals("NUMBER")) {
+      if (tok.getNormalForm().matches("[0-9]+")) {
+        tokenTypeName = "INTEGER";
+      } else if (tok.getNormalForm().matches("-?[0-9]+\\.[0-9]+")) {
+        tokenTypeName = "DECIMAL";
+      } else {
+        LOGGER.trace("Non-number tagged as number:" + tok);
+        tokenTypeName = "COMMON_NOUN";
+      }
+    }
+
+    Integer tID = this.idForTokenTypeName(tokenTypeName);
+
+    tok.setTokenTypeName(tokenTypeName);
+    tok.setType(tID);
+    LOGGER.trace("\tToken type guessed:\t" + tok.getText() + "\t" + tok.getTokenTypeName() + "\t" + pos);
+  }
+
+  private int tokenAtStart(List<HowlerToken> tokens, int offset) {
+
+    for (int i = 0; i < tokens.size(); i++) {
+      if (tokens.get(i).getStartIndex() == offset) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
+  private int tokenAtStop(List<HowlerToken> tokens, int offset) {
+
+    for (int i = 0; i < tokens.size(); i++) {
+      if (tokens.get(i).getStopIndex() == offset) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
+  private List<Integer> containsQuote(List<HowlerToken> sentence) {
+    ArrayList<Integer> quoteTokenIndices = new ArrayList<Integer>();
+
+    for (int i = 0; i < sentence.size(); i++) {
+      if (isQuoteChar(sentence.get(i))) {
+        if (i - 1 >= 0 && !isEscape(sentence.get(i - 1))) {
+          quoteTokenIndices.add(i);
+        }
+      }
+    }
+    return quoteTokenIndices;
   }
 
   // convert base verb form to 3rd person singular form
@@ -365,71 +652,10 @@ public class HowlerLexer implements TokenSource {
     return norm;
   }
 
-  private void adjustPOS(List<HOWLERToken> sentence) {
-
-    for (HOWLERToken tok : sentence) {
-      String normal = tok.getNormalForm();
-      if (phraseTypeMap.containsKey(normal)) {
-        tok.setPos(phraseTypeMap.get(normal));
-      }
-
-    }
-
-  }
-
-  // add the token and word type info
-  private void addTypeInfo(List<HOWLERToken> sentence) {
-
-    for (HOWLERToken tok : sentence) {
-      String pos = tok.getPos();
-
-      // get the lexer/parser token type based on pos
-      String tokenTypeName = tokenTypeMap.get(pos);
-
-      // split integers and decimals numbers
-      if (tokenTypeName.equals("NUMBER")) {
-        if (tok.getText().matches("[0-9]+")) {
-          tokenTypeName = "INTEGER";
-        } else {
-          tokenTypeName = "DECIMAL";
-        }
-      }
-
-      Integer ttype = tokenIDMap.get(tokenTypeName);
-
-      if (ttype == null) {
-        LOGGER.error("Lexer does not have mapping for POS=" + pos);
-        tokenTypeName = "BAD";
-        ttype = tokenIDMap.get(tokenTypeName);
-      }
-
-      tok.setType(ttype);
-      tok.setTokenTypeName(tokenTypeName);
-    }
-
-  }
-
-  public List<HOWLERToken> tokenizeFlat(String input) {
-
-    ArrayList<HOWLERToken> toks = new ArrayList<HOWLERToken>();
-
-    String clean = clean(input);
-
-    List<List<HOWLERToken>> sentences = tokenize(clean);
-
-    for (List<HOWLERToken> sent : sentences) {
-
-      toks.addAll(sent);
-
-    }
-
-    return toks;
-  }
-
   @Override
   public Token nextToken() {
 
-    if (i >= tokens.size()) {
+    if (tokenIndex >= tokens.size()) {
       if (eofToken == null) {
         int start = -1;
         if (tokens.size() > 0) {
@@ -440,63 +666,50 @@ public class HowlerLexer implements TokenSource {
         }
 
         int stop = Math.max(-1, start - 1);
-        eofToken = tokenFactory.create(new Pair<TokenSource, CharStream>(this, getInputStream()), HOWLERToken.EOF,
+        eofToken = tokenFactory.create(new Pair<TokenSource, CharStream>(this, getInputStream()), HowlerToken.EOF,
             "EOF", Token.DEFAULT_CHANNEL, start, stop, getLine(), getCharPositionInLine());
       }
 
       return eofToken;
     }
 
-    HOWLERToken t = tokens.get(i);
-    if (i == tokens.size() - 1 && t.getType() == HOWLERToken.EOF) {
+    HowlerToken t = tokens.get(tokenIndex);
+    if (tokenIndex == tokens.size() - 1 && t.getType() == HowlerToken.EOF) {
       eofToken = t;
     }
 
-    i++;
+    tokenIndex++;
     return t;
   }
 
   @Override
   public int getLine() {
-    if (i < tokens.size()) {
-      return tokens.get(i).getLine();
-    } else if (eofToken != null) {
-      return eofToken.getLine();
-    } else if (tokens.size() > 0) {
-      // have to calculate the result from the line/column of the previous
-      // token, along with the text of the token.
-      HOWLERToken lastToken = tokens.get(tokens.size() - 1);
-      int line = lastToken.getLine();
-
-      String tokenText = lastToken.getText();
-      if (tokenText != null) {
-        for (int i = 0; i < tokenText.length(); i++) {
-          if (tokenText.charAt(i) == '\n') {
-            line++;
-          }
-        }
-      }
-
-      // if no text is available, assume the token did not contain any
-      // newline characters.
-      return line;
-    }
+    return sentIndex;
+    /*
+     * if (tokenIndex < tokens.size()) { return tokens.get(tokenIndex).getLine(); } else if (eofToken != null) { return
+     * eofToken.getLine(); } else if (tokens.size() > 0) { // have to calculate the result from the line/column of the
+     * previous // token, along with the text of the token. HowlerToken lastToken = tokens.get(tokens.size() - 1); int
+     * line = lastToken.getLine(); String tokenText = lastToken.getText(); if (tokenText != null) { for (int i = 0; i <
+     * tokenText.length(); i++) { if (tokenText.charAt(i) == '\n') { line++; } } } // if no text is available, assume
+     * the token did not contain any // newline characters. return line;
+     */
+    // }
 
     // only reach this if tokens is empty, meaning EOF occurs at the first
     // position in the input
-    return 1;
+    // return 1;
   }
 
   @Override
   public int getCharPositionInLine() {
-    if (i < tokens.size()) {
-      return tokens.get(i).getCharPositionInLine();
+    if (tokenIndex < tokens.size()) {
+      return tokens.get(tokenIndex).getCharPositionInLine();
     } else if (eofToken != null) {
       return eofToken.getCharPositionInLine();
     } else if (tokens.size() > 0) {
       // have to calculate the result from the line/column of the previous
       // token, along with the text of the token.
-      HOWLERToken lastToken = tokens.get(tokens.size() - 1);
+      HowlerToken lastToken = tokens.get(tokens.size() - 1);
       String tokenText = lastToken.getText();
       if (tokenText != null) {
         int lastNewLine = tokenText.lastIndexOf('\n');
@@ -519,16 +732,7 @@ public class HowlerLexer implements TokenSource {
 
   @Override
   public CharStream getInputStream() {
-    if (i < tokens.size()) {
-      return tokens.get(i).getInputStream();
-    } else if (eofToken != null) {
-      return eofToken.getInputStream();
-    } else if (tokens.size() > 0) {
-      return tokens.get(tokens.size() - 1).getInputStream();
-    }
-
-    // no input stream information is available
-    return null;
+    return this.stream;
   }
 
   @Override
@@ -538,8 +742,8 @@ public class HowlerLexer implements TokenSource {
 
   @Override
   public void setTokenFactory(TokenFactory<?> factory) {
-    if (factory instanceof HOWLERTokenFactory) {
-      this.tokenFactory = (HOWLERTokenFactory) factory;
+    if (factory instanceof HowlerTokenFactory) {
+      this.tokenFactory = (HowlerTokenFactory) factory;
     } else {
       LOGGER.error("Cannot use a non HOWLERTokenFactory. Using default HOWLERTokenFactory");
     }
@@ -550,16 +754,8 @@ public class HowlerLexer implements TokenSource {
     return this.tokenFactory;
   }
 
-  public List<HOWLERToken> getTokens() {
+  public List<HowlerToken> getTokens() {
     return tokens;
-  }
-
-  public IRI getCurrentNamespace() {
-    return currentNamespace;
-  }
-
-  public void setCurrentNamespace(IRI currentNamespace) {
-    this.currentNamespace = currentNamespace;
   }
 
   private void initTagger(File lexiconFile, File ngramFile) {
@@ -609,11 +805,10 @@ public class HowlerLexer implements TokenSource {
 
         String posTag = pieces[0];
         String tokenTypeName = pieces[1];
-        Integer id = tokenIDMap.get(tokenTypeName);
+        int id = this.idForTokenTypeName(tokenTypeName);
 
-        if (id == null) {
+        if (id == 0) {
           LOGGER.error("POS mapped to unknown Lexer token type:" + posTag + "=>" + tokenTypeName);
-          id = 0;
         }
 
         tokenTypeMap.put(posTag, tokenTypeName);
@@ -625,10 +820,27 @@ public class HowlerLexer implements TokenSource {
 
   }
 
-  private void initPhraseMap(File phraseFile) {
+  private void initKnownPhraseMap(File phraseFile) {
+
+    // add all known phrases from the WordManager
+    for (Word ph : wm.getWords()) {
+      String norm = ph.getNormalForm();
+
+      String tType = tokenTypeFromWord(ph);
+
+      LOGGER
+          .trace("Adding known phrase to lexer from \tWord Manager\t" + norm + "\t" + tType + "\t" + ph.getWordType());
+
+      if (knownPhrases.containsKey(norm.toLowerCase())) {
+        String existingType = knownPhrases.get(norm.toLowerCase());
+        LOGGER.trace("Ambigous word from WordManager:" + ph + " replacing " + existingType);
+      }
+
+      knownPhrases.put(norm.toLowerCase(), tType);
+    }
 
     try {
-      List<String> lines = FileUtils.readLines(phraseFile);
+      List<String> lines = FileUtils.readLines(phraseFile, "UTF-8");
 
       for (String line : lines) {
         if (line.startsWith("#") || line.trim().isEmpty()) {
@@ -638,41 +850,25 @@ public class HowlerLexer implements TokenSource {
         // Phrase \t Alternate surface forms \t Token Type name
         String[] pieces = line.split("\t");
 
-        String phrase = pieces[0];
-        String altForms = pieces[1];
-        String tokenTypeName = pieces[2];
+        String phrase = pieces[0].trim();
+        String altForms = pieces[1].trim();
+        String tokenTypeName = pieces[2].trim();
+
+        // add the phrase to the known phrases map
+        knownPhrases.put(phrase.toLowerCase(), tokenTypeName);
+        LOGGER.trace("Adding known phrase to lexer from \tphrase file\t" + phrase + "\t" + tokenTypeName);
 
         String[] alts = altForms.split(",");
 
-        // every phrase is its own normal
-        phraseNormalMap.put(phrase, phrase);
-
-        // normalize each alternative to the phrase
+        // add the alt phrase to the known phrases map
         for (String alt : alts) {
-          if (!alt.trim().isEmpty()) {
-            phraseNormalMap.put(alt.trim(), phrase);
-
-            // add the alternative phrase to multiphrase
-            if (alt.trim().contains(" ") || phrase.contains("[")) {
-              multiphrases.add(alt.trim().replaceAll("\\s+", " "));
-            }
-
+          if (alt.isEmpty()) {
+            continue;
           }
+          knownPhrases.put(alt.toLowerCase(), tokenTypeName);
+          LOGGER.trace("Adding known phrase to lexer from \talt phrase file\t" + alt + "\t" + tokenTypeName);
+          phraseNormalMap.put(alt, phrase);
         }
-
-        // if a multiword phrase, add multiword phrases to multilist
-        if (phrase.contains(" ")) {
-          multiphrases.add(phrase.replaceAll("\\s+", " "));
-        }
-
-        phraseTypeMap.put(phrase, tokenTypeName);
-        tokenTypeMap.put(tokenTypeName, tokenTypeName);
-      }
-
-      // add all multiword phrases known to the Word Manager
-      for (String ph : wm.getMultiWordPhrases()) {
-        LOGGER.info("Adding multiword phrase to lexer from word manager" + ph);
-        multiphrases.add(ph.replaceAll("\\s+", " "));
       }
 
     } catch (IOException e) {
@@ -680,69 +876,136 @@ public class HowlerLexer implements TokenSource {
     }
   }
 
-  // dump a report of all the type info
-  public List<TypeInfo> generateTypeReport(File lexiconFile, File reportFile) {
+  public void initPhraser() {
 
-    List<TypeInfo> typeReport = new ArrayList<TypeInfo>();
+    TrieBuilder builder = Trie.builder();
+    builder.caseInsensitive().onlyWholeWords().removeOverlaps();
 
-    Set<String> posTags = new HashSet<String>();
-    Set<String> tokTypes = new HashSet<String>(tokenIDMap.keySet());
-    tokTypes.remove(null);
-
-    try {
-
-      // read the lexicon file to get all possible POS tags
-      for (String line : FileUtils.readLines(lexiconFile, "UTF-8")) {
-        String[] pieces = line.split(" ");
-        if (pieces.length > 2) {
-          for (int i = 1; i < pieces.length; i = i + 2) {
-            String tag = pieces[i];
-            posTags.add(tag);
-          }
-        } else {
-          LOGGER.error("Malformed line in lexicon file:" + line);
-        }
-      }
-
-      // for all POS tags, find the token type it is mapped to
-      for (String tag : posTags) {
-        TypeInfo typeInfo = new TypeInfo(tag, "POS", tokenTypeMap.get(tag));
-        tokTypes.remove(tokenTypeMap.get(tag));
-        typeReport.add(typeInfo);
-      }
-
-      // for all phrases, find the token type it is mapped to
-      for (String phrase : phraseTypeMap.keySet()) {
-        TypeInfo typeInfo = new TypeInfo(phrase, "PHRASE", phraseTypeMap.get(phrase));
-        tokTypes.remove(tokenTypeMap.get(phraseTypeMap.get(phrase)));
-        typeReport.add(typeInfo);
-      }
-
-      // see if there any token types which have no POS tag or phrase mapping
-      for (String tokType : tokTypes) {
-        TypeInfo typeInfo = new TypeInfo("", "Nothing mapped to this Token Type", tokType);
-        typeReport.add(typeInfo);
-      }
-
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    // add all the multiword phrases to the phraser
+    for (String phrase : knownPhrases.keySet()) {
+      builder.addKeyword(phrase);
     }
 
-    if (reportFile != null) {
-      try {
-        FileUtils.writeStringToFile(reportFile, "POS tag or Phrase\tElementType\tTokenType\tWordType\n", false);
+    phraser = builder.build();
 
-        for (TypeInfo info : typeReport) {
-          FileUtils.writeStringToFile(reportFile, info.toString() + "\n", true);
-        }
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+  }
+
+  // add a known phrase to the lexer
+  public void addKnownPhrase(Word ph, boolean init) {
+    
+    if(Vocabulary.isBuiltInVocabulary(ph)){
+      LOGGER.warn("Attempt to redefine built in Word:" + ph);
+      return;
+    }
+    
+    String phraseKey = ph.getNormalForm().toLowerCase();
+    if (!knownPhrases.containsKey(phraseKey)) {
+      knownPhrases.put(phraseKey, tokenTypeFromWord(ph));
+    } else {
+      String existingType = knownPhrases.get(phraseKey);
+
+      if (!existingType.equals(tokenTypeFromWord(ph)) && !existingType.equals("AMBIG_WORD")) {
+        knownPhrases.put(phraseKey, "AMBIG_WORD");
+        LOGGER.debug("Add ambigous word from text:" + phraseKey + " " + "AMBIG_WORD" + " replacing " + existingType);
       }
     }
-    return typeReport;
 
+    if (init) {
+      initPhraser();
+    }
+
+  }
+
+  private String tokenTypeFromWord(Word wrd) {
+
+    WordType wType = wrd.getWordType();
+
+    if (wrd instanceof Predicate) {
+      Predicate pred = (Predicate) wrd;
+      if (pred.isBuiltinPredicate()) {
+        return pred.getPredicateType().toString();
+      } else {
+        return "PREDICATE";
+      }
+    }
+
+    if (wType.equals(WordType.GENERIC_WORD)) {
+      return wrd.getPOS();
+    }
+
+    if (wType.equals(WordType.PREDICATE_CHARACTERISTIC)) {
+      return wType.toString();
+    }
+
+    if (wType.equals(WordType.WORD_TYPE)) {
+      return wType.toString();
+    }
+
+    if (wType.equals(WordType.DATA_FACET)) {
+      return wType.toString();
+    }
+
+    if (wType.isEnumerated()) {
+      return wrd.getLogicalForm();
+    }
+
+    return wType.toString();
+  }
+
+  private boolean isStop(HowlerToken tok) {
+    return tok.getTokenTypeName().equals("PERIOD");
+  }
+
+  private boolean isDash(HowlerToken tok) {
+    return !tok.getTokenTypeName().equals(quotedTextTypeName) && tok.getText().trim().matches("[-\\/\\+]");
+  }
+
+  private boolean isQuoteChar(HowlerToken tok) {
+    return tok.getText().trim().equals("\"");
+  }
+
+  private boolean isEscape(HowlerToken tok) {
+    return tok.getText().trim().endsWith("\\");
+  }
+
+  private boolean isURL(HowlerToken tok) {
+    return tok.getText().trim().startsWith("http:");
+  }
+
+  private int idForTokenTypeName(String name) {
+    if (tokenIDMap.containsKey(name)) {
+      return tokenIDMap.get(name);
+    } else {
+      LOGGER.warn("No token ID mapping for token name: " + name);
+      return 0;
+    }
+  }
+
+  private boolean containsDigits(CharSequence cs) {
+    if (cs == null) {
+      return false;
+    }
+    final int sz = cs.length();
+    for (int i = 0; i < sz; i++) {
+      if (Character.isDigit(cs.charAt(i))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean isAbbrev(CharSequence cs) {
+    if (cs == null || cs.length() < 3) {
+      return false;
+    }
+
+    final int sz = Math.min(cs.length(), 3);
+    for (int i = 0; i < sz; i++) {
+      if (!Character.isUpperCase(cs.charAt(i))) {
+        return false;
+      }
+    }
+    return true;
   }
 
 }

@@ -1,4 +1,16 @@
-//should be parsed as "descriptionStatementData" or "factStatementData"
+
+// Declaration statements
+big_number is a datatype.
+big number is a datatype.
+adult age is a datatype.
+quote is a datatype.
+weighs is a data verb.
+has weight is a data verb.
+has weight of is a data verb.
+social security number is a datatype.
+social_security_number is a datatype.
+SSN is a datatype.
+person name is a datatype.
 
 // Basic data positive and negative fact (assertion) sentences
 Bob weighs 7.
@@ -8,18 +20,29 @@ Bob doesn't weigh 7.
 Bob doesn't weigh 4.5 .
 Bob says "Life is sorrow".
 Bob doesn't say "Life is a box of chocolates".
-Bob doesn't say "Life is a box of chocolates" but says "Life is a cheeburger".
 Carol has "Wombats, The Untold Story.".
-Carol does "The Watusi" and sings "The Twist".
+
+// escaped quotes
+Bob says "escaped quote \" here".
+Bob says "escaped odd \"multiple\" quote \" here".
+Bob says "escaped\" \"even \" quote \" here".
 
 // Data type definitions
-A social security number is a String that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}" .
-A social_security_number is a String that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}" .
-A SSN is a String that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}" .
+A social security number is a String datatype that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}" .
+A social_security_number is a String datatype that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}" .
+A SSN is a String datatype that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}" .
 
 // multiple clauses
-A SSN is a String that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}" and a length of 9.
+A SSN is a String datatype that has a pattern of "[0-9]{3}-[0-9]{2}-[0-9]{4}" and a length of 9.
 
-An adult age is an Integer that is greater than 18.
-An adult age is an Integer greater than 18.
-A person name is a String.
+An adult age is an Integer datatype that is greater than 18.
+An adult age is an Integer datatype greater than 18.
+A person name is a String datatype.
+
+// Domain range statements
+Only people weigh a data value.
+Only people say a data value.
+A thing say only a string datatype.
+A thing weigh only a decimal datatype.
+
+

@@ -7,12 +7,20 @@ public abstract class SubjectObjectPhrase implements Phrase {
 
   private QuantifierExpression quantifierExpression = new QuantifierExpression(Quantifier.NULL);
 
-  public QuantifierExpression getQuantifier() {
+  public QuantifierExpression getQuantifierExpression() {
     return quantifierExpression;
   }
 
-  public void setQuantifier(QuantifierExpression quantifierExpression) {
+  public void setQuantifierExpression(QuantifierExpression quantifierExpression) {
     this.quantifierExpression = quantifierExpression;
+  }
+
+  public Quantifier getQuantifierType() {
+    return this.quantifierExpression.getQuantifierType();
+  }
+
+  public void setQuantifierType(Quantifier q) {
+    this.quantifierExpression.setQuantifierType(q);
   }
 
   public boolean isNegative() {
@@ -26,5 +34,4 @@ public abstract class SubjectObjectPhrase implements Phrase {
   public void flipNegative() {
     this.quantifierExpression.flipNegative();
   }
-
 }

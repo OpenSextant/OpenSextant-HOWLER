@@ -34,7 +34,8 @@ import org.opensextant.howler.abstraction.words.enumerated.Scope;
 public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhrase {
 
   List<T> phrases = new ArrayList<T>();
-  BooleanSetType booleanSetType = BooleanSetType.INTERSECTION;
+  BooleanSetType booleanSetType = BooleanSetType.AND;
+  boolean disjoint = false;
 
   public List<T> getPhrases() {
     return phrases;
@@ -54,6 +55,14 @@ public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhras
 
   public void setSetType(BooleanSetType booleanSetType) {
     this.booleanSetType = booleanSetType;
+  }
+
+  public boolean isDisjoint() {
+    return disjoint;
+  }
+
+  public void setDisjoint(boolean disjoint) {
+    this.disjoint = disjoint;
   }
 
   public boolean allInstances() {
@@ -76,15 +85,13 @@ public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhras
 
     StringBuilder bldr = new StringBuilder();
 
-    bldr.append(this.getScope() + " ");
-
     String op = "";
 
-    if (this.booleanSetType == BooleanSetType.INTERSECTION) {
+    if (this.booleanSetType == BooleanSetType.AND) {
       op = " AND ";
     }
 
-    if (this.booleanSetType == BooleanSetType.UNION) {
+    if (this.booleanSetType == BooleanSetType.OR) {
       op = " OR ";
     }
 
@@ -93,24 +100,27 @@ public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhras
       op = " OR ";
     }
 
+    bldr.append(this.getQuantifierExpression());
+    bldr.append(" ");
+
     bldr.append(phrases.get(0).toString());
 
     for (int i = 1; i < phrases.size(); i++) {
       bldr.append(op);
-      bldr.append(phrases.get(i));
+      bldr.append(phrases.get(i).toString());
     }
 
-    return phrases.toString();
+    return bldr.toString();
   }
 
   @Override
   public boolean isObjectScope() {
-    return this.getScope() == Scope.OBJECT;
+    return this.getScope() == Scope.OBJECT_SCOPE;
   }
 
   @Override
   public boolean isDataScope() {
-    return this.getScope() == Scope.DATA;
+    return this.getScope() == Scope.DATA_SCOPE;
   }
 
   @Override
@@ -118,12 +128,12 @@ public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhras
     if (this.isConsistentScope()) {
       return this.phrases.get(0).getScope();
     }
-    return Scope.GENERAL;
+    return Scope.GENERAL_SCOPE;
   }
 
   @Override
   public boolean isAnnotationScope() {
-    return this.getScope() == Scope.ANNOTATION;
+    return this.getScope() == Scope.ANNOTATION_SCOPE;
   }
 
   @Override
@@ -140,9 +150,9 @@ public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhras
   @Override
   public List<Word> getWords() {
     List<Word> wrds = new ArrayList<Word>();
-    wrds.addAll(this.getQuantifier().getWords());
+    wrds.addAll(this.getQuantifierExpression().getWords());
     wrds.addAll(this.phrases.get(0).getWords());
-    for (int i=1; i<this.phrases.size(); i++ ) {
+    for (int i = 1; i < this.phrases.size(); i++) {
       wrds.add(this.booleanSetType);
       wrds.addAll(this.phrases.get(i).getWords());
     }

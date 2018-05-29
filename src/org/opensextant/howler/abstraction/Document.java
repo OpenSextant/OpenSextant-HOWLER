@@ -25,14 +25,17 @@
 package org.opensextant.howler.abstraction;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.opensextant.howler.abstraction.phrases.Footnote;
+import org.opensextant.howler.abstraction.words.enumerated.WordType;
 import org.semanticweb.owlapi.model.IRI;
 
 /**
- * The Class Document is a container for statements
+ * Document is a container for statements, vocabulary and footnotes
  */
 public class Document {
 
@@ -41,7 +44,7 @@ public class Document {
   private List<IRI> importedDocuments = new ArrayList<IRI>();
   private String shortname = ":";
   private List<Statement> statements = new ArrayList<Statement>();
-  private List<Word> vocabulary = new ArrayList<Word>();
+  private Set<Word> vocabulary = new HashSet<Word>();
   private List<Footnote> footnotes = new ArrayList<Footnote>();
 
   public Document() {
@@ -90,22 +93,20 @@ public class Document {
 
   public void setStatements(List<Statement> statements) {
     this.statements = statements;
+    this.vocabulary.clear();
+    for (Statement state : statements) {
+      extractVocab(state);
+    }
+
   }
 
   public void addStatement(Statement statement) {
     this.statements.add(statement);
+    extractVocab(statement);
   }
 
-  public List<Word> getVocabulary() {
+  public Set<Word> getVocabulary() {
     return vocabulary;
-  }
-
-  public void setVocabulary(List<Word> vocabulary) {
-    this.vocabulary = vocabulary;
-  }
-
-  public void addVocabulary(Word wrd) {
-    this.vocabulary.add(wrd);
   }
 
   public List<Footnote> getFootnotes() {
@@ -114,10 +115,38 @@ public class Document {
 
   public void setFootnotes(List<Footnote> footnotes) {
     this.footnotes = footnotes;
+    for (Footnote fn : footnotes) {
+      extractVocab(fn);
+    }
   }
 
   public void addFootnote(Footnote footnote) {
     this.footnotes.add(footnote);
+    extractVocab(footnote);
+  }
+
+  private void extractVocab(Statement statement) {
+
+    List<Word> wrds = statement.getWords();
+
+    for (Word w : wrds) {
+      if (!w.getWordType().isEnumerated() && !w.getWordType().equals(WordType.GENERIC_WORD)
+          && !w.getWordType().equals(WordType.DATAVALUE)) {
+        this.vocabulary.add(w);
+      }
+    }
+
+  }
+
+  private void extractVocab(Footnote fn) {
+
+    for (Word w : fn.getWords()) {
+      if (!w.getWordType().isEnumerated() && !w.getWordType().equals(WordType.GENERIC_WORD)
+          && !w.getWordType().equals(WordType.DATAVALUE)) {
+        this.vocabulary.add(w);
+      }
+    }
+
   }
 
   public String toString() {

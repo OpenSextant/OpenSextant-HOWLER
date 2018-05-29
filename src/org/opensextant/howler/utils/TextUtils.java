@@ -34,94 +34,112 @@ import org.slf4j.LoggerFactory;
 
 public class TextUtils {
 
-    static Map<String, Integer> numbers = new HashMap<String, Integer>();
+  static Map<String, Integer> numbers = new HashMap<String, Integer>();
 
-    static {
-	numbers.put("one", 1);
-	numbers.put("two", 2);
-	numbers.put("three", 3);
-	numbers.put("four", 4);
-	numbers.put("five", 5);
-	numbers.put("six", 6);
-	numbers.put("seven", 7);
-	numbers.put("eight", 8);
-	numbers.put("nine", 9);
-	numbers.put("ten", 10);
-	numbers.put("eleven", 11);
-	numbers.put("twelve", 12);
+  static {
+    numbers.put("one", 1);
+    numbers.put("two", 2);
+    numbers.put("three", 3);
+    numbers.put("four", 4);
+    numbers.put("five", 5);
+    numbers.put("six", 6);
+    numbers.put("seven", 7);
+    numbers.put("eight", 8);
+    numbers.put("nine", 9);
+    numbers.put("ten", 10);
+    numbers.put("eleven", 11);
+    numbers.put("twelve", 12);
+    numbers.put("thirteen", 13);
+    numbers.put("fourteen", 14);
+    numbers.put("fifteen", 15);
+    numbers.put("sixteen", 16);
+    numbers.put("seventeen", 17);
+    numbers.put("eighteen", 18);
+    numbers.put("nineteen", 19);
+    numbers.put("twenty", 20);
+  }
+
+  // Log object
+  private static final Logger LOGGER = LoggerFactory.getLogger(TextUtils.class);
+
+  public static String convertNumber(String text) {
+
+    if (numbers.containsKey(text.toLowerCase())) {
+      return numbers.get(text.toLowerCase()).toString();
     }
 
-    // Log object
-    private static final Logger LOGGER = LoggerFactory.getLogger(TextUtils.class);
-
-    public static Integer convertNumber(String text) {
-
-	try {
-	    if (text.matches("[0-9]+")) {
-		int num = Integer.parseInt(text);
-		return num;
-	    }
-	} catch (NumberFormatException e) {
-	    LOGGER.error("Didn't convert number string to numeric " + text);
-	    return 1;
-	}
-
-	if (numbers.containsKey(text.toLowerCase())) {
-	    return numbers.get(text);
-	}
-
-	LOGGER.error("Didn't convert number string to numeric " + text);
-
-	return 1;
+    if (!text.matches("[-+\\,\\.0-9]+")) {
+      LOGGER.trace("Non-numeric text tagged as number:" + text);
     }
 
-    public static String getLogicalForm(IRI key) {
-	String keyString = key.toString().trim();
+    return text;
+  }
 
-	String logical = keyString.substring(getLocalNameIndex(keyString));
+  public static String getLocalName(IRI key) {
 
-	if (logical.isEmpty()) {
-	    LOGGER.debug("IRI with empty local name:" + keyString);
-	    String[] pieces = keyString.split("[/#]");
-	    logical = pieces[pieces.length - 1];
-	}
-
-	return logical;
+    if (key == null) {
+      LOGGER.debug("Null IRI has no local name ");
+      return "";
     }
 
-    public static String getNamespace(IRI key) {
-	String keyString = key.toString().trim();
+    String keyString = key.toString().trim();
 
-	String ns = keyString.substring(0, getLocalNameIndex(keyString));
+    String local = keyString.substring(getLocalNameIndex(keyString));
 
-	if (ns.isEmpty()) {
-	    LOGGER.debug("IRI with empty namespace:" + keyString);
-	    return Vocabulary.BUILTIN_NS.toString();
-	}
-
-	return ns;
+    if (local.isEmpty()) {
+      LOGGER.trace("IRI with empty local name:" + keyString);
     }
 
-    public static int getLocalNameIndex(String uri) {
-	int separatorIdx = uri.indexOf('#');
+    return local;
+  }
 
-	if (separatorIdx < 0) {
-	    separatorIdx = uri.lastIndexOf('/');
-	}
+  public static IRI getNamespace(IRI key) {
+    String keyString = key.toString().trim();
+    String ns = keyString.substring(0, getLocalNameIndex(keyString));
 
-	if (separatorIdx < 0) {
-	    separatorIdx = uri.lastIndexOf(':');
-	}
+    if (ns.isEmpty()) {
+      LOGGER.trace("IRI with empty namespace:" + keyString);
+      return Vocabulary.BUILTIN_NS;
+    } else {
+      return IRI.create(ns);
+    }
+  }
 
-	if (separatorIdx < 0) {
-	    throw new IllegalArgumentException("No separator character founds in URI: " + uri);
-	}
+  private static int getLocalNameIndex(String uri) {
+    int separatorIdx = uri.indexOf('#');
 
-	return separatorIdx + 1;
+    if (separatorIdx < 0) {
+      separatorIdx = uri.lastIndexOf('/');
     }
 
-    public static String createLogicalFromNormal(String normal) {
-	return normal.replaceAll("\\s+", "_");
+    if (separatorIdx < 0) {
+      separatorIdx = uri.lastIndexOf(':');
     }
+
+    if (separatorIdx < 0) {
+      LOGGER.debug("URI has no separator charater:" + uri);
+    }
+
+    return separatorIdx + 1;
+  }
+
+  public static boolean looksLikeFilePath(IRI iri) {
+
+    String localName = getLocalName(iri);
+
+    if (localName.contains(".")) {
+      // TODO check for common extensions?
+      return true;
+    }
+    if (localName.matches("[0-9]+")) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public static String createLogicalFromNormal(String normal) {
+    return normal.replaceAll("\\s+", "_");
+  }
 
 }

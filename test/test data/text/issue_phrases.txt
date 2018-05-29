@@ -1,0 +1,15 @@
+is the only.
+is the inverse of.
+is not the only.
+is not the inverse of.
+
+//---- possessives (NYI) -----
+// convert to an aircraft of Bob
+Bob's aircraft.
+an aircraft of Bob.
+
+// bad POS tagging?
+lives in an apartment.
+lives near an airport.
+lives near Dulles.
+like themselves.

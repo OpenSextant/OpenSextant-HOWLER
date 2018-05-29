@@ -5,13 +5,13 @@ import org.antlr.v4.runtime.TokenFactory;
 import org.antlr.v4.runtime.TokenSource;
 import org.antlr.v4.runtime.misc.Pair;
 
-public class HOWLERTokenFactory implements TokenFactory<HOWLERToken> {
+public class HowlerTokenFactory implements TokenFactory<HowlerToken> {
 
   @Override
-  public HOWLERToken create(Pair<TokenSource, CharStream> source, int type, String text, int channel, int start,
+  public HowlerToken create(Pair<TokenSource, CharStream> source, int type, String text, int channel, int start,
       int stop, int line, int charPositionInLine) {
 
-    HOWLERToken t = new HOWLERToken(type, text);
+    HowlerToken t = new HowlerToken(type, text);
     t.setStartIndex(start);
     t.setStopIndex(stop);
     t.setChannel(channel);
@@ -25,8 +25,8 @@ public class HOWLERTokenFactory implements TokenFactory<HOWLERToken> {
   }
 
   @Override
-  public HOWLERToken create(int type, String text) {
-    return new HOWLERToken(type, text);
+  public HowlerToken create(int type, String text) {
+    return new HowlerToken(type, text);
   }
 
 }

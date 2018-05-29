@@ -1,10 +1,10 @@
 package org.opensextant.howler.owl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.Map;
 
 import org.opensextant.howler.abstraction.Document;
 import org.opensextant.howler.abstraction.Phrase;
@@ -19,8 +19,11 @@ import org.opensextant.howler.abstraction.phrases.PhraseSet;
 import org.opensextant.howler.abstraction.phrases.PredicateExpression;
 import org.opensextant.howler.abstraction.phrases.PredicatePhrase;
 import org.opensextant.howler.abstraction.phrases.SubjectObjectPhrase;
+import org.opensextant.howler.abstraction.phrases.WordPhrase;
+import org.opensextant.howler.abstraction.statements.DeclarationStatement;
 import org.opensextant.howler.abstraction.statements.DescriptionStatement;
 import org.opensextant.howler.abstraction.statements.FactStatement;
+import org.opensextant.howler.abstraction.statements.PredicateCharacteristicStatement;
 import org.opensextant.howler.abstraction.statements.PredicateRelationStatement;
 import org.opensextant.howler.abstraction.words.Adjective;
 import org.opensextant.howler.abstraction.words.AnnotationPredicate;
@@ -32,17 +35,23 @@ import org.opensextant.howler.abstraction.words.DataValue;
 import org.opensextant.howler.abstraction.words.Noun;
 import org.opensextant.howler.abstraction.words.ObjectPredicate;
 import org.opensextant.howler.abstraction.words.Predicate;
+import org.opensextant.howler.abstraction.words.Predicate.PredicateType;
 import org.opensextant.howler.abstraction.words.ProperNoun;
 import org.opensextant.howler.abstraction.words.enumerated.BooleanSetType;
 import org.opensextant.howler.abstraction.words.enumerated.DataFacet;
 import org.opensextant.howler.abstraction.words.enumerated.PredicateCharacteristic;
 import org.opensextant.howler.abstraction.words.enumerated.Quantifier;
 import org.opensextant.howler.abstraction.words.enumerated.WordType;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.ClassExpressionType;
 import org.semanticweb.owlapi.model.DataRangeType;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.MissingImportEvent;
+import org.semanticweb.owlapi.model.MissingImportHandlingStrategy;
+import org.semanticweb.owlapi.model.MissingImportListener;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -81,6 +90,7 @@ import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointUnionAxiom;
+import org.semanticweb.owlapi.model.OWLDocumentFormat;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
@@ -115,12 +125,17 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectUnionOf;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLPrimitive;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.OWLPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLPropertyExpression;
+import org.semanticweb.owlapi.model.OWLPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLReflexiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubClassOfAxiomShortCut;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
@@ -128,6 +143,7 @@ import org.semanticweb.owlapi.model.OWLSymmetricObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.SWRLRule;
 import org.semanticweb.owlapi.model.parameters.Imports;
+import org.semanticweb.owlapi.util.AutoIRIMapper;
 import org.semanticweb.owlapi.util.OWLAPIStreamUtils;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 import org.slf4j.Logger;
@@ -138,7 +154,12 @@ public class FromOWL {
   // Log object
   private static final Logger LOGGER = LoggerFactory.getLogger(FromOWL.class);
 
-  WordManager wordManager = WordManager.getWordManager();
+  private OWLOntologyManager ontologyManager = OWLManager.createOWLOntologyManager();
+
+  private WordManager wordManager = WordManager.getWordManager();
+
+  // OWLOntologyManager owlOntologyManager = OWLManager.createOWLOntologyManager();
+  // OWLDataFactory owlDataFactory = owlOntologyManager.getOWLDataFactory();
 
   // the limit of the number of pairwise axioms to create from a set of
   // entities or -1 to always do all
@@ -148,8 +169,46 @@ public class FromOWL {
   // member
   private boolean flattenSingleSet = false;
 
-  public WordManager getWordManager() {
-    return wordManager;
+  // converted an axiom to its negation normal form
+  private boolean negNormal = false;
+
+  // convert an domain or range axiom to its subclass axiom logical equivalent
+  private boolean rewriteDomainRanges = false;
+
+  private boolean rewriteAllAsSubclass = false;
+
+  private boolean repairPuns = false;
+
+  public OWLOntologyManager getOntologyManager() {
+    return ontologyManager;
+  }
+
+  public void setOntologyManager(OWLOntologyManager ontologyManager) {
+    this.ontologyManager = ontologyManager;
+  }
+
+  public FromOWL(boolean ignoreMissingImports) {
+
+    if (ignoreMissingImports) {
+      OWLOntologyLoaderConfiguration loadConfig = new OWLOntologyLoaderConfiguration()
+          .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT).setStrict(false)
+          .setFollowRedirects(true).setRepairIllegalPunnings(repairPuns).setTreatDublinCoreAsBuiltIn(false);
+
+      ontologyManager.setOntologyLoaderConfiguration(loadConfig);
+
+      // add a listener for any missing imports
+      ontologyManager.addMissingImportListener(new MissingImportListener() {
+        private static final long serialVersionUID = 1L;
+        public void importMissing(MissingImportEvent event) {
+          IRI importURI = event.getImportedOntologyURI();
+          LOGGER.error("Cannot import\t" + importURI + "\t" + event.getCreationException().getMessage());
+        }
+      });
+    }
+  }
+
+  public FromOWL() {
+    this(true);
   }
 
   public int getMaxPairs() {
@@ -170,16 +229,73 @@ public class FromOWL {
     this.flattenSingleSet = allowSingleSet;
   }
 
+  // convert to negation normal form?
+  public boolean isNegNormal() {
+    return negNormal;
+  }
+
+  // set behavior for converting to negation normal form
+  public void setNegNormal(boolean negNormal) {
+    this.negNormal = negNormal;
+  }
+
+  // rewrite domain/range axioms to subclass axioms
+  public boolean isRewriteDomainRanges() {
+    return rewriteDomainRanges;
+  }
+
+  // set behavior for rewriting domain/range axioms to subclass axioms
+  public void setRewriteDomainRanges(boolean rewriteDomainRanges) {
+    this.rewriteDomainRanges = rewriteDomainRanges;
+  }
+
+  // rewrite all possible axioms as subclass equivalents
+  public boolean isRewriteAllAsSubclass() {
+    return rewriteAllAsSubclass;
+  }
+
+  // rewrite all possible axioms as subclass equivalents
+  public void setRewriteAllAsSubclass(boolean rewriteAllAsSubclass) {
+    this.rewriteAllAsSubclass = rewriteAllAsSubclass;
+  }
+
+  // convert a file containing an ontology to a Document
+  public Document convertOWL(File ontoFile) {
+    OWLOntology onto = loadOWL(ontoFile);
+    return convertOWL(onto);
+  }
+
+  // convert a file containing an ontology to an ontology
+  public OWLOntology loadOWL(File ontoFile) {
+
+    // AutoMapper attempts to find imported ontologies located in same
+    // directories as ontology
+    AutoIRIMapper mapper = new AutoIRIMapper(ontoFile.getParentFile(), true);
+    ontologyManager.getIRIMappers().add(mapper);
+
+    try {
+      OWLOntology onto = ontologyManager.loadOntologyFromOntologyDocument(ontoFile);
+      LOGGER.trace("Loaded ontology from " + ontoFile);
+      return onto;
+    } catch (OWLOntologyCreationException e) {
+      LOGGER.error("Could not load ontology from " + ontoFile + ":" + e.getMessage());
+      return null;
+    }
+  }
+
   public Document convertOWL(OWLOntology onto) {
 
     Document doc = new Document();
 
-    // if the ontology has a version IRI
+    // add any namespace prefixes seen in onto to the word manager
+    addNameSpacePrefixes(onto);
+
+    // if the ontology has a ontology IRI, set the document equivalent
     if (onto.getOntologyID().getOntologyIRI().isPresent()) {
       doc.setDocumentID(onto.getOntologyID().getOntologyIRI().get());
     }
 
-    // if the ontology has a version IRI
+    // if the ontology has a version IRI, set the document equivalent
     if (onto.getOntologyID().getVersionIRI().isPresent()) {
       doc.setVersionID(onto.getOntologyID().getVersionIRI().get());
     }
@@ -187,90 +303,69 @@ public class FromOWL {
     // add the ontology level annotations as footnotes to document
     for (OWLAnnotation anno : OWLAPIStreamUtils.asList(onto.annotations())) {
       doc.addFootnote(convertOWL(anno));
+      // TODO can any of these be used as a title if present?
     }
 
     // add the imports
     doc.setImportedDocuments(OWLAPIStreamUtils.asList(onto.directImportsDocuments()));
+    // TODO add option to convert the imports as well?
 
-    // convert each axioms and add result to document
+    // convert each axiom and add result to document
     for (OWLAxiom axiom : OWLAPIStreamUtils.asList(onto.axioms())) {
       List<? extends Statement> statements = convertOWL(axiom);
+
+      String axString = axiom.toString();
       for (Statement st : statements) {
+        st.setSource(axString);
         doc.addStatement(st);
       }
     }
 
-    // renormalize after whole ontology processed to get any labels added
-    // during axiom conversion
-    wordManager.renormalize();
-
-    // add the vocabulary by lookingup the entities from the ontology
-    // signature
-    for (OWLEntity entity : OWLAPIStreamUtils.asSet(onto.signature(Imports.EXCLUDED))) {
-      if (includeInVocabulary(entity, onto)) {
-        Optional<Word> wrd = lookupPrimitive(entity);
-        if (wrd.isPresent()) {
-          LOGGER.debug("Adding Vocabulary to match entity: " + entity.getEntityType() + ":" + entity);
-          doc.addVocabulary(wrd.get());
-        } else {
-          LOGGER.error("No Word in Vocabulary to match entity: " + entity.getEntityType() + ":" + entity);
-        }
+    // create a declaration for each element of the signature not explicitly declared
+    for (OWLEntity ent : OWLAPIStreamUtils.asList(onto.signature(Imports.EXCLUDED))) {
+      // don't include builtin (OWL,RDF..) entities
+      if (!onto.isDeclared(ent, Imports.EXCLUDED) && !ent.isBuiltIn()) {
+        DeclarationStatement statement = new DeclarationStatement();
+        statement.setWord(convertOWLPrimitive(ent));
+        statement.setDerived(true);
+        statement.setSource("Declaration(" + ent.getEntityType() + "(" + ent + "))");
+        doc.addStatement(statement);
       }
     }
 
-    // add the vocabulary from anonymous individuals (they aren't entities,
-    // so not in signature)
-    for (OWLAnonymousIndividual ind : OWLAPIStreamUtils.asSet(onto.anonymousIndividuals())) {
-      Optional<Word> wrd = lookupPrimitive(ind);
-      if (wrd.isPresent()) {
-        doc.addVocabulary(wrd.get());
-      } else {
-        LOGGER.error("No Word in Vocabulary to match Anonymous Individual: " + ind);
-      }
-    }
-
-    // add vocabulary from "bare" IRIs since they aren't entities either
-    List<IRI> bares = findBareIRIs(onto);
-    for (IRI iri : bares) {
-      Optional<Word> wrd = lookupPrimitive(iri);
-      if (wrd.isPresent()) {
-        LOGGER.debug("Adding Vocabulary to match IRI: " + iri + ":" + wrd);
-        doc.addVocabulary(wrd.get());
-      } else {
-        LOGGER.error("No Word in Vocabulary to match IRI: " + iri);
-      }
-    }
+    // clear the manager
+    ontologyManager.clearOntologies();
 
     return doc;
   }
 
-  // what entities/words to include in a documents vocabulary section
-  private boolean includeInVocabulary(OWLEntity entity, OWLOntology onto) {
+  // convert each axiom by type
+  public List<? extends Statement> convertOWL(OWLAxiom ax) {
 
-    // (NOTE: this only considers LOADED imported ontologies, so if import
-    // could not be loaded...)
-    // if declared somewhere...
-    if (onto.isDeclared(entity, Imports.INCLUDED)) {
-
-      // if not declared in onto (must be only in an import)
-      if (!onto.isDeclared(entity, Imports.EXCLUDED)) {
-        LOGGER.warn("Not including in Vocabulary\t" + entity + "\t" + onto.getOntologyID());
-        return false;
-      } else {
-        // must be declared in onto
-        return true;
+    OWLAxiom axiom = ax;
+    if (negNormal) {
+      // rewrite axiom into its negation normal form
+      axiom = ax.getNNF();
+      if (!axiom.equals(ax)) {
+        LOGGER.debug("Rewrote to negation normal form:" + ax + " => " + axiom);
       }
     }
 
-    // false if appears in signature of imported onto? Should have been
-    // declared in imports?
+    // if rewriting axioms as subclasses
+    if (axiom instanceof OWLSubClassOfAxiomShortCut) {
+      OWLSubClassOfAxiomShortCut sub = (OWLSubClassOfAxiomShortCut) axiom;
 
-    // true for everything else
-    return true;
-  }
+      if (rewriteDomainRanges && (axiom instanceof OWLPropertyRangeAxiom || axiom instanceof OWLPropertyDomainAxiom)) {
+        axiom = sub.asOWLSubClassOfAxiom();
+        LOGGER.debug("Rewrote " + ax.getAxiomType() + "to subclass equivalent:" + ax + " => " + axiom);
+      }
 
-  // convert each axiom by type
-  public List<? extends Statement> convertOWL(OWLAxiom axiom) {
+      if (this.rewriteAllAsSubclass) {
+        axiom = sub.asOWLSubClassOfAxiom();
+        LOGGER.debug("Rewrote " + ax.getAxiomType() + "to subclass equivalent:" + ax + " => " + axiom);
+      }
+
+    }
 
     AxiomType<?> axType = axiom.getAxiomType();
 
@@ -397,10 +492,17 @@ public class FromOWL {
     return new ArrayList<Statement>();
   }
 
-  private List<Statement> convertOWL(OWLDeclarationAxiom ax) {
-    // convert the entity to a Word
-    convertOWLPrimitive(ax.getEntity());
-    return new ArrayList<Statement>();
+  private List<DeclarationStatement> convertOWL(OWLDeclarationAxiom ax) {
+    List<DeclarationStatement> statementList = new ArrayList<DeclarationStatement>();
+
+    DeclarationStatement statement = new DeclarationStatement();
+
+    statement.setWord(convertOWLPrimitive(ax.getEntity()));
+    attachFootnotes(statement, ax);
+
+    statementList.add(statement);
+
+    return statementList;
   }
 
   private List<DescriptionStatement<ObjectPredicate>> convertOWL(OWLEquivalentClassesAxiom ax) {
@@ -409,7 +511,7 @@ public class FromOWL {
     // do as pairwise rather than single set of n
     Collection<OWLEquivalentClassesAxiom> axs = ax.asPairwiseAxioms();
 
-    // look for
+    // look for no pairs
     if (axs.isEmpty()) {
       LOGGER.warn("Equivalent Classes axiom with " + axs.size() + " pairs.");
       return statementList;
@@ -422,11 +524,9 @@ public class FromOWL {
       OWLClassExpression subj = cePair.get(0);
       OWLClassExpression obj = cePair.get(1);
 
-      SubjectObjectPhrase subjPhrase = convertToSubjectObjectPhrase(convertOWL(subj));
-      subjPhrase.getQuantifier().setQuantifierType(Quantifier.A);
+      SubjectObjectPhrase subjPhrase = convertToSubjectObjectPhrase(convertOWL(subj), Quantifier.A);
 
-      SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(convertOWL(obj));
-      objPhrase.getQuantifier().setQuantifierType(Quantifier.A);
+      SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(convertOWL(obj), Quantifier.A);
 
       PredicateExpression<ObjectPredicate> predExp = new PredicateExpression<ObjectPredicate>(Vocabulary.SAME_Object);
 
@@ -466,11 +566,9 @@ public class FromOWL {
       OWLClassExpression subj = cePair.get(0);
       OWLClassExpression obj = cePair.get(1);
 
-      SubjectObjectPhrase subjPhrase = convertToSubjectObjectPhrase(convertOWL(subj));
-      subjPhrase.getQuantifier().setQuantifierType(Quantifier.A);
+      SubjectObjectPhrase subjPhrase = convertToSubjectObjectPhrase(convertOWL(subj), Quantifier.A);
 
-      SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(convertOWL(obj));
-      objPhrase.getQuantifier().setQuantifierType(Quantifier.A);
+      SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(convertOWL(obj), Quantifier.A);
 
       PredicateExpression<ObjectPredicate> predExp = new PredicateExpression<ObjectPredicate>(Vocabulary.IS_Object);
       predExp.setNegative(true);
@@ -500,11 +598,9 @@ public class FromOWL {
     OWLClassExpression subj = ax.getSubClass();
     OWLClassExpression obj = ax.getSuperClass();
 
-    SubjectObjectPhrase subjPhrase = convertToSubjectObjectPhrase(convertOWL(subj));
-    subjPhrase.getQuantifier().setQuantifierType(Quantifier.EVERY);
+    SubjectObjectPhrase subjPhrase = convertToSubjectObjectPhrase(convertOWL(subj), Quantifier.EVERY);
 
-    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(convertOWL(obj));
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.A);
+    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(convertOWL(obj), Quantifier.A);
 
     PredicateExpression<ObjectPredicate> predExp = new PredicateExpression<ObjectPredicate>(Vocabulary.IS_Object);
 
@@ -528,24 +624,22 @@ public class FromOWL {
 
     List<OWLClassExpression> objs = OWLAPIStreamUtils.asList(ax.classExpressions());
 
-    SubjectObjectPhrase subjPhrase = convertToSubjectObjectPhrase(convertOWL(subj));
-    subjPhrase.getQuantifier().setQuantifierType(Quantifier.EVERY);
+    SubjectObjectPhrase subjPhrase = convertToSubjectObjectPhrase(convertOWL(subj), Quantifier.EVERY);
 
     PhraseSet<SubjectObjectPhrase> objPhrases = new PhraseSet<SubjectObjectPhrase>();
-    objPhrases.setSetType(BooleanSetType.UNION);
+    objPhrases.setSetType(BooleanSetType.OR);
 
     for (OWLClassExpression objCE : objs) {
-      SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(convertOWL(objCE));
-      objPhrase.getQuantifier().setQuantifierType(Quantifier.A);
+      SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(convertOWL(objCE), Quantifier.A);
       objPhrases.addPhrase(objPhrase);
     }
 
-    objPhrases.getQuantifier().setQuantifierType(Quantifier.A);
+    objPhrases.setDisjoint(true);
 
-    PredicateExpression<ObjectPredicate> pred = new PredicateExpression<ObjectPredicate>(Vocabulary.IS_ONLY_Object);
+    PredicateExpression<ObjectPredicate> pred = new PredicateExpression<ObjectPredicate>(Vocabulary.SAME_Object);
 
     PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(
-        pred, convertToSubjectObjectPhrase(objPhrases));
+        pred, objPhrases);
 
     DescriptionStatement<ObjectPredicate> statement = new DescriptionStatement<ObjectPredicate>();
     attachFootnotes(statement, ax);
@@ -564,10 +658,9 @@ public class FromOWL {
     OWLClassExpression obj = ax.getClassExpression();
 
     InstancePhrase<ProperNoun> subjPhrase = convertOWL(subj);
-    subjPhrase.getQuantifier().setQuantifierType(Quantifier.THE);
+    subjPhrase.setQuantifierType(Quantifier.NULL);
 
-    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(convertOWL(obj));
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.A);
+    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(convertOWL(obj), Quantifier.A);
 
     PredicateExpression<ObjectPredicate> pExp = new PredicateExpression<ObjectPredicate>(Vocabulary.IS_Object);
 
@@ -587,7 +680,7 @@ public class FromOWL {
   private List<FactStatement<ObjectPredicate, ProperNoun>> convertOWL(OWLSameIndividualAxiom ax) {
     List<FactStatement<ObjectPredicate, ProperNoun>> factList = new ArrayList<FactStatement<ObjectPredicate, ProperNoun>>();
 
-    Set<OWLSameIndividualAxiom> axs = ax.asPairwiseAxioms();
+    Collection<OWLSameIndividualAxiom> axs = ax.asPairwiseAxioms();
 
     if (axs.isEmpty()) {
       LOGGER.warn("Same Individual axiom with " + axs.size() + " pairs.");
@@ -601,10 +694,10 @@ public class FromOWL {
       OWLIndividual obj = si.getIndividualsAsList().get(1);
 
       InstancePhrase<ProperNoun> subjPhrase = convertOWL(subj);
-      subjPhrase.getQuantifier().setQuantifierType(Quantifier.THE);
+      subjPhrase.setQuantifierType(Quantifier.NULL);
 
       InstancePhrase<ProperNoun> objPhrase = convertOWL(obj);
-      objPhrase.getQuantifier().setQuantifierType(Quantifier.THE);
+      objPhrase.setQuantifierType(Quantifier.NULL);
 
       PredicateExpression<ObjectPredicate> pExp = new PredicateExpression<ObjectPredicate>(Vocabulary.SAME_Object);
       PredicatePhrase<InstancePhrase<ProperNoun>, ObjectPredicate> predPhrase = new PredicatePhrase<InstancePhrase<ProperNoun>, ObjectPredicate>(
@@ -641,10 +734,10 @@ public class FromOWL {
       OWLIndividual obj = si.getIndividualsAsList().get(1);
 
       InstancePhrase<ProperNoun> subjPhrase = convertOWL(subj);
-      subjPhrase.getQuantifier().setQuantifierType(Quantifier.THE);
+      subjPhrase.setQuantifierType(Quantifier.NULL);
 
       InstancePhrase<ProperNoun> objPhrase = convertOWL(obj);
-      objPhrase.getQuantifier().setQuantifierType(Quantifier.THE);
+      objPhrase.setQuantifierType(Quantifier.NULL);
 
       PredicateExpression<ObjectPredicate> pred = new PredicateExpression<ObjectPredicate>(Vocabulary.SAME_Object);
       pred.setNegative(true);
@@ -676,10 +769,10 @@ public class FromOWL {
     OWLIndividual obj = ax.getObject();
 
     InstancePhrase<ProperNoun> subjPhrase = convertOWL(subj);
-    subjPhrase.getQuantifier().setQuantifierType(Quantifier.THE);
+    subjPhrase.setQuantifierType(Quantifier.NULL);
 
     InstancePhrase<ProperNoun> objPhrase = convertOWL(obj);
-    subjPhrase.getQuantifier().setQuantifierType(Quantifier.THE);
+    subjPhrase.setQuantifierType(Quantifier.NULL);
 
     PredicateExpression<ObjectPredicate> pred = convertOWL(ax.getProperty());
     PredicatePhrase<InstancePhrase<ProperNoun>, ObjectPredicate> predPhrase = new PredicatePhrase<InstancePhrase<ProperNoun>, ObjectPredicate>(
@@ -701,10 +794,10 @@ public class FromOWL {
     OWLIndividual obj = ax.getObject();
 
     InstancePhrase<ProperNoun> subjPhrase = convertOWL(subj);
-    subjPhrase.getQuantifier().setQuantifierType(Quantifier.THE);
+    subjPhrase.setQuantifierType(Quantifier.NULL);
 
     InstancePhrase<ProperNoun> objPhrase = convertOWL(obj);
-    subjPhrase.getQuantifier().setQuantifierType(Quantifier.THE);
+    subjPhrase.setQuantifierType(Quantifier.NULL);
 
     PredicateExpression<ObjectPredicate> pred = convertOWL(ax.getProperty());
     pred.setNegative(true);
@@ -728,10 +821,10 @@ public class FromOWL {
     OWLLiteral obj = ax.getObject();
 
     InstancePhrase<ProperNoun> subjPhrase = convertOWL(subj);
-    subjPhrase.getQuantifier().setQuantifierType(Quantifier.THE);
+    subjPhrase.setQuantifierType(Quantifier.NULL);
 
     InstancePhrase<DataValue> objPhrase = convertOWL(obj);
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.THE);
+    objPhrase.setQuantifierType(Quantifier.NULL);
 
     PredicateExpression<DataPredicate> pred = convertOWL(ax.getProperty());
     PredicatePhrase<InstancePhrase<DataValue>, DataPredicate> predPhrase = new PredicatePhrase<InstancePhrase<DataValue>, DataPredicate>(
@@ -754,10 +847,10 @@ public class FromOWL {
     OWLLiteral obj = ax.getObject();
 
     InstancePhrase<ProperNoun> subjPhrase = convertOWL(subj);
-    subjPhrase.getQuantifier().setQuantifierType(Quantifier.THE);
+    subjPhrase.setQuantifierType(Quantifier.NULL);
 
     InstancePhrase<DataValue> objPhrase = convertOWL(obj);
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.THE);
+    objPhrase.setQuantifierType(Quantifier.NULL);
 
     PredicateExpression<DataPredicate> pred = convertOWL(ax.getProperty());
     pred.setNegative(true);
@@ -790,10 +883,9 @@ public class FromOWL {
       i++;
       List<OWLObjectPropertyExpression> propPair = OWLAPIStreamUtils.asList(pairAx.properties());
       PredicateExpression<ObjectPredicate> subj = convertOWL(propPair.get(0));
-      PredicateExpression<ObjectPredicate> pred = new PredicateExpression<ObjectPredicate>(Vocabulary.SAME_Object);
       PredicateExpression<ObjectPredicate> obj = convertOWL(propPair.get(1));
       PredicateRelationStatement<ObjectPredicate> statement = new PredicateRelationStatement<ObjectPredicate>(subj,
-          pred, obj);
+          PredicateType.SAME_AS, obj);
       attachFootnotes(statement, ax);
       statementList.add(statement);
       if (i > maxPairs && maxPairs > 0) {
@@ -809,10 +901,9 @@ public class FromOWL {
     List<PredicateRelationStatement<ObjectPredicate>> statementList = new ArrayList<PredicateRelationStatement<ObjectPredicate>>();
 
     PredicateExpression<ObjectPredicate> subj = convertOWL(ax.getSubProperty());
-    PredicateExpression<ObjectPredicate> pred = new PredicateExpression<ObjectPredicate>(Vocabulary.IS_Object);
     PredicateExpression<ObjectPredicate> obj = convertOWL(ax.getSuperProperty());
-    PredicateRelationStatement<ObjectPredicate> statement = new PredicateRelationStatement<ObjectPredicate>(subj, pred,
-        obj);
+    PredicateRelationStatement<ObjectPredicate> statement = new PredicateRelationStatement<ObjectPredicate>(subj,
+        PredicateType.IS, obj);
     attachFootnotes(statement, ax);
     statementList.add(statement);
     return statementList;
@@ -822,136 +913,171 @@ public class FromOWL {
     List<PredicateRelationStatement<ObjectPredicate>> statementList = new ArrayList<PredicateRelationStatement<ObjectPredicate>>();
 
     PredicateExpression<ObjectPredicate> subj = convertOWL(ax.getFirstProperty());
-    PredicateExpression<ObjectPredicate> pred = new PredicateExpression<ObjectPredicate>(Vocabulary.SAME_Object);
     PredicateExpression<ObjectPredicate> obj = convertOWL(ax.getSecondProperty());
-    pred.setPassive(true);
 
-    PredicateRelationStatement<ObjectPredicate> statement = new PredicateRelationStatement<ObjectPredicate>(subj, pred,
-        obj);
+    PredicateRelationStatement<ObjectPredicate> statement = new PredicateRelationStatement<ObjectPredicate>(subj,
+        PredicateType.SAME_AS, obj);
+    statement.setInverse(true);
     attachFootnotes(statement, ax);
     statementList.add(statement);
 
     return statementList;
   }
 
-  private List<Statement> convertOWL(OWLFunctionalObjectPropertyAxiom ax) {
+  private List<PredicateCharacteristicStatement<ObjectPredicate>> convertOWL(OWLFunctionalObjectPropertyAxiom ax) {
+    List<PredicateCharacteristicStatement<ObjectPredicate>> statements = new ArrayList<PredicateCharacteristicStatement<ObjectPredicate>>();
 
     PredicateExpression<ObjectPredicate> subjExp = convertOWL(ax.getProperty());
 
-    ObjectPredicate pred = subjExp.getPredicate();
-    if (subjExp.isPassive()) {
-      pred.addCharacteristic(PredicateCharacteristic.FUNCTIONAL_OF_INVERSE);
-    } else {
-      pred.addCharacteristic(PredicateCharacteristic.FUNCTIONAL);
-    }
+    PredicateCharacteristic ch = PredicateCharacteristic.FUNCTIONAL;
 
-    return new ArrayList<Statement>();
+    PredicateCharacteristicStatement<ObjectPredicate> statement = new PredicateCharacteristicStatement<ObjectPredicate>(
+        subjExp, ch);
+    attachFootnotes(statement, ax);
+    statements.add(statement);
+
+    return statements;
   }
 
-  private List<Statement> convertOWL(OWLInverseFunctionalObjectPropertyAxiom ax) {
+  private List<PredicateCharacteristicStatement<ObjectPredicate>> convertOWL(
+      OWLInverseFunctionalObjectPropertyAxiom ax) {
+    List<PredicateCharacteristicStatement<ObjectPredicate>> statements = new ArrayList<PredicateCharacteristicStatement<ObjectPredicate>>();
+
     PredicateExpression<ObjectPredicate> subjExp = convertOWL(ax.getProperty());
 
-    ObjectPredicate pred = subjExp.getPredicate();
-    if (subjExp.isPassive()) {
-      pred.addCharacteristic(PredicateCharacteristic.INVERSE_FUNCTIONAL_OF_INVERSE);
-    } else {
-      pred.addCharacteristic(PredicateCharacteristic.INVERSE_FUNCTIONAL);
-    }
+    PredicateCharacteristic ch = PredicateCharacteristic.INVERSE_FUNCTIONAL;
 
-    return new ArrayList<Statement>();
+    PredicateCharacteristicStatement<ObjectPredicate> statement = new PredicateCharacteristicStatement<ObjectPredicate>(
+        subjExp, ch);
+    attachFootnotes(statement, ax);
+    statements.add(statement);
+
+    return statements;
   }
 
-  private List<Statement> convertOWL(OWLSymmetricObjectPropertyAxiom ax) {
+  private List<PredicateCharacteristicStatement<ObjectPredicate>> convertOWL(OWLSymmetricObjectPropertyAxiom ax) {
+    List<PredicateCharacteristicStatement<ObjectPredicate>> statements = new ArrayList<PredicateCharacteristicStatement<ObjectPredicate>>();
+
     PredicateExpression<ObjectPredicate> subjExp = convertOWL(ax.getProperty());
 
-    ObjectPredicate pred = subjExp.getPredicate();
-    if (subjExp.isPassive()) {
-      pred.addCharacteristic(PredicateCharacteristic.SYMMETRIC_OF_INVERSE);
-    } else {
-      pred.addCharacteristic(PredicateCharacteristic.SYMMETRIC);
-    }
+    PredicateCharacteristic ch = PredicateCharacteristic.SYMMETRIC;
 
-    return new ArrayList<Statement>();
+    PredicateCharacteristicStatement<ObjectPredicate> statement = new PredicateCharacteristicStatement<ObjectPredicate>(
+        subjExp, ch);
+    attachFootnotes(statement, ax);
+    statements.add(statement);
+
+    return statements;
   }
 
-  private List<Statement> convertOWL(OWLAsymmetricObjectPropertyAxiom ax) {
+  private List<PredicateCharacteristicStatement<ObjectPredicate>> convertOWL(OWLAsymmetricObjectPropertyAxiom ax) {
+    List<PredicateCharacteristicStatement<ObjectPredicate>> statements = new ArrayList<PredicateCharacteristicStatement<ObjectPredicate>>();
+
     PredicateExpression<ObjectPredicate> subjExp = convertOWL(ax.getProperty());
 
-    ObjectPredicate pred = subjExp.getPredicate();
-    if (subjExp.isPassive()) {
-      pred.addCharacteristic(PredicateCharacteristic.ASYMMETRIC_OF_INVERSE);
-    } else {
-      pred.addCharacteristic(PredicateCharacteristic.ASYMMETRIC);
-    }
+    PredicateCharacteristic ch = PredicateCharacteristic.ASYMMETRIC;
 
-    return new ArrayList<Statement>();
+    PredicateCharacteristicStatement<ObjectPredicate> statement = new PredicateCharacteristicStatement<ObjectPredicate>(
+        subjExp, ch);
+    attachFootnotes(statement, ax);
+    statements.add(statement);
+
+    return statements;
   }
 
-  private List<Statement> convertOWL(OWLTransitiveObjectPropertyAxiom ax) {
+  private List<PredicateCharacteristicStatement<ObjectPredicate>> convertOWL(OWLTransitiveObjectPropertyAxiom ax) {
+    List<PredicateCharacteristicStatement<ObjectPredicate>> statements = new ArrayList<PredicateCharacteristicStatement<ObjectPredicate>>();
+
     PredicateExpression<ObjectPredicate> subjExp = convertOWL(ax.getProperty());
 
-    ObjectPredicate pred = subjExp.getPredicate();
-    if (subjExp.isPassive()) {
-      pred.addCharacteristic(PredicateCharacteristic.TRANSITIVE_OF_INVERSE);
-    } else {
-      pred.addCharacteristic(PredicateCharacteristic.TRANSITIVE);
-    }
+    PredicateCharacteristic ch = PredicateCharacteristic.TRANSITIVE;
 
-    return new ArrayList<Statement>();
+    PredicateCharacteristicStatement<ObjectPredicate> statement = new PredicateCharacteristicStatement<ObjectPredicate>(
+        subjExp, ch);
+    attachFootnotes(statement, ax);
+    statements.add(statement);
+
+    return statements;
   }
 
-  private List<Statement> convertOWL(OWLReflexiveObjectPropertyAxiom ax) {
+  private List<PredicateCharacteristicStatement<ObjectPredicate>> convertOWL(OWLReflexiveObjectPropertyAxiom ax) {
+    List<PredicateCharacteristicStatement<ObjectPredicate>> statements = new ArrayList<PredicateCharacteristicStatement<ObjectPredicate>>();
+
     PredicateExpression<ObjectPredicate> subjExp = convertOWL(ax.getProperty());
 
-    ObjectPredicate pred = subjExp.getPredicate();
-    if (subjExp.isPassive()) {
-      pred.addCharacteristic(PredicateCharacteristic.REFLEXIVE_OF_INVERSE);
-    } else {
-      pred.addCharacteristic(PredicateCharacteristic.REFLEXIVE);
-    }
+    PredicateCharacteristic ch = PredicateCharacteristic.REFLEXIVE;
 
-    return new ArrayList<Statement>();
+    PredicateCharacteristicStatement<ObjectPredicate> statement = new PredicateCharacteristicStatement<ObjectPredicate>(
+        subjExp, ch);
+    attachFootnotes(statement, ax);
+    statements.add(statement);
+
+    return statements;
   }
 
-  private List<Statement> convertOWL(OWLIrreflexiveObjectPropertyAxiom ax) {
+  private List<PredicateCharacteristicStatement<ObjectPredicate>> convertOWL(OWLIrreflexiveObjectPropertyAxiom ax) {
+    List<PredicateCharacteristicStatement<ObjectPredicate>> statements = new ArrayList<PredicateCharacteristicStatement<ObjectPredicate>>();
+
     PredicateExpression<ObjectPredicate> subjExp = convertOWL(ax.getProperty());
 
-    ObjectPredicate pred = subjExp.getPredicate();
-    if (subjExp.isPassive()) {
-      pred.addCharacteristic(PredicateCharacteristic.IRREFLEXIVE_OF_INVERSE);
-    } else {
-      pred.addCharacteristic(PredicateCharacteristic.IRREFLEXIVE);
-    }
+    PredicateCharacteristic ch = PredicateCharacteristic.IRREFLEXIVE;
 
-    return new ArrayList<Statement>();
+    PredicateCharacteristicStatement<ObjectPredicate> statement = new PredicateCharacteristicStatement<ObjectPredicate>(
+        subjExp, ch);
+    attachFootnotes(statement, ax);
+    statements.add(statement);
+
+    return statements;
   }
 
-  private List<Statement> convertOWL(OWLObjectPropertyDomainAxiom ax) {
+  private List<DescriptionStatement<ObjectPredicate>> convertOWL(OWLObjectPropertyDomainAxiom ax) {
 
-    SubjectObjectPhrase domain = convertToSubjectObjectPhrase(convertOWL(ax.getDomain()));
-    PredicateExpression<ObjectPredicate> pred = convertOWL(ax.getProperty());
+    List<DescriptionStatement<ObjectPredicate>> statementList = new ArrayList<DescriptionStatement<ObjectPredicate>>();
 
-    if (pred.isPassive()) {
-      pred.getPredicate().addRange(domain);
-    } else {
-      pred.getPredicate().addDomain(domain);
-    }
+    SubjectObjectPhrase subjPhrase = convertToSubjectObjectPhrase(convertOWL(ax.getDomain()), Quantifier.EVERY);
 
-    return new ArrayList<Statement>();
+    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(new CategoryPhrase<CommonNoun>(Vocabulary.THING),
+        Quantifier.SOME);
+
+    PredicateExpression<ObjectPredicate> predExp = convertOWL(ax.getProperty());
+    PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(
+        predExp, objPhrase);
+
+    DescriptionStatement<ObjectPredicate> statement = new DescriptionStatement<ObjectPredicate>();
+    statement.setDomain(true);
+    statement.setSubject(subjPhrase);
+    statement.setPredicatePhrase(predPhrase);
+    attachFootnotes(statement, ax);
+
+    statementList.add(statement);
+
+    return statementList;
+
   }
 
-  private List<Statement> convertOWL(OWLObjectPropertyRangeAxiom ax) {
+  private List<DescriptionStatement<ObjectPredicate>> convertOWL(OWLObjectPropertyRangeAxiom ax) {
 
-    SubjectObjectPhrase range = convertToSubjectObjectPhrase(convertOWL(ax.getRange()));
-    PredicateExpression<ObjectPredicate> pred = convertOWL(ax.getProperty());
+    List<DescriptionStatement<ObjectPredicate>> statementList = new ArrayList<DescriptionStatement<ObjectPredicate>>();
 
-    if (pred.isPassive()) {
-      pred.getPredicate().addDomain(range);
-    } else {
-      pred.getPredicate().addRange(range);
-    }
+    SubjectObjectPhrase subjPhrase = convertToSubjectObjectPhrase(new CategoryPhrase<CommonNoun>(Vocabulary.THING),
+        Quantifier.EVERY);
 
-    return new ArrayList<Statement>();
+    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(convertOWL(ax.getRange()), Quantifier.A);
+
+    PredicateExpression<ObjectPredicate> predExp = convertOWL(ax.getProperty());
+    PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(
+        predExp, objPhrase);
+
+    DescriptionStatement<ObjectPredicate> statement = new DescriptionStatement<ObjectPredicate>();
+    statement.setRange(true);
+    statement.setSubject(subjPhrase);
+    statement.setPredicatePhrase(predPhrase);
+    attachFootnotes(statement, ax);
+
+    statementList.add(statement);
+
+    return statementList;
+
   }
 
   private List<PredicateRelationStatement<ObjectPredicate>> convertOWL(OWLDisjointObjectPropertiesAxiom ax) {
@@ -972,11 +1098,12 @@ public class FromOWL {
       PredicateExpression<ObjectPredicate> subj = convertOWL(propPair.get(0));
       PredicateExpression<ObjectPredicate> obj = convertOWL(propPair.get(1));
 
-      PredicateExpression<ObjectPredicate> pred = new PredicateExpression<ObjectPredicate>(Vocabulary.SAME_Object);
+      PredicateExpression<ObjectPredicate> pred = new PredicateExpression<ObjectPredicate>(Vocabulary.IS_Object);
       pred.setNegative(true);
 
       PredicateRelationStatement<ObjectPredicate> statement = new PredicateRelationStatement<ObjectPredicate>(subj,
-          pred, obj);
+          PredicateType.IS, obj);
+      statement.setNegative(true);
       attachFootnotes(statement, ax);
 
       statementList.add(statement);
@@ -1007,10 +1134,8 @@ public class FromOWL {
       PredicateExpression<DataPredicate> subj = convertOWL(pairProps.get(0));
       PredicateExpression<DataPredicate> obj = convertOWL(pairProps.get(1));
 
-      PredicateExpression<DataPredicate> pred = new PredicateExpression<DataPredicate>(Vocabulary.SAME_Data);
-
-      PredicateRelationStatement<DataPredicate> statement = new PredicateRelationStatement<DataPredicate>(subj, pred,
-          obj);
+      PredicateRelationStatement<DataPredicate> statement = new PredicateRelationStatement<DataPredicate>(subj,
+          PredicateType.SAME_AS, obj);
       attachFootnotes(statement, ax);
 
       statementList.add(statement);
@@ -1029,47 +1154,75 @@ public class FromOWL {
     PredicateExpression<DataPredicate> subj = convertOWL(ax.getSubProperty());
     PredicateExpression<DataPredicate> obj = convertOWL(ax.getSuperProperty());
 
-    PredicateExpression<DataPredicate> pred = new PredicateExpression<DataPredicate>(Vocabulary.IS_Data);
-
-    PredicateRelationStatement<DataPredicate> statement = new PredicateRelationStatement<DataPredicate>(subj, pred,
-        obj);
+    PredicateRelationStatement<DataPredicate> statement = new PredicateRelationStatement<DataPredicate>(subj,
+        PredicateType.IS, obj);
     attachFootnotes(statement, ax);
     statementList.add(statement);
 
     return statementList;
   }
 
-  private List<Statement> convertOWL(OWLFunctionalDataPropertyAxiom ax) {
+  private List<PredicateCharacteristicStatement<DataPredicate>> convertOWL(OWLFunctionalDataPropertyAxiom ax) {
+    List<PredicateCharacteristicStatement<DataPredicate>> statements = new ArrayList<PredicateCharacteristicStatement<DataPredicate>>();
 
     PredicateExpression<DataPredicate> subjExp = convertOWL(ax.getProperty());
 
-    DataPredicate pred = subjExp.getPredicate();
-    if (subjExp.isPassive()) {
-      LOGGER.error("Data Properties do not have inverses. Ignoring" + ax);
-      pred.addCharacteristic(PredicateCharacteristic.FUNCTIONAL_OF_INVERSE);
-    } else {
-      pred.addCharacteristic(PredicateCharacteristic.FUNCTIONAL);
-    }
+    PredicateCharacteristic ch = PredicateCharacteristic.FUNCTIONAL;
 
-    return new ArrayList<Statement>();
+    PredicateCharacteristicStatement<DataPredicate> statement = new PredicateCharacteristicStatement<DataPredicate>(
+        subjExp, ch);
+    attachFootnotes(statement, ax);
+    statements.add(statement);
+
+    return statements;
   }
 
-  private List<Statement> convertOWL(OWLDataPropertyDomainAxiom ax) {
+  private List<DescriptionStatement<DataPredicate>> convertOWL(OWLDataPropertyDomainAxiom ax) {
 
-    SubjectObjectPhrase domain = convertToSubjectObjectPhrase(convertOWL(ax.getDomain()));
-    PredicateExpression<DataPredicate> pred = convertOWL(ax.getProperty());
-    pred.getPredicate().addDomain(domain);
+    List<DescriptionStatement<DataPredicate>> statementList = new ArrayList<DescriptionStatement<DataPredicate>>();
 
-    return new ArrayList<Statement>();
+    SubjectObjectPhrase subjPhrase = convertToSubjectObjectPhrase(convertOWL(ax.getDomain()), Quantifier.EVERY);
+
+    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(new CategoryPhrase<DataType>(Vocabulary.LITERAL_TYPE),
+        Quantifier.A);
+
+    PredicateExpression<DataPredicate> predExp = convertOWL(ax.getProperty());
+    PredicatePhrase<SubjectObjectPhrase, DataPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, DataPredicate>(
+        predExp, objPhrase);
+
+    DescriptionStatement<DataPredicate> statement = new DescriptionStatement<DataPredicate>();
+    statement.setDomain(true);
+    statement.setSubject(subjPhrase);
+    statement.setPredicatePhrase(predPhrase);
+    attachFootnotes(statement, ax);
+
+    statementList.add(statement);
+
+    return statementList;
   }
 
-  private List<Statement> convertOWL(OWLDataPropertyRangeAxiom ax) {
+  private List<DescriptionStatement<DataPredicate>> convertOWL(OWLDataPropertyRangeAxiom ax) {
 
-    SubjectObjectPhrase range = convertToSubjectObjectPhrase(convertOWL(ax.getRange()));
-    PredicateExpression<DataPredicate> pred = convertOWL(ax.getProperty());
-    pred.getPredicate().addRange(range);
+    List<DescriptionStatement<DataPredicate>> statementList = new ArrayList<DescriptionStatement<DataPredicate>>();
 
-    return new ArrayList<Statement>();
+    SubjectObjectPhrase subjPhrase = convertToSubjectObjectPhrase(new CategoryPhrase<CommonNoun>(Vocabulary.THING),
+        Quantifier.EVERY);
+
+    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(convertOWL(ax.getRange()), Quantifier.A);
+
+    PredicateExpression<DataPredicate> predExp = convertOWL(ax.getProperty());
+    PredicatePhrase<SubjectObjectPhrase, DataPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, DataPredicate>(
+        predExp, objPhrase);
+
+    DescriptionStatement<DataPredicate> statement = new DescriptionStatement<DataPredicate>();
+    statement.setRange(true);
+    statement.setSubject(subjPhrase);
+    statement.setPredicatePhrase(predPhrase);
+    attachFootnotes(statement, ax);
+
+    statementList.add(statement);
+
+    return statementList;
   }
 
   private List<PredicateRelationStatement<DataPredicate>> convertOWL(OWLDisjointDataPropertiesAxiom ax) {
@@ -1090,11 +1243,12 @@ public class FromOWL {
       PredicateExpression<DataPredicate> subj = convertOWL(pairProps.get(0));
       PredicateExpression<DataPredicate> obj = convertOWL(pairProps.get(1));
 
-      PredicateExpression<DataPredicate> pred = new PredicateExpression<DataPredicate>(Vocabulary.SAME_Data);
+      PredicateExpression<DataPredicate> pred = new PredicateExpression<DataPredicate>(Vocabulary.IS_Data);
       pred.setNegative(true);
 
-      PredicateRelationStatement<DataPredicate> statement = new PredicateRelationStatement<DataPredicate>(subj, pred,
-          obj);
+      PredicateRelationStatement<DataPredicate> statement = new PredicateRelationStatement<DataPredicate>(subj,
+          PredicateType.IS, obj);
+      statement.setNegative(true);
       attachFootnotes(statement, ax);
 
       statementList.add(statement);
@@ -1111,10 +1265,10 @@ public class FromOWL {
     List<DescriptionStatement<DataPredicate>> statementList = new ArrayList<DescriptionStatement<DataPredicate>>();
 
     CategoryPhrase<DataType> subj = convertOWL(ax.getDatatype());
-    subj.getQuantifier().setQuantifierType(Quantifier.A);
+    subj.setQuantifierType(Quantifier.A);
 
     SubjectObjectPhrase obj = convertOWL(ax.getDataRange());
-    obj.getQuantifier().setQuantifierType(Quantifier.A);
+    obj.setQuantifierType(Quantifier.A);
 
     PredicateExpression<DataPredicate> pred = new PredicateExpression<DataPredicate>(Vocabulary.SAME_Data);
 
@@ -1131,52 +1285,97 @@ public class FromOWL {
     return statementList;
   }
 
-  private List<Statement> convertOWL(OWLAnnotationAssertionAxiom ax) {
+  private List<DescriptionStatement<AnnotationPredicate>> convertOWL(OWLAnnotationAssertionAxiom ax) {
+
+    List<DescriptionStatement<AnnotationPredicate>> statements = new ArrayList<DescriptionStatement<AnnotationPredicate>>();
+
+    DescriptionStatement<AnnotationPredicate> statement = new DescriptionStatement<AnnotationPredicate>();
 
     Word subjWord = convertOWLPrimitive(ax.getSubject());
-    OWLAnnotation anno = ax.getAnnotation();
-    subjWord.addFootnote(convertOWL(anno));
-    wordManager.addWord(subjWord);
 
-    return new ArrayList<Statement>();
+    WordPhrase subj = new WordPhrase(subjWord);
+
+    AnnotationPredicate pred = convertOWLPrimitive(ax.getProperty());
+    Word objWord = convertOWLPrimitive(ax.getValue());
+    WordPhrase obj = new WordPhrase(objWord);
+
+    PredicateExpression<AnnotationPredicate> pe = new PredicateExpression<AnnotationPredicate>(pred);
+
+    PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate> predicatePhrase = new PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate>(
+        pe, obj);
+
+    // add to word manager as possible instance of an entity label
+    wordManager.addLabelAnnotation(subjWord, pred, objWord);
+
+    statement.setSubject(subj);
+    statement.setPredicatePhrase(predicatePhrase);
+
+    attachFootnotes(statement, ax);
+    statements.add(statement);
+
+    return statements;
   }
 
   private List<PredicateRelationStatement<AnnotationPredicate>> convertOWL(OWLSubAnnotationPropertyOfAxiom ax) {
     List<PredicateRelationStatement<AnnotationPredicate>> statementList = new ArrayList<PredicateRelationStatement<AnnotationPredicate>>();
 
     PredicateExpression<AnnotationPredicate> subj = convertOWL(ax.getSubProperty());
-
-    PredicateExpression<AnnotationPredicate> pred = new PredicateExpression<AnnotationPredicate>(
-        Vocabulary.IS_Annotation);
-
     PredicateExpression<AnnotationPredicate> obj = convertOWL(ax.getSuperProperty());
 
     PredicateRelationStatement<AnnotationPredicate> statement = new PredicateRelationStatement<AnnotationPredicate>(
-        subj, pred, obj);
+        subj, PredicateType.IS, obj);
     attachFootnotes(statement, ax);
     statementList.add(statement);
 
     return statementList;
   }
 
-  private List<Statement> convertOWL(OWLAnnotationPropertyRangeAxiom ax) {
+  private List<DescriptionStatement<AnnotationPredicate>> convertOWL(OWLAnnotationPropertyRangeAxiom ax) {
+    List<DescriptionStatement<AnnotationPredicate>> statementList = new ArrayList<DescriptionStatement<AnnotationPredicate>>();
 
-    Word range = convertOWLPrimitive(ax.getRange());
-    AnnotationPredicate pred = convertOWLPrimitive(ax.getProperty());
-    pred.addRange(range);
-    wordManager.addWord(pred);
+    SubjectObjectPhrase subjPhrase = convertToSubjectObjectPhrase(new CategoryPhrase<CommonNoun>(Vocabulary.THING),
+        Quantifier.EVERY);
 
-    return new ArrayList<Statement>();
+    Word obj = convertOWLPrimitive(ax.getRange());
+    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(new WordPhrase(obj), Quantifier.A);
+
+    PredicateExpression<AnnotationPredicate> predExp = convertOWL(ax.getProperty());
+    PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate>(
+        predExp, objPhrase);
+
+    DescriptionStatement<AnnotationPredicate> statement = new DescriptionStatement<AnnotationPredicate>();
+    statement.setRange(true);
+    statement.setSubject(subjPhrase);
+    statement.setPredicatePhrase(predPhrase);
+    attachFootnotes(statement, ax);
+
+    statementList.add(statement);
+
+    return statementList;
   }
 
-  private List<Statement> convertOWL(OWLAnnotationPropertyDomainAxiom ax) {
+  private List<DescriptionStatement<AnnotationPredicate>> convertOWL(OWLAnnotationPropertyDomainAxiom ax) {
+    List<DescriptionStatement<AnnotationPredicate>> statementList = new ArrayList<DescriptionStatement<AnnotationPredicate>>();
 
-    AnnotationPredicate pred = convertOWLPrimitive(ax.getProperty());
-    Word domain = convertOWLPrimitive(ax.getDomain());
-    pred.addDomain(domain);
-    wordManager.addWord(pred);
+    Word subj = convertOWLPrimitive(ax.getDomain());
+    SubjectObjectPhrase subjPhrase = convertToSubjectObjectPhrase(new WordPhrase(subj), Quantifier.EVERY);
 
-    return new ArrayList<Statement>();
+    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(new CategoryPhrase<CommonNoun>(Vocabulary.THING),
+        Quantifier.A);
+
+    PredicateExpression<AnnotationPredicate> predExp = convertOWL(ax.getProperty());
+    PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate>(
+        predExp, objPhrase);
+
+    DescriptionStatement<AnnotationPredicate> statement = new DescriptionStatement<AnnotationPredicate>();
+    statement.setDomain(true);
+    statement.setSubject(subjPhrase);
+    statement.setPredicatePhrase(predPhrase);
+    attachFootnotes(statement, ax);
+
+    statementList.add(statement);
+
+    return statementList;
   }
 
   // -------- Currently unsupported Axioms ------------------
@@ -1190,7 +1389,7 @@ public class FromOWL {
     }
 
     // TODO
-    LOGGER.debug("OWLSubPropertyChainOfAxiom not yet supported:" + ax);
+    LOGGER.warn("OWLSubPropertyChainOfAxiom not yet supported:" + ax);
     return statementList;
   }
 
@@ -1208,14 +1407,14 @@ public class FromOWL {
     }
 
     // TODO
-    LOGGER.debug("OWLHasKeyAxiom not yet supported:" + ax);
+    LOGGER.warn("OWLHasKeyAxiom not yet supported:" + ax);
     return statementList;
   }
 
   private List<Statement> convertOWL(SWRLRule rule) {
     List<Statement> statementList = new ArrayList<Statement>();
     // TODO
-    LOGGER.debug("SWRLRule not yet supported:" + rule);
+    LOGGER.warn("SWRLRule not yet supported:" + rule);
     return statementList;
   }
 
@@ -1296,7 +1495,7 @@ public class FromOWL {
       return convertOWL((OWLDataMinCardinality) ce);
     }
 
-    LOGGER.error("Could not convert ClassExpression of type:" + type + " " + ce);
+    LOGGER.error("Should not happen. Could not convert ClassExpression of type:" + type + " " + ce);
 
     return new CategoryPhrase<CommonNoun>(Vocabulary.THING);
   }
@@ -1310,9 +1509,10 @@ public class FromOWL {
   private Phrase convertOWL(OWLObjectUnionOf ce) {
 
     PhraseSet<SubjectObjectPhrase> phSet = new PhraseSet<SubjectObjectPhrase>();
-    phSet.setSetType(BooleanSetType.UNION);
+    phSet.setSetType(BooleanSetType.OR);
 
     List<OWLClassExpression> members = ce.getOperandsAsList();
+
     if (members.size() == 1 && flattenSingleSet) {
       return convertOWL(members.get(0));
     }
@@ -1320,7 +1520,8 @@ public class FromOWL {
     // convert all set members to phrases
     for (OWLClassExpression member : members) {
       Phrase phrase = convertOWL(member);
-      SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(phrase);
+      SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(phrase, Quantifier.NULL);
+
       phSet.addPhrase(objPhrase);
     }
 
@@ -1336,7 +1537,7 @@ public class FromOWL {
       return convertOWL(members.get(0));
     }
 
-    // if memebers are a set of categories and predicate phrases-> category
+    // if members are a set of categories and predicate phrases-> category
     // phrase
     List<Noun> nouns = new ArrayList<Noun>();
     List<Noun> mods = new ArrayList<Noun>();
@@ -1390,12 +1591,12 @@ public class FromOWL {
 
     // if none of the above, convert as a simple intersection
     PhraseSet<SubjectObjectPhrase> phSet = new PhraseSet<SubjectObjectPhrase>();
-    phSet.setSetType(BooleanSetType.INTERSECTION);
+    phSet.setSetType(BooleanSetType.AND);
 
     // convert all set members to phrases
     for (OWLClassExpression member : members) {
       Phrase phrase = convertOWL(member);
-      SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(phrase);
+      SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(phrase, Quantifier.NULL);
       phSet.addPhrase(objPhrase);
     }
 
@@ -1434,16 +1635,14 @@ public class FromOWL {
     PredicateExpression<ObjectPredicate> predExp = convertOWL(prop);
 
     // create object phrase and possible convert to relative clause
-    Phrase phrase = convertOWL(objCE);
-
-    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(phrase);
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.EVERY);
+    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(convertOWL(objCE), Quantifier.ONLY);
 
     // assemble predicate phrase
     PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(
         predExp, objPhrase);
 
     return predPhrase;
+
   }
 
   private Phrase convertOWL(OWLObjectComplementOf ce) {
@@ -1463,8 +1662,8 @@ public class FromOWL {
 
     // create and possible convert to relative clause
     Phrase phrase = convertOWL(objCE);
-    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(phrase);
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.SOME);
+
+    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(phrase, Quantifier.SOME);
 
     // assemble predicate phrase
     PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(
@@ -1485,7 +1684,7 @@ public class FromOWL {
     // create propernoun
     ProperNoun properNoun = convertOWLPrimitive(objInd);
     InstancePhrase<ProperNoun> np = new InstancePhrase<ProperNoun>(properNoun);
-    np.getQuantifier().setQuantifierType(Quantifier.THE);
+    np.setQuantifierType(Quantifier.NULL);
 
     // assemble predicate phrase
     PredicatePhrase<InstancePhrase<ProperNoun>, ObjectPredicate> predPhrase = new PredicatePhrase<InstancePhrase<ProperNoun>, ObjectPredicate>(
@@ -1506,9 +1705,7 @@ public class FromOWL {
 
     // create and possible convert to relative clause
     Phrase phrase = convertOWL(objCE);
-    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(phrase);
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.EXACT);
-    objPhrase.getQuantifier().setQuantity(ce.getCardinality());
+    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(phrase, Quantifier.EXACT, ce.getCardinality());
 
     // assemble predicate phrase
     PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(
@@ -1528,9 +1725,8 @@ public class FromOWL {
 
     // create and possible convert to relative clause
     Phrase phrase = convertOWL(objCE);
-    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(phrase);
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.LESS_THAN_OR_EQUAL);
-    objPhrase.getQuantifier().setQuantity(ce.getCardinality());
+    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(phrase, Quantifier.LESS_THAN_OR_EQUAL,
+        ce.getCardinality());
 
     // assemble predicate phrase
     PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(
@@ -1550,9 +1746,8 @@ public class FromOWL {
 
     // create and possible convert to relative clause
     Phrase phrase = convertOWL(objCE);
-    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(phrase);
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.MORE_THAN_OR_EQUAL);
-    objPhrase.getQuantifier().setQuantity(ce.getCardinality());
+    SubjectObjectPhrase objPhrase = convertToSubjectObjectPhrase(phrase, Quantifier.MORE_THAN_OR_EQUAL,
+        ce.getCardinality());
 
     // assemble predicate phrase
     PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(
@@ -1569,7 +1764,7 @@ public class FromOWL {
     PredicateExpression<ObjectPredicate> predExp = convertOWL(prop);
     // create itself phrase
     CategoryPhrase<CommonNoun> objPhrase = new CategoryPhrase<CommonNoun>(Vocabulary.ITSELF);
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.EVERY);
+    objPhrase.setQuantifierType(Quantifier.EVERY);
 
     // assemble predicate phrase
     PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(
@@ -1589,7 +1784,7 @@ public class FromOWL {
     // create datavalue
     DataValue value = convertOWLPrimitive(objLit);
     InstancePhrase<DataValue> ip = new InstancePhrase<DataValue>(value);
-    ip.getQuantifier().setQuantifierType(Quantifier.THE);
+    ip.setQuantifierType(Quantifier.NULL);
 
     // assemble predicate phrase
     PredicatePhrase<InstancePhrase<DataValue>, DataPredicate> predPhrase = new PredicatePhrase<InstancePhrase<DataValue>, DataPredicate>(
@@ -1609,7 +1804,7 @@ public class FromOWL {
 
     // create objectphrase
     SubjectObjectPhrase objPhrase = convertOWL(objDR);
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.EVERY);
+    objPhrase.setQuantifierType(Quantifier.ONLY);
 
     // assemble predicate phrase
     PredicatePhrase<SubjectObjectPhrase, DataPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, DataPredicate>(
@@ -1634,7 +1829,7 @@ public class FromOWL {
 
     // create object phrase
     SubjectObjectPhrase objPhrase = convertOWL(objDR);
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.SOME);
+    objPhrase.setQuantifierType(Quantifier.SOME);
 
     // assemble predicate phrase
     PredicatePhrase<SubjectObjectPhrase, DataPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, DataPredicate>(
@@ -1654,8 +1849,8 @@ public class FromOWL {
 
     // create object phrase
     SubjectObjectPhrase objPhrase = convertOWL(objDR);
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.EXACT);
-    objPhrase.getQuantifier().setQuantity(ce.getCardinality());
+    objPhrase.setQuantifierType(Quantifier.EXACT);
+    objPhrase.getQuantifierExpression().setQuantity(ce.getCardinality());
 
     // assemble predicate phrase
     PredicatePhrase<SubjectObjectPhrase, DataPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, DataPredicate>(
@@ -1674,8 +1869,8 @@ public class FromOWL {
 
     // create object phrase
     SubjectObjectPhrase objPhrase = convertOWL(objDR);
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.LESS_THAN_OR_EQUAL);
-    objPhrase.getQuantifier().setQuantity(ce.getCardinality());
+    objPhrase.setQuantifierType(Quantifier.LESS_THAN_OR_EQUAL);
+    objPhrase.getQuantifierExpression().setQuantity(ce.getCardinality());
 
     // assemble predicate phrase
     PredicatePhrase<SubjectObjectPhrase, DataPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, DataPredicate>(
@@ -1695,8 +1890,8 @@ public class FromOWL {
 
     // create object phrase
     SubjectObjectPhrase objPhrase = convertOWL(objDR);
-    objPhrase.getQuantifier().setQuantifierType(Quantifier.MORE_THAN_OR_EQUAL);
-    objPhrase.getQuantifier().setQuantity(ce.getCardinality());
+    objPhrase.setQuantifierType(Quantifier.MORE_THAN_OR_EQUAL);
+    objPhrase.getQuantifierExpression().setQuantity(ce.getCardinality());
 
     // assemble predicate phrase
     PredicatePhrase<SubjectObjectPhrase, DataPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, DataPredicate>(
@@ -1710,10 +1905,12 @@ public class FromOWL {
   // Object property expression to Predicate
   private PredicateExpression<ObjectPredicate> convertOWL(OWLObjectPropertyExpression prop) {
 
-    // check for inverse
+    // check for explicit inverse
     if (prop instanceof OWLObjectInverseOf) {
       return convertOWL((OWLObjectInverseOf) prop);
     }
+
+    // TODO check for is_X_by form? convert to inverse?
 
     PredicateExpression<ObjectPredicate> predExp = new PredicateExpression<ObjectPredicate>();
 
@@ -1731,7 +1928,7 @@ public class FromOWL {
     // create predicate from named property
     ObjectPredicate pred = convertOWLPrimitive(prop.getNamedProperty());
     predExp.setPredicate(pred);
-    predExp.setPassive(true);
+    predExp.setInverse(true);
     return predExp;
   }
 
@@ -1781,9 +1978,8 @@ public class FromOWL {
       return convertOWL((OWLDatatypeRestriction) dr);
     }
 
-    // Should never happen
-    LOGGER.warn("Could not convert DataRange of type " + drType + " " + dr);
-    return new CategoryPhrase<DataType>(Vocabulary.DATATYPE_THING);
+    LOGGER.error("Should not happen. Could not convert DataRange of type " + drType + " " + dr);
+    return new CategoryPhrase<DataType>(Vocabulary.LITERAL_TYPE);
   }
 
   private CategoryPhrase<DataType> convertOWL(OWLDatatype odt) {
@@ -1795,7 +1991,7 @@ public class FromOWL {
   private SubjectObjectPhrase convertOWL(OWLDataIntersectionOf dr) {
 
     PhraseSet<SubjectObjectPhrase> phSet = new PhraseSet<SubjectObjectPhrase>();
-    phSet.setSetType(BooleanSetType.INTERSECTION);
+    phSet.setSetType(BooleanSetType.AND);
 
     List<OWLDataRange> members = OWLAPIStreamUtils.asList(dr.operands());
 
@@ -1815,7 +2011,7 @@ public class FromOWL {
   private SubjectObjectPhrase convertOWL(OWLDataUnionOf dr) {
 
     PhraseSet<SubjectObjectPhrase> phSet = new PhraseSet<SubjectObjectPhrase>();
-    phSet.setSetType(BooleanSetType.UNION);
+    phSet.setSetType(BooleanSetType.OR);
     List<OWLDataRange> members = OWLAPIStreamUtils.asList(dr.operands());
 
     if (members.size() == 1 && flattenSingleSet) {
@@ -1868,7 +2064,7 @@ public class FromOWL {
       PredicateExpression<DataFacetPredicate> predExp = new PredicateExpression<DataFacetPredicate>(dfp);
 
       InstancePhrase<DataValue> val = convertOWL(rest.getFacetValue());
-      val.getQuantifier().setQuantifierType(Quantifier.THE);
+      val.setQuantifierType(Quantifier.NULL);
 
       PredicatePhrase<InstancePhrase<DataValue>, DataFacetPredicate> restriction = new PredicatePhrase<InstancePhrase<DataValue>, DataFacetPredicate>(
           predExp, val);
@@ -1943,32 +2139,37 @@ public class FromOWL {
       return convertOWLPrimitive((OWLObjectProperty) ent);
     }
 
-    LOGGER.error("Couldn't convert Entity of unknown type. Should not happen." + ent);
-    return Vocabulary.ERROR;
+    LOGGER.error(" Should not happen. Couldn't convert Entity of unknown type." + ent);
+    return Vocabulary.THING;
   }
 
   private Noun convertOWLPrimitive(OWLClass cl) {
     if (isAdjective(cl)) {
-      return wordManager.lookupOrCreateByKeyAndType(cl.getIRI(), WordType.ADJECTIVE);
+      return wordManager.lookupOrCreateByKeyAndType(cl.getIRI(), WordType.ADJECTIVE, true);
     } else {
-      return wordManager.lookupOrCreateByKeyAndType(cl.getIRI(), WordType.COMMON_NOUN);
+      return wordManager.lookupOrCreateByKeyAndType(cl.getIRI(), WordType.COMMON_NOUN, true);
     }
   }
 
   private DataType convertOWLPrimitive(OWLDatatype dt) {
-    return wordManager.lookupOrCreateByKeyAndType(dt.getIRI(), WordType.DATATYPE);
+    return wordManager.lookupOrCreateByKeyAndType(dt.getIRI(), WordType.DATATYPE, true);
   }
 
   private DataValue convertOWLPrimitive(OWLLiteral lit) {
 
+    String value = lit.getLiteral();
     OWLDatatype odt = lit.getDatatype();
+    String lang = lit.getLang();
+
     DataType dt = convertOWLPrimitive(odt);
 
-    String value = lit.getLiteral();
     if (value.isEmpty()) {
-      LOGGER.warn("Literal with empty value");
+      LOGGER.trace("Literal with empty value");
     }
-    String lang = lit.getLang();
+
+    if (!lang.isEmpty() && !lang.equals("en")) {
+      LOGGER.trace("Found a non-English literal" + lit);
+    }
 
     DataValue dv = new DataValue(value);
     dv.setDatatype(dt);
@@ -1985,24 +2186,26 @@ public class FromOWL {
   }
 
   private ProperNoun convertOWLPrimitive(OWLNamedIndividual ind) {
-    return wordManager.lookupOrCreateByKeyAndType(ind.getIRI(), WordType.PROPER_NOUN);
+    return wordManager.lookupOrCreateByKeyAndType(ind.getIRI(), WordType.PROPER_NOUN, true);
   }
 
   private ProperNoun convertOWLPrimitive(OWLAnonymousIndividual ind) {
+    // TODO better model for normal for anonymous individuals. Globalize?
     String normal = ind.getID().getID().substring(Vocabulary.ANONYMOUS_NS.length());
-    return wordManager.lookupOrCreateByKeyAndType(IRI.create(Vocabulary.ANONYMOUS_NS, normal), WordType.PROPER_NOUN);
+    return wordManager.lookupOrCreateByKeyAndType(IRI.create(Vocabulary.ANONYMOUS_NS, normal), WordType.PROPER_NOUN,
+        true);
   }
 
   private DataPredicate convertOWLPrimitive(OWLDataProperty prop) {
-    return wordManager.lookupOrCreateByKeyAndType(prop.getIRI(), WordType.DATA_PREDICATE);
+    return wordManager.lookupOrCreateByKeyAndType(prop.getIRI(), WordType.DATA_PREDICATE, true);
   }
 
   private ObjectPredicate convertOWLPrimitive(OWLObjectProperty prop) {
-    return wordManager.lookupOrCreateByKeyAndType(prop.getIRI(), WordType.OBJECT_PREDICATE);
+    return wordManager.lookupOrCreateByKeyAndType(prop.getIRI(), WordType.OBJECT_PREDICATE, true);
   }
 
   private AnnotationPredicate convertOWLPrimitive(OWLAnnotationProperty prop) {
-    return wordManager.lookupOrCreateByKeyAndType(prop.getIRI(), WordType.ANNOTATION_PREDICATE);
+    return wordManager.lookupOrCreateByKeyAndType(prop.getIRI(), WordType.ANNOTATION_PREDICATE, true);
   }
 
   private Word convertOWLPrimitive(OWLAnnotationSubject subj) {
@@ -2015,8 +2218,8 @@ public class FromOWL {
       return convertOWLPrimitive(subj.asAnonymousIndividual().get());
     }
 
-    LOGGER.error("Couldn't convert AnnotationSubject, not an AnonymousIndividual or IRI. Should not happen." + subj);
-    return Vocabulary.ERROR;
+    LOGGER.error(" Should not happen. Couldn't convert AnnotationSubject, not an AnonymousIndividual or IRI." + subj);
+    return Vocabulary.THING;
   }
 
   private Word convertOWLPrimitive(OWLAnnotationValue value) {
@@ -2034,8 +2237,8 @@ public class FromOWL {
     }
 
     LOGGER.error(
-        "Couldn't convert AnnotationSubject, not an AnonymousIndividual, Literal or IRI. Should not happen." + value);
-    return Vocabulary.ERROR;
+        " Should not happen. Couldn't convert AnnotationSubject, not an AnonymousIndividual, Literal or IRI." + value);
+    return Vocabulary.THING;
   }
 
   private DataFacet convertOWLPrimitive(OWLFacet facet) {
@@ -2044,136 +2247,77 @@ public class FromOWL {
   }
 
   private Word convertOWLPrimitive(IRI iri) {
-    // any existing word type
-    return wordManager.lookupOrCreateByKeyAndType(iri, WordType.GENERIC_WORD);
+    // find any existing word type or create a generic
+    return wordManager.lookupOrCreateByKey(iri, true);
   }
 
+  // check if class is using the HOWLER adjective naming convention
   private boolean isAdjective(OWLClass cl) {
     return cl.getIRI().toString().endsWith("_thing");
   }
 
-  private SubjectObjectPhrase convertToSubjectObjectPhrase(Phrase phrase) {
+  private SubjectObjectPhrase convertToSubjectObjectPhrase(Phrase phrase, Quantifier q) {
 
     if (phrase instanceof SubjectObjectPhrase) {
-      return (SubjectObjectPhrase) phrase;
+      SubjectObjectPhrase so = (SubjectObjectPhrase) phrase;
+
+      if (so.getQuantifierType().equals(Quantifier.NULL)) {
+        so.setQuantifierType(q);
+      }
+
+      return so;
     }
 
     if (phrase.isObjectScope()) {
       PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = (PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>) phrase;
       CategoryPhrase<CommonNoun> np = new CategoryPhrase<CommonNoun>(Vocabulary.THING);
+      np.setQuantifierType(Quantifier.SOME);
+      if (predPhrase.getObject().equals(Quantifier.NULL)) {
+        predPhrase.getObject().setQuantifierType(q);
+      }
       np.addRelativePhrase(predPhrase);
       return np;
     }
 
     if (phrase.isDataScope()) {
       PredicatePhrase<SubjectObjectPhrase, DataPredicate> predPhrase = (PredicatePhrase<SubjectObjectPhrase, DataPredicate>) phrase;
-      CategoryPhrase<DataType> np = new CategoryPhrase<DataType>(Vocabulary.DATATYPE_THING);
+      CategoryPhrase<CommonNoun> np = new CategoryPhrase<CommonNoun>(Vocabulary.THING);
+      np.setQuantifierType(Quantifier.SOME);
+      if (predPhrase.getObject().equals(Quantifier.NULL)) {
+        predPhrase.getObject().setQuantifierType(q);
+      }
       np.addRelativePhrase(predPhrase);
       return np;
     }
 
-    LOGGER.error("Couldn't convert phrase to SubjectObjectPhrase:" + phrase);
+    if (phrase.isAnnotationScope()) {
+      LOGGER
+          .error("Couldn't convert annotation predicate phrase to relative phrase Forcing to object phrase:" + phrase);
+    }
+
     PredicatePhrase<SubjectObjectPhrase, Predicate> predPhrase = (PredicatePhrase<SubjectObjectPhrase, Predicate>) phrase;
     CategoryPhrase<CommonNoun> np = new CategoryPhrase<CommonNoun>(Vocabulary.THING);
+    np.setQuantifierType(Quantifier.SOME);
+    if (predPhrase.getObject().equals(Quantifier.NULL)) {
+      predPhrase.getObject().setQuantifierType(q);
+    }
     np.addRelativePhrase(predPhrase);
     return np;
 
   }
 
-  public Optional<Word> lookupPrimitive(OWLPrimitive prim) {
+  private SubjectObjectPhrase convertToSubjectObjectPhrase(Phrase phrase, Quantifier q, int quantity) {
 
-    if (prim instanceof OWLEntity) {
-      OWLEntity ent = (OWLEntity) prim;
-      if (ent.isType(EntityType.ANNOTATION_PROPERTY)) {
-        return wordManager.lookupByKeyAndType(ent.getIRI(), WordType.ANNOTATION_PREDICATE);
-      }
-
-      if (ent.isType(EntityType.CLASS)) {
-        if (isAdjective((OWLClass) ent)) {
-          return wordManager.lookupByKeyAndType(ent.getIRI(), WordType.ADJECTIVE);
-        }
-        return wordManager.lookupByKeyAndType(ent.getIRI(), WordType.COMMON_NOUN);
-      }
-
-      if (ent.isType(EntityType.DATA_PROPERTY)) {
-        return wordManager.lookupByKeyAndType(ent.getIRI(), WordType.DATA_PREDICATE);
-      }
-
-      if (ent.isType(EntityType.DATATYPE)) {
-        return wordManager.lookupByKeyAndType(ent.getIRI(), WordType.DATATYPE);
-      }
-
-      if (ent.isType(EntityType.NAMED_INDIVIDUAL)) {
-        return wordManager.lookupByKeyAndType(ent.getIRI(), WordType.PROPER_NOUN);
-      }
-
-      if (ent.isType(EntityType.OBJECT_PROPERTY)) {
-        return wordManager.lookupByKeyAndType(ent.getIRI(), WordType.OBJECT_PREDICATE);
-      }
-
+    if (!q.isNumeric()) {
+      LOGGER.warn("Tried to set a quantity for a non-numerical Quantifier. Ignoring quantity:" + q);
     }
 
-    if (prim instanceof OWLAnonymousIndividual) {
-      OWLAnonymousIndividual anon = (OWLAnonymousIndividual) prim;
-      String normal = anon.getID().getID().substring(Vocabulary.ANONYMOUS_NS.length());
-      return wordManager.lookupByKeyAndType(IRI.create(Vocabulary.ANONYMOUS_NS, normal), WordType.PROPER_NOUN);
-    }
-
-    if (prim instanceof IRI) {
-      return wordManager.lookupByKeyAndType((IRI) prim, WordType.GENERIC_WORD);
-    }
-
-    if (prim instanceof OWLLiteral) {
-      LOGGER.error("Literals are not in WordManager" + prim);
-      return Optional.empty();
-    }
-
-    LOGGER.error("Couldn't convert Primitive:" + prim);
-
-    return Optional.empty();
+    SubjectObjectPhrase so = convertToSubjectObjectPhrase(phrase, q);
+    so.getQuantifierExpression().setQuantity(quantity);
+    return so;
   }
 
-  private List<IRI> findBareIRIs(OWLOntology onto) {
-    List<IRI> bares = new ArrayList<IRI>();
-    List<IRI> entityIRIs = new ArrayList<IRI>();
-    for (OWLEntity ent : OWLAPIStreamUtils.asSet(onto.signature(Imports.EXCLUDED))) {
-      entityIRIs.add(ent.getIRI());
-    } ;
-
-    // bare IRIs can occur as AnnotationSubjects, AnnotationObjects or the
-    // domain/range of annotationproperties
-    List<OWLAnnotationAssertionAxiom> asserts = OWLAPIStreamUtils.asList(onto.axioms(AxiomType.ANNOTATION_ASSERTION));
-    List<OWLAnnotationPropertyDomainAxiom> domains = OWLAPIStreamUtils
-        .asList(onto.axioms(AxiomType.ANNOTATION_PROPERTY_DOMAIN));
-    List<OWLAnnotationPropertyRangeAxiom> ranges = OWLAPIStreamUtils
-        .asList(onto.axioms(AxiomType.ANNOTATION_PROPERTY_RANGE));
-
-    for (OWLAnnotationAssertionAxiom ax : asserts) {
-      OWLAnnotationSubject subj = ax.getSubject();
-      OWLAnnotationValue value = ax.getValue();
-      if (subj.isIRI() && !entityIRIs.contains(subj)) {
-        bares.add((IRI) subj);
-      }
-      if (value.isIRI() && !entityIRIs.contains(value)) {
-        bares.add((IRI) value);
-      }
-    }
-
-    for (OWLAnnotationPropertyDomainAxiom ax : domains) {
-      if (!entityIRIs.contains(ax.getDomain())) {
-        bares.add(ax.getDomain());
-      }
-
-    }
-    for (OWLAnnotationPropertyRangeAxiom ax : ranges) {
-      if (!entityIRIs.contains(ax.getRange())) {
-        bares.add(ax.getRange());
-      }
-    }
-
-    return bares;
-  }
-
+  // add any axiom annotations to statement as footnotes
   private List<OWLAnnotation> attachFootnotes(Statement statement, OWLAxiom ax) {
     List<OWLAnnotation> annos = OWLAPIStreamUtils.asList(ax.annotations());
 
@@ -2181,7 +2325,28 @@ public class FromOWL {
       Footnote foot = convertOWL(anno);
       statement.addFootnote(foot);
     }
+
     return annos;
+  }
+
+  // add any prefixes defined to the word manager
+  private void addNameSpacePrefixes(OWLOntology onto) {
+
+    OWLDocumentFormat format = ontologyManager.getOntologyFormat(onto);
+    // does this format include prefixes?
+    if (format != null && format.isPrefixOWLDocumentFormat()) {
+      PrefixDocumentFormat prefixFormat = format.asPrefixOWLDocumentFormat();
+
+      Map<String, String> nsMap = prefixFormat.getPrefixName2PrefixMap();
+      // add any prefix except default (:) to the word manager
+      for (String prefix : nsMap.keySet()) {
+        if (!prefix.equals(":")) {
+          this.wordManager.addPrefix(prefix, IRI.create(nsMap.get(prefix)));
+        }
+      }
+    } else {
+      LOGGER.trace("Ontology " + onto.getOntologyID().getDefaultDocumentIRI() + " does not have any prefixes defined");
+    }
   }
 
 }

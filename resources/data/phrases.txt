@@ -1,61 +1,46 @@
-#normal form	Alternate surface forms	Lexer/Parser Token Type
+#normal form	Alternate surface forms	Token Type
 
 # ---- subtype/equivalence/inverse predicates
-is	is a type of,implies	IS
-is only		IS_ONLY
-the same as	is any,is every,also known as,defined as,equivalent to,identical to	SAME_AS
+is	is a type of	IS
+same as	the same as,also known as,equivalent to,identical to	SAME_AS
 the inverse of		INVERSE_OF
 
+# ------ annotation structure
+*		ANNOTATION_MARKER
+:		ANNOTATION_SPLIT
+
+# ----- punctuation ---
+,		COMMA
+
 # -------- quantifiers --------
-no		NO
-none		NONE
-not		NOT
-a	an	A
-the		THE
 every	all,any	EVERY
 some	many,several	SOME
+only	no thing but,no thing except, no thing that is not,nothing that is not	ONLY
+a	an	A
+#the		THE
+
 # --- the numeric quantifiers --
-exactly		EXACT
+#exactly		EXACT
 less than	smaller than	LESS_THAN
-less than or equal to	at most,not more than,no more than	LESS_THAN_OR_EQUAL
-more than	greater than	MORE_THAN
-more than or equal to	at least,no less than	MORE_THAN_OR_EQUAL
-only		ONLY
+at most	less than or equal to,not more than,no more than	LESS_THAN_OR_EQUAL
+#more than		MORE_THAN
+at least	more than or equal to,no less than	MORE_THAN_OR_EQUAL
 
 # ------ boolean connectors -----
 and	but	AND
 or	nor,and/or	OR
+either	one of	ONEOF
 
 # ------- Misc ------
 that	which,who	THAT
-by		BY
-one of	either	ONEOF
+thing		THING
+data value		DATA_VALUE
 
-# flags used in predicate relations statements ----
-annotation		ANNOTATION_FLAG
-object		OBJECT_FLAG
-data		DATA_FLAG
-
-# ----- Data types -----
-integer		DATATYPE
-decimal		DATATYPE
-string		DATATYPE
-# TODO add the rest if needed
-
-# ----- data facets ------
-a length of		LENGTH_OF
-a minimum length of		MIN_LENGTH_OF
-a maximum length of		MAX_LENGTH_OF
-a pattern of		PATTERN_OF
-a total digits of		TOTAL_DIGITS_OF
-a fractional digits of		FRAC_DIGITS_OF
-a language range of		LANG_RANGE_OF
-
-# ----- Predicate characteristics ----
-functional		PRED_CHAR
-symmetric		PRED_CHAR
-asymmetric		PRED_CHAR
-reflexive		PRED_CHAR
-irreflexive		PRED_CHAR
-transitive		PRED_CHAR
-inverse functional		PRED_CHAR
+# ---------- Word types (for declarations) ----------
+#adjective		WORD_TYPE
+common noun	noun	WORD_TYPE
+#proper noun		WORD_TYPE
+object predicate	object property,object verb	WORD_TYPE
+datatype	data type	WORD_TYPE
+data predicate	data verb,data property	WORD_TYPE
+annotation predicate	annotation verb,annotation property	WORD_TYPE

@@ -73,17 +73,17 @@ public class PredicatePhrase<T extends SubjectObjectPhrase, P extends Predicate>
 
   @Override
   public boolean isObjectScope() {
-    return this.getScope() == Scope.OBJECT;
+    return this.getScope() == Scope.OBJECT_SCOPE;
   }
 
   @Override
   public boolean isDataScope() {
-    return this.getScope() == Scope.DATA;
+    return this.getScope() == Scope.DATA_SCOPE;
   }
 
   @Override
   public boolean isAnnotationScope() {
-    return this.getScope() == Scope.ANNOTATION;
+    return this.getScope() == Scope.ANNOTATION_SCOPE;
   }
 
   @Override
@@ -97,11 +97,11 @@ public class PredicatePhrase<T extends SubjectObjectPhrase, P extends Predicate>
     if (this.isConsistentScope()) {
       return this.getObject().getScope();
     }
-    return Scope.GENERAL;
+    return Scope.GENERAL_SCOPE;
   }
 
   public String toString() {
-    return "(" + this.getScope() + ") " + predicateExpression.toString() + " " + object.toString();
+    return predicateExpression.toString() + " " + object.toString();
   }
 
   @Override

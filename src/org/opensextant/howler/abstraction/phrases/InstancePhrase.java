@@ -27,7 +27,7 @@ public class InstancePhrase<T extends Instance> extends SubjectObjectPhrase {
 
   @Override
   public String toString() {
-    return "(" + this.getScope() + ") " + head.toString();
+    return head.toString();
   }
 
   public boolean isObjectScope() {
@@ -56,7 +56,7 @@ public class InstancePhrase<T extends Instance> extends SubjectObjectPhrase {
   @Override
   public List<Word> getWords() {
     List<Word> wrds = new ArrayList<Word>();
-    wrds.addAll(this.getQuantifier().getWords());
+    wrds.addAll(this.getQuantifierExpression().getWords());
     wrds.add(head);
     return wrds;
   }
