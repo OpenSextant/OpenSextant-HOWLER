@@ -34,8 +34,6 @@ public enum Quantifier implements Word {
     return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(NULL);
   }
 
- 
-
   public boolean isNumeric() {
     return numeric;
   }
@@ -92,7 +90,27 @@ public enum Quantifier implements Word {
 
   @Override
   public void setPrefix(String prefix) {
-    //ignore
+    // ignore
   }
+
+  public Quantifier getNegation(){
+    
+    if(this.equals(NULL)) return NO;
+    if(this.equals(NO)) return NULL;
+    if(this.equals(EVERY)) return SOME;
+    if(this.equals(SOME)) return EVERY;
+    if(this.equals(ONLY)) return ONLY;
+    if(this.equals(A)) return A;
+    if(this.equals(THE)) return THE;
+    //special case, should be intersection of more_than and less_than
+    if(this.equals(EXACT)) return NULL;
+    if(this.equals(MORE_THAN)) return LESS_THAN_OR_EQUAL;
+    if(this.equals(LESS_THAN)) return MORE_THAN_OR_EQUAL;
+    if(this.equals(MORE_THAN_OR_EQUAL)) return LESS_THAN;
+    if(this.equals( LESS_THAN_OR_EQUAL)) return MORE_THAN;
+ 
+    return null;
+  }
+  
   
 }

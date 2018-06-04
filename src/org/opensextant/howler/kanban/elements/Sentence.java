@@ -38,7 +38,7 @@ public class Sentence {
 
   private String _id;
   private String text;
-  private Set<Word> words = new HashSet<Word>();
+  private List<Word> words = new ArrayList<Word>();
   private boolean parseable = true;
   private boolean inferred = true;
   private String userId;
@@ -67,11 +67,11 @@ public class Sentence {
     this.text = text;
   }
 
-  public Set<Word> getWords() {
+  public List<Word> getWords() {
     return words;
   }
 
-  public void setWords(Set<Word> words) {
+  public void setWords(List<Word> words) {
     this.words = words;
   }
 

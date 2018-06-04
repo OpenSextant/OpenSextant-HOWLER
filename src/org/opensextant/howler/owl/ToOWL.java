@@ -42,8 +42,6 @@ import org.opensextant.howler.abstraction.words.enumerated.PredicateCharacterist
 import org.opensextant.howler.abstraction.words.enumerated.Quantifier;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.OWLXMLDocumentFormat;
-import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
-import org.semanticweb.owlapi.io.OWLXMLOntologyFormat;
 import org.semanticweb.owlapi.model.AddImport;
 import org.semanticweb.owlapi.model.AddOntologyAnnotation;
 import org.semanticweb.owlapi.model.ClassExpressionType;
@@ -391,7 +389,7 @@ public class ToOWL {
     boolean neg = pExp.isNegative();
     PredicateType predType = pExp.getPredicate().getPredicateType();
     // TODO must be SAME_AS check
-    DataPredicate pred = pExp.getPredicate();
+    // DataPredicate pred = pExp.getPredicate();
 
     OWLDataPropertyExpression propExp = convertData(pExp);
 
@@ -643,7 +641,6 @@ public class ToOWL {
       OWLClassExpression objCE = convertData(predPhrase);
 
       if (!pred.isBuiltinPredicate()) {
-        // TODO check logic
         // convert ObjCE to datatype thing that <propertyExpression> ObjCE
         objCE = owlDataFactory.getOWLObjectIntersectionOf(objCE,
             owlDataFactory.getOWLDataSomeValuesFrom(propExp, owlDataFactory.getTopDatatype()));
@@ -755,8 +752,8 @@ public class ToOWL {
     if (rel.equals(PredicateType.IS)) {
 
       if (inverse) {
-        // TODO should this be interpreted as prop is inverse(prop)?
-        LOGGER.error("Cannot have inverse of a subtype relation. Ignoring Inverse:" + statement);
+        LOGGER.error("Cannot have inverse of a subtype relation in a predicate relation statement. Ignoring Inverse:"
+            + statement);
       }
 
       if (negative) {
@@ -817,8 +814,8 @@ public class ToOWL {
     if (rel.equals(PredicateType.IS)) {
 
       if (inverse) {
-        // TODO should this be interpreted as prop is inverse(prop)?
-        LOGGER.error("Cannot have inverse of a subtype relation. Ignoring Inverse:" + statement);
+        LOGGER.error("Cannot have inverse of a subtype relation in a predicate relation statement. Ignoring Inverse:"
+            + statement);
       }
 
       if (negative) {
@@ -1145,7 +1142,24 @@ public class ToOWL {
     BooleanSetType booleanSetType = phSet.getSetType();
     boolean neg = phSet.isNegative();
 
-    if (booleanSetType == BooleanSetType.ONEOF) {
+    if (booleanSetType == BooleanSetType.AND) {
+
+      List<OWLDataRange> drList = new ArrayList<OWLDataRange>();
+
+      for (SubjectObjectPhrase ph : phraseList) {
+        OWLDataRange dr = convertData(ph);
+        drList.add(dr);
+      }
+
+      if (neg) {
+        return owlDataFactory.getOWLDataComplementOf(owlDataFactory.getOWLDataIntersectionOf(drList));
+      } else {
+        return owlDataFactory.getOWLDataIntersectionOf(drList);
+      }
+
+    }
+
+    if (booleanSetType == BooleanSetType.OR) {
 
       if (phSet.allInstances()) {
         List<OWLLiteral> litList = new ArrayList<OWLLiteral>();
@@ -1162,10 +1176,23 @@ public class ToOWL {
         }
 
       } else {
-        LOGGER.warn("Data OneOf contains non-instance(s), converted as Union:" + phSet);
-        booleanSetType = BooleanSetType.OR;
+
+        List<OWLDataRange> drList = new ArrayList<OWLDataRange>();
+
+        for (SubjectObjectPhrase ph : phraseList) {
+          OWLDataRange dr = convertData(ph);
+          drList.add(dr);
+        }
+
+        if (neg) {
+          return owlDataFactory.getOWLDataComplementOf(owlDataFactory.getOWLDataUnionOf(drList));
+        } else {
+          return owlDataFactory.getOWLDataUnionOf(drList);
+        }
       }
     }
+
+    LOGGER.warn("Could not convert Data PhraseSet:" + phSet);
 
     List<OWLDataRange> drList = new ArrayList<OWLDataRange>();
 
@@ -1173,27 +1200,6 @@ public class ToOWL {
       OWLDataRange dr = convertData(ph);
       drList.add(dr);
     }
-
-    if (booleanSetType == BooleanSetType.AND) {
-
-      if (neg) {
-        return owlDataFactory.getOWLDataComplementOf(owlDataFactory.getOWLDataIntersectionOf(drList));
-      } else {
-        return owlDataFactory.getOWLDataIntersectionOf(drList);
-      }
-
-    }
-
-    if (booleanSetType == BooleanSetType.OR) {
-      if (neg) {
-        return owlDataFactory.getOWLDataComplementOf(owlDataFactory.getOWLDataUnionOf(drList));
-      } else {
-        return owlDataFactory.getOWLDataUnionOf(drList);
-      }
-
-    }
-
-    LOGGER.warn("Could not convert Data PhraseSet:" + phSet);
 
     if (neg) {
       return owlDataFactory.getOWLDataComplementOf(owlDataFactory.getOWLDataUnionOf(drList));
@@ -1223,10 +1229,10 @@ public class ToOWL {
     Quantifier qType = quant.getQuantifierType();
     boolean neg = ph.getPredicateExpression().isNegative();
 
-    if(neg){
+    if (neg) {
       obj = owlDataFactory.getOWLDataComplementOf(obj);
     }
-    
+
     OWLClassExpression finalCE = null;
 
     // NO = NOT EVERY
@@ -1286,11 +1292,11 @@ public class ToOWL {
     }
 
     if (finalCE != null) {
-     // if (neg) {
-     //   return finalCE.getObjectComplementOf();
-     // } else {
-        return finalCE;
-    //  }
+      // if (neg) {
+      // return finalCE.getObjectComplementOf();
+      // } else {
+      return finalCE;
+      // }
     }
 
     LOGGER.warn("Couldn't convert Data Phrase:" + ph);
@@ -1460,12 +1466,29 @@ public class ToOWL {
   }
 
   private OWLClassExpression convertObject(PhraseSet<SubjectObjectPhrase> phSet) {
+
     List<SubjectObjectPhrase> phraseList = phSet.getPhrases();
     BooleanSetType booleanSetType = phSet.getSetType();
 
     boolean neg = phSet.isNegative();
 
-    if (booleanSetType == BooleanSetType.ONEOF) {
+    if (booleanSetType == BooleanSetType.AND) {
+
+      List<OWLClassExpression> ceList = new ArrayList<OWLClassExpression>();
+
+      for (SubjectObjectPhrase ph : phraseList) {
+        OWLClassExpression ce = convertObject(ph);
+        ceList.add(ce);
+      }
+
+      if (neg) {
+        return owlDataFactory.getOWLObjectIntersectionOf(ceList).getObjectComplementOf();
+      } else {
+        return owlDataFactory.getOWLObjectIntersectionOf(ceList);
+      }
+    }
+
+    if (booleanSetType == BooleanSetType.OR) {
 
       if (phSet.allInstances()) {
         List<OWLIndividual> indList = new ArrayList<OWLIndividual>();
@@ -1482,10 +1505,23 @@ public class ToOWL {
         }
 
       } else {
-        LOGGER.warn("Object OneOf contains non-instance(s), converted as Union:" + phSet);
-        booleanSetType = BooleanSetType.OR;
+
+        List<OWLClassExpression> ceList = new ArrayList<OWLClassExpression>();
+
+        for (SubjectObjectPhrase ph : phraseList) {
+          OWLClassExpression ce = convertObject(ph);
+          ceList.add(ce);
+        }
+
+        if (neg) {
+          return owlDataFactory.getOWLObjectUnionOf(ceList).getObjectComplementOf();
+        } else {
+          return owlDataFactory.getOWLObjectUnionOf(ceList);
+        }
       }
     }
+
+    LOGGER.warn("Could not convert Object PhraseSet:" + phSet);
 
     List<OWLClassExpression> ceList = new ArrayList<OWLClassExpression>();
 
@@ -1494,23 +1530,6 @@ public class ToOWL {
       ceList.add(ce);
     }
 
-    if (booleanSetType == BooleanSetType.AND) {
-      if (neg) {
-        return owlDataFactory.getOWLObjectIntersectionOf(ceList).getObjectComplementOf();
-      } else {
-        return owlDataFactory.getOWLObjectIntersectionOf(ceList);
-      }
-    }
-
-    if (booleanSetType == BooleanSetType.OR) {
-      if (neg) {
-        return owlDataFactory.getOWLObjectUnionOf(ceList).getObjectComplementOf();
-      } else {
-        return owlDataFactory.getOWLObjectUnionOf(ceList);
-      }
-    }
-
-    LOGGER.warn("Could not convert Object PhraseSet:" + phSet);
     if (neg) {
       return owlDataFactory.getOWLObjectUnionOf(ceList).getObjectComplementOf();
     } else {
@@ -1538,10 +1557,11 @@ public class ToOWL {
 
     OWLClassExpression obj = convertObject(objPhrase);
 
-    if(neg){
-      obj=obj.getObjectComplementOf();
+    // push negative predicate to object
+    if (neg) {
+      obj = obj.getObjectComplementOf();
     }
-    
+
     QuantifierExpression quant = ph.getObject().getQuantifierExpression();
     Quantifier qType = quant.getQuantifierType();
 
@@ -1562,7 +1582,7 @@ public class ToOWL {
       finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp, obj);
     }
 
-    if (qType == Quantifier.A || qType == Quantifier.THE || qType == Quantifier.NULL) {
+    if (qType == Quantifier.A || qType == Quantifier.THE) {
 
       // check for single individual
       if (obj.getClassExpressionType() == ClassExpressionType.OBJECT_ONE_OF) {
@@ -1577,8 +1597,29 @@ public class ToOWL {
         if (builtin) {
           finalCE = obj;
         } else {
-          LOGGER.trace("Object Quantifier " + qType + " converted as EVERY");
-          finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp, obj);
+          LOGGER.debug("Object Quantifier " + qType + " converted as SOME:" + objPhrase);
+          finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, obj);
+        }
+      }
+    }
+
+    if (qType == Quantifier.NULL) {
+
+      // check for single individual
+      if (obj.getClassExpressionType() == ClassExpressionType.OBJECT_ONE_OF) {
+        OWLObjectOneOf oof = (OWLObjectOneOf) obj;
+        List<OWLIndividual> inds = OWLAPIStreamUtils.asList(oof.individuals());
+        if (inds.size() == 1 && useHasValue) {
+          finalCE = owlDataFactory.getOWLObjectHasValue(propExp, inds.get(0));
+        } else {
+          finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, oof);
+        }
+      } else {
+        if (builtin) {
+          finalCE = obj;
+        } else {
+          LOGGER.debug("Object Quantifier " + qType + " converted as SOME:" + objPhrase);
+          finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, obj);
         }
       }
     }
@@ -1606,11 +1647,11 @@ public class ToOWL {
     }
 
     if (finalCE != null) {
-   //   if (neg) {
-        //return finalCE.getObjectComplementOf();
-   //   } else {
-        return finalCE;
-    //  }
+      // if (neg) {
+      // return finalCE.getObjectComplementOf();
+      // } else {
+      return finalCE;
+      // }
     }
 
     LOGGER.warn("Couldn't convert Object Phrase:" + ph);

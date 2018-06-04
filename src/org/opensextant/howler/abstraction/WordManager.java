@@ -105,16 +105,22 @@ public class WordManager {
       // if adding a non-GENERIC_WORD ...
       // see if there is a GENERIC_WORD with same key
       Optional<Word> existingGenericWord = lookupByKeyAndType(newWord.getKey(), WordType.GENERIC_WORD);
+      
       // if there is an existing GENERIC_WORD
       if (existingGenericWord.isPresent()) {
         // remove GENERIC_WORD
         words.remove(existingGenericWord.get());
+        LOGGER.trace("Replacing GENERIC_WORD with typed word:" + newWord);
+      }else{
+        LOGGER.trace("Adding ambigous word:" + newWord + " + " + existingWordsByKey);
       }
 
-      // TODO any further checks for duplicate/ambigous words?
+      // set normal to label if it exists
       if (labelMap.containsKey(newWord.getKey())) {
         newWord.setNormalForm(labelMap.get(newWord.getKey()));
       }
+      
+      // TODO any further checks for duplicate/ambigous words?
       words.add(newWord);
     }
   }

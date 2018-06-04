@@ -2,7 +2,9 @@ package org.opensextant.howler.text;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -68,8 +70,6 @@ import org.opensextant.howler.text.grammar.HOWL.DomainStatementObjectContext;
 import org.opensextant.howler.text.grammar.HOWL.FactStatementDataContext;
 import org.opensextant.howler.text.grammar.HOWL.FactStatementObjectContext;
 import org.opensextant.howler.text.grammar.HOWL.NProperSequenceContext;
-import org.opensextant.howler.text.grammar.HOWL.NounPhraseContext;
-import org.opensextant.howler.text.grammar.HOWL.OneOfDataContext;
 import org.opensextant.howler.text.grammar.HOWL.PredicateCharacteristicStatementContext;
 import org.opensextant.howler.text.grammar.HOWL.PredicateContext;
 import org.opensextant.howler.text.grammar.HOWL.PredicateExpressionAnnotationContext;
@@ -106,7 +106,7 @@ import org.semanticweb.owlapi.model.IRI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked"})
 public class FromText {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(FromText.class);
@@ -432,6 +432,10 @@ public class FromText {
 
     SubjectObjectPhrase obj = convertText(ctx.obj);
 
+    if (ctx.NOT() != null) {
+      obj.flipNegative();
+    }
+
     PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(
         pe, obj);
     statement.setPredicatePhrase(predPhrase);
@@ -452,6 +456,9 @@ public class FromText {
 
     SubjectObjectPhrase obj = convertText(ctx.obj);
 
+    if (ctx.NOT() != null) {
+      obj.flipNegative();
+    }
     PredicatePhrase<SubjectObjectPhrase, DataPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, DataPredicate>(
         pe, obj);
     statement.setPredicatePhrase(predPhrase);
@@ -470,6 +477,10 @@ public class FromText {
 
     Word objWord = convertWord(ctx.obj, WordType.GENERIC_WORD, true, true);
     WordPhrase obj = new WordPhrase(objWord);
+
+    if (ctx.NOT() != null) {
+      obj.flipNegative();
+    }
 
     PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate>(
         pe, obj);
@@ -721,32 +732,14 @@ public class FromText {
     return nouns;
   }
 
-  private SubjectObjectPhrase convertText(NounPhraseContext ctx) {
-    if (ctx.compoundNounPhrase() != null) {
-      return convertText(ctx.compoundNounPhrase());
-    }
-
-    if (ctx.properNounPhrase() != null) {
-      return convertText(ctx.properNounPhrase());
-    }
-
-    return null;
-  }
-
   private SubjectObjectPhrase convertText(CompoundNounPhraseContext ctx) {
 
     if (ctx.common != null) {
       return convertText(ctx.common);
     }
 
-    if (ctx.oneof != null) {
-      PhraseSet<InstancePhrase<ProperNoun>> set = new PhraseSet<InstancePhrase<ProperNoun>>();
-      set.setSetType(BooleanSetType.ONEOF);
-      for (ProperNounPhraseContext proper : ctx.properNounPhrase()) {
-        set.addPhrase(convertText(proper));
-      }
-
-      return set;
+    if (ctx.proper != null) {
+      return convertText(ctx.properNounPhrase());
     }
 
     if (ctx.setIntersection != null) {
@@ -775,34 +768,45 @@ public class FromText {
       BooleanSetType type) {
 
     PhraseSet<SubjectObjectPhrase> set = new PhraseSet<SubjectObjectPhrase>();
+    Set<Quantifier> qes = new HashSet<Quantifier>();
 
     for (CompoundNounPhraseContext phCTX : phraseCTXs) {
       SubjectObjectPhrase elem = convertText(phCTX);
+      qes.add(elem.getQuantifierExpression().getQuantifierType());
       if (elem instanceof PhraseSet) {
-        // TODO check instanceof elements of innerset
-         // TODO this only merges one level deep, should be recursive
-        @SuppressWarnings("unchecked")
-        PhraseSet<SubjectObjectPhrase> innerSet = (PhraseSet<SubjectObjectPhrase>) elem;
+        // TODO this only merges one level deep, should be recursive
+        PhraseSet<?> innerSet = (PhraseSet<?>) elem;
         // only merge same set types
         if (innerSet.getSetType().equals(type)) {
-          LOGGER.trace("Merging Nested phrase sets" + innerSet.getPhrases() + " into " + set );
+          LOGGER.debug("Merging Nested phrase sets" + innerSet.getPhrases() + " into " + set);
           for (SubjectObjectPhrase iph : innerSet.getPhrases()) {
             set.addPhrase(iph);
           }
-        }else{
+        } else {
           set.addPhrase(elem);
         }
       } else {
         set.addPhrase(elem);
       }
     }
-    
+
     set.setSetType(type);
+
+    if (qes.contains(Quantifier.EVERY) || qes.contains(Quantifier.ONLY)) {
+      set.setQuantifierType(Quantifier.EVERY);
+    } else {
+      set.setQuantifierType(Quantifier.SOME);
+    }
+
     return set;
   }
 
   private InstancePhrase<ProperNoun> convertText(ProperNounPhraseContext ctx) {
-    return new InstancePhrase<ProperNoun>(convertText(ctx.nProperSequence()));
+    InstancePhrase<ProperNoun> ip = new InstancePhrase<ProperNoun>(convertText(ctx.nProperSequence()));
+    if (ctx.NOT() != null) {
+      ip.flipNegative();
+    }
+    return ip;
   }
 
   private ProperNoun convertText(NProperSequenceContext ctx) {
@@ -897,10 +901,6 @@ public class FromText {
       return cat;
     }
 
-    if (ctx.oneof != null) {
-      return convertText(ctx.oneof);
-    }
-
     if (ctx.dv != null) {
       return convertText(ctx.dv);
     }
@@ -932,8 +932,23 @@ public class FromText {
     set.setSetType(setType);
     for (DataTypeExpressionContext dte : dtes) {
       SubjectObjectPhrase dt = convertText(dte);
-      set.addPhrase(dt);
+
+      if (dt instanceof PhraseSet) {
+        PhraseSet<?> innerSet = (PhraseSet<?>) dt;
+        if (innerSet.getQuantifierType().equals(setType)) {
+          LOGGER.debug("Merging Nested phrase sets" + innerSet.getPhrases() + " into " + set);
+          for (SubjectObjectPhrase elem : innerSet.getPhrases()) {
+            set.addPhrase(elem);
+          }
+        } else {
+          set.addPhrase(innerSet);
+        }
+      } else {
+        set.addPhrase(dt);
+      }
+
     }
+
     return set;
   }
 
@@ -941,20 +956,6 @@ public class FromText {
     DataValue dv = convertText(ctx.dataValue());
     InstancePhrase<DataValue> ip = new InstancePhrase<DataValue>(dv);
     return ip;
-  }
-
-  private PhraseSet<InstancePhrase<DataValue>> convertText(OneOfDataContext ctx) {
-
-    PhraseSet<InstancePhrase<DataValue>> set = new PhraseSet<InstancePhrase<DataValue>>();
-
-    for (DataValueContext dv : ctx.dataValue()) {
-      DataValue v = convertText(dv);
-      set.addPhrase(new InstancePhrase<DataValue>(v));
-    }
-
-    set.setSetType(BooleanSetType.ONEOF);
-
-    return set;
   }
 
   private QuantifierExpression convertText(QuantContext ctx) {
@@ -1114,10 +1115,17 @@ public class FromText {
 
   private PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> convertText(PredicatePhraseNounContext ctx) {
 
-    SubjectObjectPhrase obj = convertText(ctx.nounPhrase());
+    // SubjectObjectPhrase obj = convertText(ctx.nounPhrase());
+    SubjectObjectPhrase obj = convertText(ctx.compoundNounPhrase());
     PredicateExpression<ObjectPredicate> pe = convertText(ctx.predicateExpressionObject());
+    /*
+     * // move negative predicate to object if (pe.isNegative()) { if (obj.getQuantifierType().equals(Quantifier.EXACT))
+     * { // dont change anything } else { pe.flipNegative(); obj.flipNegative();
+     * obj.setQuantifierType(obj.getQuantifierType().getNegation()); } }
+     */
     PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(
         pe, obj);
+
     return predPhrase;
   }
 

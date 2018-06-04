@@ -65,13 +65,19 @@ public class OWLTest {
 
     // expand n-ary axioms including all pairs
     fromOWL.setMaxPairs(-1);
+    
     // rewrite Domain/Ranges to subclass axioms?
     fromOWL.setRewriteDomainRanges(false);
 
     // rewrite all axioms as subclass axioms?
     fromOWL.setRewriteAllAsSubclass(false);
 
+    // convert axiom to Negation Normal Form 
+    fromOWL.setNegNormal(false);
+    
+    // if only one individual in set, use HasValue not SomeValuesFrom
     toOWL.setUseHasValue(true);
+    
     List<String> ontoDirs = FileUtils.readLines(inputDirsFile, "UTF-8");
 
     // create and write header to Summary file

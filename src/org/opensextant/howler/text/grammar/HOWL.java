@@ -34,41 +34,39 @@ public class HOWL extends Parser {
 		RULE_domainStatementDataType = 7, RULE_domainStatementObject = 8, RULE_domainStatementAnnotation = 9, 
 		RULE_rangeStatementDataType = 10, RULE_rangeStatementObject = 11, RULE_rangeStatementAnnotation = 12, 
 		RULE_predicateCharacteristicStatement = 13, RULE_predicateRelationStatement = 14, 
-		RULE_annotationStatement = 15, RULE_declarationStatement = 16, RULE_nounPhrase = 17, 
-		RULE_compoundNounPhrase = 18, RULE_properNounPhrase = 19, RULE_nProperSequence = 20, 
-		RULE_commonNounPhrase = 21, RULE_adjp = 22, RULE_dataTypeExpression = 23, 
-		RULE_dataTypeRestriction = 24, RULE_dataFacetExpression = 25, RULE_dataValuePhrase = 26, 
-		RULE_dataValue = 27, RULE_oneOfData = 28, RULE_quant = 29, RULE_quantNumeric = 30, 
-		RULE_quantNumericExpression = 31, RULE_predicateExpressionObject = 32, 
-		RULE_predicateExpressionData = 33, RULE_predicateExpressionAnnotation = 34, 
-		RULE_predicateExpressionVerbData = 35, RULE_predicateExpression = 36, 
-		RULE_predicateExpressionVerb = 37, RULE_predicateExpressionState = 38, 
-		RULE_predicateExpressionSimple = 39, RULE_predicateExpressionParticle = 40, 
-		RULE_predicateExpressionPassive = 41, RULE_predicateExpressionNoun = 42, 
-		RULE_predicateExpressionSameAs = 43, RULE_predicateExpressionBE = 44, 
-		RULE_predicateExpressionDO = 45, RULE_predicateExpressionHAS = 46, RULE_predicate = 47, 
-		RULE_predicatePhraseNoun = 48, RULE_predicatePhraseDataType = 49, RULE_predicatePhraseDataValue = 50, 
-		RULE_predicatePhrase = 51, RULE_singlePhraseObject = 52, RULE_singlePhraseData = 53, 
-		RULE_catchSet = 54, RULE_badSentence = 55, RULE_wordSequence = 56, RULE_declareWordSequence = 57, 
-		RULE_debugWordSequence = 58;
+		RULE_annotationStatement = 15, RULE_declarationStatement = 16, RULE_compoundNounPhrase = 17, 
+		RULE_properNounPhrase = 18, RULE_nProperSequence = 19, RULE_commonNounPhrase = 20, 
+		RULE_adjp = 21, RULE_dataTypeExpression = 22, RULE_dataTypeRestriction = 23, 
+		RULE_dataFacetExpression = 24, RULE_dataValuePhrase = 25, RULE_dataValue = 26, 
+		RULE_quant = 27, RULE_quantNumeric = 28, RULE_quantNumericExpression = 29, 
+		RULE_predicateExpressionObject = 30, RULE_predicateExpressionData = 31, 
+		RULE_predicateExpressionAnnotation = 32, RULE_predicateExpressionVerbData = 33, 
+		RULE_predicateExpression = 34, RULE_predicateExpressionVerb = 35, RULE_predicateExpressionState = 36, 
+		RULE_predicateExpressionSimple = 37, RULE_predicateExpressionParticle = 38, 
+		RULE_predicateExpressionPassive = 39, RULE_predicateExpressionNoun = 40, 
+		RULE_predicateExpressionSameAs = 41, RULE_predicateExpressionBE = 42, 
+		RULE_predicateExpressionDO = 43, RULE_predicateExpressionHAS = 44, RULE_predicate = 45, 
+		RULE_predicatePhraseNoun = 46, RULE_predicatePhraseDataType = 47, RULE_predicatePhraseDataValue = 48, 
+		RULE_predicatePhrase = 49, RULE_singlePhraseObject = 50, RULE_singlePhraseData = 51, 
+		RULE_catchSet = 52, RULE_badSentence = 53, RULE_wordSequence = 54, RULE_declareWordSequence = 55, 
+		RULE_debugWordSequence = 56;
 	public static final String[] ruleNames = {
 		"document", "statement", "debug", "factStatementData", "factStatementObject", 
 		"descriptionStatementObject", "descriptionStatementDataType", "domainStatementDataType", 
 		"domainStatementObject", "domainStatementAnnotation", "rangeStatementDataType", 
 		"rangeStatementObject", "rangeStatementAnnotation", "predicateCharacteristicStatement", 
 		"predicateRelationStatement", "annotationStatement", "declarationStatement", 
-		"nounPhrase", "compoundNounPhrase", "properNounPhrase", "nProperSequence", 
-		"commonNounPhrase", "adjp", "dataTypeExpression", "dataTypeRestriction", 
-		"dataFacetExpression", "dataValuePhrase", "dataValue", "oneOfData", "quant", 
-		"quantNumeric", "quantNumericExpression", "predicateExpressionObject", 
-		"predicateExpressionData", "predicateExpressionAnnotation", "predicateExpressionVerbData", 
-		"predicateExpression", "predicateExpressionVerb", "predicateExpressionState", 
-		"predicateExpressionSimple", "predicateExpressionParticle", "predicateExpressionPassive", 
-		"predicateExpressionNoun", "predicateExpressionSameAs", "predicateExpressionBE", 
-		"predicateExpressionDO", "predicateExpressionHAS", "predicate", "predicatePhraseNoun", 
-		"predicatePhraseDataType", "predicatePhraseDataValue", "predicatePhrase", 
-		"singlePhraseObject", "singlePhraseData", "catchSet", "badSentence", "wordSequence", 
-		"declareWordSequence", "debugWordSequence"
+		"compoundNounPhrase", "properNounPhrase", "nProperSequence", "commonNounPhrase", 
+		"adjp", "dataTypeExpression", "dataTypeRestriction", "dataFacetExpression", 
+		"dataValuePhrase", "dataValue", "quant", "quantNumeric", "quantNumericExpression", 
+		"predicateExpressionObject", "predicateExpressionData", "predicateExpressionAnnotation", 
+		"predicateExpressionVerbData", "predicateExpression", "predicateExpressionVerb", 
+		"predicateExpressionState", "predicateExpressionSimple", "predicateExpressionParticle", 
+		"predicateExpressionPassive", "predicateExpressionNoun", "predicateExpressionSameAs", 
+		"predicateExpressionBE", "predicateExpressionDO", "predicateExpressionHAS", 
+		"predicate", "predicatePhraseNoun", "predicatePhraseDataType", "predicatePhraseDataValue", 
+		"predicatePhrase", "singlePhraseObject", "singlePhraseData", "catchSet", 
+		"badSentence", "wordSequence", "declareWordSequence", "debugWordSequence"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
@@ -167,20 +165,20 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(124); 
+			setState(120); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
-				setState(124);
+				setState(120);
 				_errHandler.sync(this);
 				switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
 				case 1:
 					{
 					{
-					setState(118);
+					setState(114);
 					statement();
-					setState(119);
+					setState(115);
 					match(PERIOD);
 					}
 					}
@@ -188,16 +186,16 @@ public class HOWL extends Parser {
 				case 2:
 					{
 					{
-					setState(121);
+					setState(117);
 					debug();
-					setState(122);
+					setState(118);
 					match(PERIOD);
 					}
 					}
 					break;
 				}
 				}
-				setState(126); 
+				setState(122); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << ADJECTIVE) | (1L << BADWORD) | (1L << COMMON_NOUN) | (1L << QUOTED_TEXT) | (1L << OPEN) | (1L << CLOSE) | (1L << PERIOD) | (1L << COMMA) | (1L << NUMBER) | (1L << INTEGER) | (1L << DECIMAL) | (1L << DOES) | (1L << DASH) | (1L << HAS) | (1L << PARTICLE) | (1L << IS) | (1L << PROPER_NOUN) | (1L << PREDICATE) | (1L << AND) | (1L << ONEOF) | (1L << OR) | (1L << BY) | (1L << ONLY) | (1L << NO) | (1L << NONE) | (1L << NOT) | (1L << A) | (1L << EVERY) | (1L << EXACT) | (1L << LESS_THAN) | (1L << LESS_THAN_OR_EQUAL) | (1L << MORE_THAN) | (1L << MORE_THAN_OR_EQUAL) | (1L << DATA_FACET) | (1L << SOME) | (1L << THE) | (1L << SAME_AS) | (1L << INVERSE_OF) | (1L << THAT) | (1L << OBJECT_SCOPE) | (1L << DATA_SCOPE) | (1L << ANNOTATION_MARKER) | (1L << ANNOTATION_SPLIT) | (1L << DATATYPE) | (1L << ITSELF) | (1L << TO) | (1L << PREDICATE_CHARACTERISTIC) | (1L << QUOTE) | (1L << WORD_TYPE) | (1L << THING) | (1L << DATA_VALUE) | (1L << AMBIG_WORD))) != 0) );
@@ -221,12 +219,6 @@ public class HOWL extends Parser {
 		public FactStatementDataContext factStatementData() {
 			return getRuleContext(FactStatementDataContext.class,0);
 		}
-		public DescriptionStatementObjectContext descriptionStatementObject() {
-			return getRuleContext(DescriptionStatementObjectContext.class,0);
-		}
-		public DescriptionStatementDataTypeContext descriptionStatementDataType() {
-			return getRuleContext(DescriptionStatementDataTypeContext.class,0);
-		}
 		public DomainStatementObjectContext domainStatementObject() {
 			return getRuleContext(DomainStatementObjectContext.class,0);
 		}
@@ -238,6 +230,12 @@ public class HOWL extends Parser {
 		}
 		public RangeStatementDataTypeContext rangeStatementDataType() {
 			return getRuleContext(RangeStatementDataTypeContext.class,0);
+		}
+		public DescriptionStatementObjectContext descriptionStatementObject() {
+			return getRuleContext(DescriptionStatementObjectContext.class,0);
+		}
+		public DescriptionStatementDataTypeContext descriptionStatementDataType() {
+			return getRuleContext(DescriptionStatementDataTypeContext.class,0);
 		}
 		public AnnotationStatementContext annotationStatement() {
 			return getRuleContext(AnnotationStatementContext.class,0);
@@ -272,104 +270,104 @@ public class HOWL extends Parser {
 		StatementContext _localctx = new StatementContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_statement);
 		try {
-			setState(142);
+			setState(138);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(128);
+				setState(124);
 				factStatementObject();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(129);
+				setState(125);
 				factStatementData();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(130);
-				descriptionStatementObject();
+				setState(126);
+				domainStatementObject();
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(131);
-				descriptionStatementDataType();
+				setState(127);
+				domainStatementDataType();
 				}
 				break;
 			case 5:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(132);
-				domainStatementObject();
+				setState(128);
+				rangeStatementObject();
 				}
 				break;
 			case 6:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(133);
-				domainStatementDataType();
+				setState(129);
+				rangeStatementDataType();
 				}
 				break;
 			case 7:
 				enterOuterAlt(_localctx, 7);
 				{
-				setState(134);
-				rangeStatementObject();
+				setState(130);
+				descriptionStatementObject();
 				}
 				break;
 			case 8:
 				enterOuterAlt(_localctx, 8);
 				{
-				setState(135);
-				rangeStatementDataType();
+				setState(131);
+				descriptionStatementDataType();
 				}
 				break;
 			case 9:
 				enterOuterAlt(_localctx, 9);
 				{
-				setState(136);
+				setState(132);
 				annotationStatement();
 				}
 				break;
 			case 10:
 				enterOuterAlt(_localctx, 10);
 				{
-				setState(137);
+				setState(133);
 				declarationStatement();
 				}
 				break;
 			case 11:
 				enterOuterAlt(_localctx, 11);
 				{
-				setState(138);
+				setState(134);
 				predicateCharacteristicStatement();
 				}
 				break;
 			case 12:
 				enterOuterAlt(_localctx, 12);
 				{
-				setState(139);
+				setState(135);
 				predicateRelationStatement();
 				}
 				break;
 			case 13:
 				enterOuterAlt(_localctx, 13);
 				{
-				setState(140);
+				setState(136);
 				domainStatementAnnotation();
 				}
 				break;
 			case 14:
 				enterOuterAlt(_localctx, 14);
 				{
-				setState(141);
+				setState(137);
 				rangeStatementAnnotation();
 				}
 				break;
@@ -417,41 +415,41 @@ public class HOWL extends Parser {
 		DebugContext _localctx = new DebugContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_debug);
 		try {
-			setState(149);
+			setState(145);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(144);
+				setState(140);
 				singlePhraseObject();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(145);
+				setState(141);
 				singlePhraseData();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(146);
+				setState(142);
 				catchSet();
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(147);
+				setState(143);
 				badSentence();
 				}
 				break;
 			case 5:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(148);
+				setState(144);
 				debugWordSequence();
 				}
 				break;
@@ -492,9 +490,9 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(151);
+			setState(147);
 			properNounPhrase();
-			setState(152);
+			setState(148);
 			predicatePhraseDataValue();
 			}
 		}
@@ -533,9 +531,9 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(154);
+			setState(150);
 			properNounPhrase();
-			setState(155);
+			setState(151);
 			predicatePhraseNoun();
 			}
 		}
@@ -574,9 +572,9 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(157);
+			setState(153);
 			compoundNounPhrase(0);
-			setState(158);
+			setState(154);
 			predicatePhraseNoun();
 			}
 		}
@@ -619,9 +617,9 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(160);
+			setState(156);
 			match(A);
-			setState(161);
+			setState(157);
 			_la = _input.LA(1);
 			if ( !(_la==DATATYPE || _la==AMBIG_WORD) ) {
 			_errHandler.recoverInline(this);
@@ -631,9 +629,9 @@ public class HOWL extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(162);
+			setState(158);
 			predicateExpressionState();
-			setState(163);
+			setState(159);
 			dataTypeExpression(0);
 			}
 		}
@@ -659,10 +657,7 @@ public class HOWL extends Parser {
 		public PredicateExpressionDataContext predicateExpressionData() {
 			return getRuleContext(PredicateExpressionDataContext.class,0);
 		}
-		public List<TerminalNode> A() { return getTokens(HOWL.A); }
-		public TerminalNode A(int i) {
-			return getToken(HOWL.A, i);
-		}
+		public TerminalNode A() { return getToken(HOWL.A, 0); }
 		public TerminalNode SOME() { return getToken(HOWL.SOME, 0); }
 		public DomainStatementDataTypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -682,23 +677,13 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(165);
+			setState(161);
 			match(ONLY);
-			setState(167);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
-			case 1:
-				{
-				setState(166);
-				match(A);
-				}
-				break;
-			}
-			setState(169);
+			setState(162);
 			((DomainStatementDataTypeContext)_localctx).subj = compoundNounPhrase(0);
-			setState(170);
+			setState(163);
 			((DomainStatementDataTypeContext)_localctx).pred = predicateExpressionData();
-			setState(171);
+			setState(164);
 			_la = _input.LA(1);
 			if ( !(_la==A || _la==SOME) ) {
 			_errHandler.recoverInline(this);
@@ -708,7 +693,7 @@ public class HOWL extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(172);
+			setState(165);
 			match(DATA_VALUE);
 			}
 		}
@@ -734,10 +719,7 @@ public class HOWL extends Parser {
 		public PredicateExpressionObjectContext predicateExpressionObject() {
 			return getRuleContext(PredicateExpressionObjectContext.class,0);
 		}
-		public List<TerminalNode> A() { return getTokens(HOWL.A); }
-		public TerminalNode A(int i) {
-			return getToken(HOWL.A, i);
-		}
+		public TerminalNode A() { return getToken(HOWL.A, 0); }
 		public TerminalNode SOME() { return getToken(HOWL.SOME, 0); }
 		public DomainStatementObjectContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -757,23 +739,13 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(174);
+			setState(167);
 			match(ONLY);
-			setState(176);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
-			case 1:
-				{
-				setState(175);
-				match(A);
-				}
-				break;
-			}
-			setState(178);
+			setState(168);
 			((DomainStatementObjectContext)_localctx).subj = compoundNounPhrase(0);
-			setState(179);
+			setState(169);
 			((DomainStatementObjectContext)_localctx).pred = predicateExpressionObject();
-			setState(180);
+			setState(170);
 			_la = _input.LA(1);
 			if ( !(_la==A || _la==SOME) ) {
 			_errHandler.recoverInline(this);
@@ -783,7 +755,7 @@ public class HOWL extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(181);
+			setState(171);
 			match(THING);
 			}
 		}
@@ -810,10 +782,7 @@ public class HOWL extends Parser {
 		public PredicateExpressionAnnotationContext predicateExpressionAnnotation() {
 			return getRuleContext(PredicateExpressionAnnotationContext.class,0);
 		}
-		public List<TerminalNode> A() { return getTokens(HOWL.A); }
-		public TerminalNode A(int i) {
-			return getToken(HOWL.A, i);
-		}
+		public TerminalNode A() { return getToken(HOWL.A, 0); }
 		public TerminalNode SOME() { return getToken(HOWL.SOME, 0); }
 		public DomainStatementAnnotationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -833,25 +802,15 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(183);
+			setState(173);
 			match(ANNOTATION_MARKER);
-			setState(184);
+			setState(174);
 			match(ONLY);
-			setState(186);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
-			case 1:
-				{
-				setState(185);
-				match(A);
-				}
-				break;
-			}
-			setState(188);
+			setState(175);
 			((DomainStatementAnnotationContext)_localctx).subj = wordSequence();
-			setState(189);
+			setState(176);
 			((DomainStatementAnnotationContext)_localctx).pred = predicateExpressionAnnotation();
-			setState(190);
+			setState(177);
 			_la = _input.LA(1);
 			if ( !(_la==A || _la==SOME) ) {
 			_errHandler.recoverInline(this);
@@ -861,7 +820,7 @@ public class HOWL extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(191);
+			setState(178);
 			match(THING);
 			}
 		}
@@ -889,6 +848,7 @@ public class HOWL extends Parser {
 		public DataTypeExpressionContext dataTypeExpression() {
 			return getRuleContext(DataTypeExpressionContext.class,0);
 		}
+		public TerminalNode NOT() { return getToken(HOWL.NOT, 0); }
 		public RangeStatementDataTypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -907,7 +867,7 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(193);
+			setState(180);
 			_la = _input.LA(1);
 			if ( !(_la==A || _la==SOME) ) {
 			_errHandler.recoverInline(this);
@@ -917,13 +877,23 @@ public class HOWL extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(194);
+			setState(181);
 			match(THING);
-			setState(195);
+			setState(182);
 			((RangeStatementDataTypeContext)_localctx).pred = predicateExpressionData();
-			setState(196);
+			setState(184);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==NOT) {
+				{
+				setState(183);
+				match(NOT);
+				}
+			}
+
+			setState(186);
 			match(ONLY);
-			setState(197);
+			setState(187);
 			((RangeStatementDataTypeContext)_localctx).obj = dataTypeExpression(0);
 			}
 		}
@@ -951,6 +921,7 @@ public class HOWL extends Parser {
 		public CompoundNounPhraseContext compoundNounPhrase() {
 			return getRuleContext(CompoundNounPhraseContext.class,0);
 		}
+		public TerminalNode NOT() { return getToken(HOWL.NOT, 0); }
 		public RangeStatementObjectContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -969,7 +940,7 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(199);
+			setState(189);
 			_la = _input.LA(1);
 			if ( !(_la==A || _la==SOME) ) {
 			_errHandler.recoverInline(this);
@@ -979,13 +950,23 @@ public class HOWL extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(200);
+			setState(190);
 			match(THING);
-			setState(201);
+			setState(191);
 			((RangeStatementObjectContext)_localctx).pred = predicateExpressionObject();
-			setState(202);
+			setState(193);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==NOT) {
+				{
+				setState(192);
+				match(NOT);
+				}
+			}
+
+			setState(195);
 			match(ONLY);
-			setState(203);
+			setState(196);
 			((RangeStatementObjectContext)_localctx).obj = compoundNounPhrase(0);
 			}
 		}
@@ -1006,10 +987,7 @@ public class HOWL extends Parser {
 		public TerminalNode ANNOTATION_MARKER() { return getToken(HOWL.ANNOTATION_MARKER, 0); }
 		public TerminalNode THING() { return getToken(HOWL.THING, 0); }
 		public TerminalNode ONLY() { return getToken(HOWL.ONLY, 0); }
-		public List<TerminalNode> A() { return getTokens(HOWL.A); }
-		public TerminalNode A(int i) {
-			return getToken(HOWL.A, i);
-		}
+		public TerminalNode A() { return getToken(HOWL.A, 0); }
 		public TerminalNode SOME() { return getToken(HOWL.SOME, 0); }
 		public PredicateExpressionAnnotationContext predicateExpressionAnnotation() {
 			return getRuleContext(PredicateExpressionAnnotationContext.class,0);
@@ -1017,6 +995,7 @@ public class HOWL extends Parser {
 		public WordSequenceContext wordSequence() {
 			return getRuleContext(WordSequenceContext.class,0);
 		}
+		public TerminalNode NOT() { return getToken(HOWL.NOT, 0); }
 		public RangeStatementAnnotationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1035,9 +1014,9 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(205);
+			setState(198);
 			match(ANNOTATION_MARKER);
-			setState(206);
+			setState(199);
 			_la = _input.LA(1);
 			if ( !(_la==A || _la==SOME) ) {
 			_errHandler.recoverInline(this);
@@ -1047,15 +1026,23 @@ public class HOWL extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(207);
+			setState(200);
 			match(THING);
-			setState(208);
+			setState(201);
 			((RangeStatementAnnotationContext)_localctx).pred = predicateExpressionAnnotation();
-			setState(209);
+			setState(203);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==NOT) {
+				{
+				setState(202);
+				match(NOT);
+				}
+			}
+
+			setState(205);
 			match(ONLY);
-			setState(210);
-			match(A);
-			setState(211);
+			setState(206);
 			((RangeStatementAnnotationContext)_localctx).obj = wordSequence();
 			}
 		}
@@ -1095,15 +1082,15 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(213);
+			setState(208);
 			match(THE);
-			setState(214);
+			setState(209);
 			wordSequence();
-			setState(215);
+			setState(210);
 			match(WORD_TYPE);
-			setState(216);
+			setState(211);
 			match(IS);
-			setState(217);
+			setState(212);
 			match(PREDICATE_CHARACTERISTIC);
 			}
 		}
@@ -1160,54 +1147,54 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(219);
+			setState(214);
 			match(THE);
-			setState(220);
+			setState(215);
 			((PredicateRelationStatementContext)_localctx).subj = wordSequence();
-			setState(221);
+			setState(216);
 			match(WORD_TYPE);
-			setState(222);
+			setState(217);
 			((PredicateRelationStatementContext)_localctx).relIS = match(IS);
-			setState(224);
+			setState(219);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==NOT) {
 				{
-				setState(223);
+				setState(218);
 				match(NOT);
 				}
 			}
 
-			setState(227);
+			setState(222);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==SAME_AS) {
 				{
-				setState(226);
+				setState(221);
 				((PredicateRelationStatementContext)_localctx).relSame = match(SAME_AS);
 				}
 			}
 
-			setState(230);
+			setState(225);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==INVERSE_OF) {
 				{
-				setState(229);
+				setState(224);
 				((PredicateRelationStatementContext)_localctx).relInv = match(INVERSE_OF);
 				}
 			}
 
-			setState(232);
+			setState(227);
 			match(THE);
-			setState(233);
+			setState(228);
 			((PredicateRelationStatementContext)_localctx).obj = wordSequence();
-			setState(235);
+			setState(230);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WORD_TYPE) {
 				{
-				setState(234);
+				setState(229);
 				match(WORD_TYPE);
 				}
 			}
@@ -1261,28 +1248,28 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(237);
+			setState(232);
 			match(ANNOTATION_MARKER);
-			setState(238);
+			setState(233);
 			((AnnotationStatementContext)_localctx).subj = wordSequence();
-			setState(239);
+			setState(234);
 			match(ANNOTATION_SPLIT);
-			setState(240);
+			setState(235);
 			((AnnotationStatementContext)_localctx).rel = wordSequence();
-			setState(241);
+			setState(236);
 			match(ANNOTATION_SPLIT);
-			setState(244);
+			setState(239);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,11,_ctx) ) {
 			case 1:
 				{
-				setState(242);
+				setState(237);
 				((AnnotationStatementContext)_localctx).objValue = dataValue();
 				}
 				break;
 			case 2:
 				{
-				setState(243);
+				setState(238);
 				((AnnotationStatementContext)_localctx).objWord = wordSequence();
 				}
 				break;
@@ -1325,13 +1312,13 @@ public class HOWL extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(246);
+			setState(241);
 			((DeclarationStatementContext)_localctx).subj = declareWordSequence();
-			setState(247);
+			setState(242);
 			match(IS);
-			setState(248);
+			setState(243);
 			match(A);
-			setState(249);
+			setState(244);
 			match(WORD_TYPE);
 			}
 		}
@@ -1346,85 +1333,30 @@ public class HOWL extends Parser {
 		return _localctx;
 	}
 
-	public static class NounPhraseContext extends ParserRuleContext {
-		public ProperNounPhraseContext properNounPhrase() {
-			return getRuleContext(ProperNounPhraseContext.class,0);
-		}
-		public CompoundNounPhraseContext compoundNounPhrase() {
-			return getRuleContext(CompoundNounPhraseContext.class,0);
-		}
-		public NounPhraseContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_nounPhrase; }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof HOWLVisitor ) return ((HOWLVisitor<? extends T>)visitor).visitNounPhrase(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final NounPhraseContext nounPhrase() throws RecognitionException {
-		NounPhraseContext _localctx = new NounPhraseContext(_ctx, getState());
-		enterRule(_localctx, 34, RULE_nounPhrase);
-		try {
-			setState(253);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
-			case 1:
-				enterOuterAlt(_localctx, 1);
-				{
-				setState(251);
-				properNounPhrase();
-				}
-				break;
-			case 2:
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(252);
-				compoundNounPhrase(0);
-				}
-				break;
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
 	public static class CompoundNounPhraseContext extends ParserRuleContext {
-		public CompoundNounPhraseContext setIntersection;
 		public CompoundNounPhraseContext setUnion;
-		public ProperNounPhraseContext oneof;
+		public CompoundNounPhraseContext setIntersection;
 		public CompoundNounPhraseContext disjointUnion;
+		public ProperNounPhraseContext proper;
 		public CommonNounPhraseContext common;
 		public Token itself;
 		public TerminalNode ONEOF() { return getToken(HOWL.ONEOF, 0); }
-		public List<ProperNounPhraseContext> properNounPhrase() {
-			return getRuleContexts(ProperNounPhraseContext.class);
-		}
-		public ProperNounPhraseContext properNounPhrase(int i) {
-			return getRuleContext(ProperNounPhraseContext.class,i);
-		}
 		public List<TerminalNode> OR() { return getTokens(HOWL.OR); }
 		public TerminalNode OR(int i) {
 			return getToken(HOWL.OR, i);
-		}
-		public List<TerminalNode> COMMA() { return getTokens(HOWL.COMMA); }
-		public TerminalNode COMMA(int i) {
-			return getToken(HOWL.COMMA, i);
 		}
 		public List<CompoundNounPhraseContext> compoundNounPhrase() {
 			return getRuleContexts(CompoundNounPhraseContext.class);
 		}
 		public CompoundNounPhraseContext compoundNounPhrase(int i) {
 			return getRuleContext(CompoundNounPhraseContext.class,i);
+		}
+		public List<TerminalNode> COMMA() { return getTokens(HOWL.COMMA); }
+		public TerminalNode COMMA(int i) {
+			return getToken(HOWL.COMMA, i);
+		}
+		public ProperNounPhraseContext properNounPhrase() {
+			return getRuleContext(ProperNounPhraseContext.class,0);
 		}
 		public CommonNounPhraseContext commonNounPhrase() {
 			return getRuleContext(CommonNounPhraseContext.class,0);
@@ -1454,31 +1386,30 @@ public class HOWL extends Parser {
 		int _parentState = getState();
 		CompoundNounPhraseContext _localctx = new CompoundNounPhraseContext(_ctx, _parentState);
 		CompoundNounPhraseContext _prevctx = _localctx;
-		int _startState = 36;
-		enterRecursionRule(_localctx, 36, RULE_compoundNounPhrase, _p);
+		int _startState = 34;
+		enterRecursionRule(_localctx, 34, RULE_compoundNounPhrase, _p);
 		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(274);
+			setState(262);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,13,_ctx) ) {
 			case 1:
 				{
-				setState(256);
+				setState(247);
 				match(ONEOF);
-				setState(257);
-				((CompoundNounPhraseContext)_localctx).oneof = properNounPhrase();
-				setState(260); 
+				setState(248);
+				((CompoundNounPhraseContext)_localctx).disjointUnion = compoundNounPhrase(0);
+				setState(253);
 				_errHandler.sync(this);
-				_alt = 1;
-				do {
-					switch (_alt) {
-					case 1:
+				_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
+				while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+					if ( _alt==1 ) {
 						{
 						{
-						setState(258);
+						setState(249);
 						_la = _input.LA(1);
 						if ( !(_la==COMMA || _la==OR) ) {
 						_errHandler.recoverInline(this);
@@ -1488,140 +1419,68 @@ public class HOWL extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(259);
-						properNounPhrase();
+						setState(250);
+						compoundNounPhrase(0);
 						}
-						}
-						break;
-					default:
-						throw new NoViableAltException(this);
+						} 
 					}
-					setState(262); 
+					setState(255);
 					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
-				} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
+					_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
+				}
+				setState(256);
+				match(OR);
+				setState(257);
+				compoundNounPhrase(4);
 				}
 				break;
 			case 2:
 				{
-				setState(264);
-				match(ONEOF);
-				setState(265);
-				((CompoundNounPhraseContext)_localctx).disjointUnion = compoundNounPhrase(0);
-				setState(268); 
-				_errHandler.sync(this);
-				_alt = 1;
-				do {
-					switch (_alt) {
-					case 1:
-						{
-						{
-						setState(266);
-						_la = _input.LA(1);
-						if ( !(_la==COMMA || _la==OR) ) {
-						_errHandler.recoverInline(this);
-						}
-						else {
-							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-							_errHandler.reportMatch(this);
-							consume();
-						}
-						setState(267);
-						compoundNounPhrase(0);
-						}
-						}
-						break;
-					default:
-						throw new NoViableAltException(this);
-					}
-					setState(270); 
-					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input,14,_ctx);
-				} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
+				setState(259);
+				((CompoundNounPhraseContext)_localctx).proper = properNounPhrase();
 				}
 				break;
 			case 3:
 				{
-				setState(272);
+				setState(260);
 				((CompoundNounPhraseContext)_localctx).common = commonNounPhrase();
 				}
 				break;
 			case 4:
 				{
-				setState(273);
+				setState(261);
 				((CompoundNounPhraseContext)_localctx).itself = match(ITSELF);
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(292);
+			setState(286);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,19,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(290);
+					setState(284);
 					_errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,18,_ctx) ) {
+					switch ( getInterpreter().adaptivePredict(_input,16,_ctx) ) {
 					case 1:
 						{
 						_localctx = new CompoundNounPhraseContext(_parentctx, _parentState);
-						_localctx.setIntersection = _prevctx;
-						_localctx.setIntersection = _prevctx;
-						pushNewRecursionContext(_localctx, _startState, RULE_compoundNounPhrase);
-						setState(276);
-						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
-						setState(279); 
-						_errHandler.sync(this);
-						_alt = 1;
-						do {
-							switch (_alt) {
-							case 1:
-								{
-								{
-								setState(277);
-								_la = _input.LA(1);
-								if ( !(_la==COMMA || _la==AND) ) {
-								_errHandler.recoverInline(this);
-								}
-								else {
-									if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-									_errHandler.reportMatch(this);
-									consume();
-								}
-								setState(278);
-								compoundNounPhrase(0);
-								}
-								}
-								break;
-							default:
-								throw new NoViableAltException(this);
-							}
-							setState(281); 
-							_errHandler.sync(this);
-							_alt = getInterpreter().adaptivePredict(_input,16,_ctx);
-						} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
-						}
-						break;
-					case 2:
-						{
-						_localctx = new CompoundNounPhraseContext(_parentctx, _parentState);
 						_localctx.setUnion = _prevctx;
 						_localctx.setUnion = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_compoundNounPhrase);
-						setState(283);
-						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(286); 
+						setState(264);
+						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
+						setState(269);
 						_errHandler.sync(this);
-						_alt = 1;
-						do {
-							switch (_alt) {
-							case 1:
+						_alt = getInterpreter().adaptivePredict(_input,14,_ctx);
+						while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+							if ( _alt==1 ) {
 								{
 								{
-								setState(284);
+								setState(265);
 								_la = _input.LA(1);
 								if ( !(_la==COMMA || _la==OR) ) {
 								_errHandler.recoverInline(this);
@@ -1631,26 +1490,67 @@ public class HOWL extends Parser {
 									_errHandler.reportMatch(this);
 									consume();
 								}
-								setState(285);
+								setState(266);
 								compoundNounPhrase(0);
 								}
-								}
-								break;
-							default:
-								throw new NoViableAltException(this);
+								} 
 							}
-							setState(288); 
+							setState(271);
 							_errHandler.sync(this);
-							_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
-						} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
+							_alt = getInterpreter().adaptivePredict(_input,14,_ctx);
+						}
+						setState(272);
+						match(OR);
+						setState(273);
+						compoundNounPhrase(7);
+						}
+						break;
+					case 2:
+						{
+						_localctx = new CompoundNounPhraseContext(_parentctx, _parentState);
+						_localctx.setIntersection = _prevctx;
+						_localctx.setIntersection = _prevctx;
+						pushNewRecursionContext(_localctx, _startState, RULE_compoundNounPhrase);
+						setState(274);
+						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
+						setState(279);
+						_errHandler.sync(this);
+						_alt = getInterpreter().adaptivePredict(_input,15,_ctx);
+						while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+							if ( _alt==1 ) {
+								{
+								{
+								setState(275);
+								_la = _input.LA(1);
+								if ( !(_la==COMMA || _la==AND) ) {
+								_errHandler.recoverInline(this);
+								}
+								else {
+									if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+									_errHandler.reportMatch(this);
+									consume();
+								}
+								setState(276);
+								compoundNounPhrase(0);
+								}
+								} 
+							}
+							setState(281);
+							_errHandler.sync(this);
+							_alt = getInterpreter().adaptivePredict(_input,15,_ctx);
+						}
+						setState(282);
+						match(AND);
+						setState(283);
+						compoundNounPhrase(6);
 						}
 						break;
 					}
 					} 
 				}
-				setState(294);
+				setState(288);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,19,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
 			}
 			}
 		}
@@ -1669,6 +1569,7 @@ public class HOWL extends Parser {
 		public NProperSequenceContext nProperSequence() {
 			return getRuleContext(NProperSequenceContext.class,0);
 		}
+		public TerminalNode NOT() { return getToken(HOWL.NOT, 0); }
 		public TerminalNode THE() { return getToken(HOWL.THE, 0); }
 		public ProperNounPhraseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1683,22 +1584,32 @@ public class HOWL extends Parser {
 
 	public final ProperNounPhraseContext properNounPhrase() throws RecognitionException {
 		ProperNounPhraseContext _localctx = new ProperNounPhraseContext(_ctx, getState());
-		enterRule(_localctx, 38, RULE_properNounPhrase);
+		enterRule(_localctx, 36, RULE_properNounPhrase);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(296);
+			setState(290);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==NOT) {
+				{
+				setState(289);
+				match(NOT);
+				}
+			}
+
+			setState(293);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==THE) {
 				{
-				setState(295);
+				setState(292);
 				match(THE);
 				}
 			}
 
-			setState(298);
+			setState(295);
 			nProperSequence();
 			}
 		}
@@ -1735,13 +1646,13 @@ public class HOWL extends Parser {
 
 	public final NProperSequenceContext nProperSequence() throws RecognitionException {
 		NProperSequenceContext _localctx = new NProperSequenceContext(_ctx, getState());
-		enterRule(_localctx, 40, RULE_nProperSequence);
+		enterRule(_localctx, 38, RULE_nProperSequence);
 		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(301); 
+			setState(298); 
 			_errHandler.sync(this);
 			_alt = 1;
 			do {
@@ -1749,7 +1660,7 @@ public class HOWL extends Parser {
 				case 1:
 					{
 					{
-					setState(300);
+					setState(297);
 					_la = _input.LA(1);
 					if ( !(_la==PROPER_NOUN || _la==AMBIG_WORD) ) {
 					_errHandler.recoverInline(this);
@@ -1765,9 +1676,9 @@ public class HOWL extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(303); 
+				setState(300); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,21,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,20,_ctx);
 			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 			}
 		}
@@ -1822,43 +1733,43 @@ public class HOWL extends Parser {
 
 	public final CommonNounPhraseContext commonNounPhrase() throws RecognitionException {
 		CommonNounPhraseContext _localctx = new CommonNounPhraseContext(_ctx, getState());
-		enterRule(_localctx, 42, RULE_commonNounPhrase);
+		enterRule(_localctx, 40, RULE_commonNounPhrase);
 		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(306);
+			setState(303);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==NOT) {
 				{
-				setState(305);
+				setState(302);
 				match(NOT);
+				}
+			}
+
+			setState(306);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << INTEGER) | (1L << ONLY) | (1L << NO) | (1L << A) | (1L << EVERY) | (1L << EXACT) | (1L << LESS_THAN) | (1L << LESS_THAN_OR_EQUAL) | (1L << MORE_THAN) | (1L << MORE_THAN_OR_EQUAL) | (1L << SOME) | (1L << THE))) != 0)) {
+				{
+				setState(305);
+				quant();
 				}
 			}
 
 			setState(309);
 			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << INTEGER) | (1L << ONLY) | (1L << NO) | (1L << A) | (1L << EVERY) | (1L << EXACT) | (1L << LESS_THAN) | (1L << LESS_THAN_OR_EQUAL) | (1L << MORE_THAN) | (1L << MORE_THAN_OR_EQUAL) | (1L << SOME) | (1L << THE))) != 0)) {
-				{
-				setState(308);
-				quant();
-				}
-			}
-
-			setState(312);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,24,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,23,_ctx) ) {
 			case 1:
 				{
-				setState(311);
+				setState(308);
 				adjp();
 				}
 				break;
 			}
-			setState(314);
+			setState(311);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << ADJECTIVE) | (1L << COMMON_NOUN) | (1L << PROPER_NOUN) | (1L << THING) | (1L << AMBIG_WORD))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -1868,34 +1779,34 @@ public class HOWL extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(325);
+			setState(322);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,26,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,25,_ctx) ) {
 			case 1:
 				{
-				setState(315);
+				setState(312);
 				match(THAT);
-				setState(316);
+				setState(313);
 				predicatePhrase();
-				setState(322);
+				setState(319);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,25,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,24,_ctx);
 				while ( _alt!=1 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 					if ( _alt==1+1 ) {
 						{
 						{
-						setState(317);
+						setState(314);
 						match(AND);
-						setState(318);
+						setState(315);
 						match(THAT);
-						setState(319);
+						setState(316);
 						predicatePhrase();
 						}
 						} 
 					}
-					setState(324);
+					setState(321);
 					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input,25,_ctx);
+					_alt = getInterpreter().adaptivePredict(_input,24,_ctx);
 				}
 				}
 				break;
@@ -1943,13 +1854,13 @@ public class HOWL extends Parser {
 
 	public final AdjpContext adjp() throws RecognitionException {
 		AdjpContext _localctx = new AdjpContext(_ctx, getState());
-		enterRule(_localctx, 44, RULE_adjp);
+		enterRule(_localctx, 42, RULE_adjp);
 		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(328); 
+			setState(325); 
 			_errHandler.sync(this);
 			_alt = 1;
 			do {
@@ -1957,7 +1868,7 @@ public class HOWL extends Parser {
 				case 1:
 					{
 					{
-					setState(327);
+					setState(324);
 					_la = _input.LA(1);
 					if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << ADJECTIVE) | (1L << COMMON_NOUN) | (1L << PROPER_NOUN) | (1L << AMBIG_WORD))) != 0)) ) {
 					_errHandler.recoverInline(this);
@@ -1973,9 +1884,9 @@ public class HOWL extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(330); 
+				setState(327); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,27,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,26,_ctx);
 			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 			}
 		}
@@ -1997,13 +1908,12 @@ public class HOWL extends Parser {
 		public Token ambig;
 		public DataTypeExpressionContext comp;
 		public DataTypeRestrictionContext rest;
-		public OneOfDataContext oneof;
 		public DataValuePhraseContext dv;
-		public TerminalNode DATATYPE() { return getToken(HOWL.DATATYPE, 0); }
 		public TerminalNode NOT() { return getToken(HOWL.NOT, 0); }
 		public QuantContext quant() {
 			return getRuleContext(QuantContext.class,0);
 		}
+		public TerminalNode DATATYPE() { return getToken(HOWL.DATATYPE, 0); }
 		public TerminalNode AMBIG_WORD() { return getToken(HOWL.AMBIG_WORD, 0); }
 		public List<DataTypeExpressionContext> dataTypeExpression() {
 			return getRuleContexts(DataTypeExpressionContext.class);
@@ -2013,9 +1923,6 @@ public class HOWL extends Parser {
 		}
 		public DataTypeRestrictionContext dataTypeRestriction() {
 			return getRuleContext(DataTypeRestrictionContext.class,0);
-		}
-		public OneOfDataContext oneOfData() {
-			return getRuleContext(OneOfDataContext.class,0);
 		}
 		public DataValuePhraseContext dataValuePhrase() {
 			return getRuleContext(DataValuePhraseContext.class,0);
@@ -2052,116 +1959,100 @@ public class HOWL extends Parser {
 		int _parentState = getState();
 		DataTypeExpressionContext _localctx = new DataTypeExpressionContext(_ctx, _parentState);
 		DataTypeExpressionContext _prevctx = _localctx;
-		int _startState = 46;
-		enterRecursionRule(_localctx, 46, RULE_dataTypeExpression, _p);
+		int _startState = 44;
+		enterRecursionRule(_localctx, 44, RULE_dataTypeExpression, _p);
 		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(352);
+			setState(344);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,32,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,30,_ctx) ) {
 			case 1:
 				{
-				setState(334);
+				setState(331);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==NOT) {
 					{
-					setState(333);
+					setState(330);
 					match(NOT);
 					}
 				}
 
-				setState(337);
+				setState(334);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << INTEGER) | (1L << ONLY) | (1L << NO) | (1L << A) | (1L << EVERY) | (1L << EXACT) | (1L << LESS_THAN) | (1L << LESS_THAN_OR_EQUAL) | (1L << MORE_THAN) | (1L << MORE_THAN_OR_EQUAL) | (1L << SOME) | (1L << THE))) != 0)) {
 					{
-					setState(336);
+					setState(333);
 					quant();
 					}
 				}
 
-				setState(339);
-				((DataTypeExpressionContext)_localctx).dt = match(DATATYPE);
+				setState(338);
+				_errHandler.sync(this);
+				switch (_input.LA(1)) {
+				case DATATYPE:
+					{
+					setState(336);
+					((DataTypeExpressionContext)_localctx).dt = match(DATATYPE);
+					}
+					break;
+				case AMBIG_WORD:
+					{
+					setState(337);
+					((DataTypeExpressionContext)_localctx).ambig = match(AMBIG_WORD);
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
+				}
 				}
 				break;
 			case 2:
 				{
+				setState(340);
+				match(NOT);
 				setState(341);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-				if (_la==NOT) {
-					{
-					setState(340);
-					match(NOT);
-					}
-				}
-
-				setState(344);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << INTEGER) | (1L << ONLY) | (1L << NO) | (1L << A) | (1L << EVERY) | (1L << EXACT) | (1L << LESS_THAN) | (1L << LESS_THAN_OR_EQUAL) | (1L << MORE_THAN) | (1L << MORE_THAN_OR_EQUAL) | (1L << SOME) | (1L << THE))) != 0)) {
-					{
-					setState(343);
-					quant();
-					}
-				}
-
-				setState(346);
-				((DataTypeExpressionContext)_localctx).ambig = match(AMBIG_WORD);
+				((DataTypeExpressionContext)_localctx).comp = dataTypeExpression(3);
 				}
 				break;
 			case 3:
 				{
-				setState(347);
-				match(NOT);
-				setState(348);
-				((DataTypeExpressionContext)_localctx).comp = dataTypeExpression(6);
+				setState(342);
+				((DataTypeExpressionContext)_localctx).rest = dataTypeRestriction();
 				}
 				break;
 			case 4:
 				{
-				setState(349);
-				((DataTypeExpressionContext)_localctx).rest = dataTypeRestriction();
-				}
-				break;
-			case 5:
-				{
-				setState(350);
-				((DataTypeExpressionContext)_localctx).oneof = oneOfData();
-				}
-				break;
-			case 6:
-				{
-				setState(351);
+				setState(343);
 				((DataTypeExpressionContext)_localctx).dv = dataValuePhrase();
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(370);
+			setState(362);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,36,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,34,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(368);
+					setState(360);
 					_errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,35,_ctx) ) {
+					switch ( getInterpreter().adaptivePredict(_input,33,_ctx) ) {
 					case 1:
 						{
 						_localctx = new DataTypeExpressionContext(_parentctx, _parentState);
 						_localctx.setUnion = _prevctx;
 						_localctx.setUnion = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_dataTypeExpression);
-						setState(354);
-						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(357); 
+						setState(346);
+						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
+						setState(349); 
 						_errHandler.sync(this);
 						_alt = 1;
 						do {
@@ -2169,7 +2060,7 @@ public class HOWL extends Parser {
 							case 1:
 								{
 								{
-								setState(355);
+								setState(347);
 								_la = _input.LA(1);
 								if ( !(_la==COMMA || _la==OR) ) {
 								_errHandler.recoverInline(this);
@@ -2179,7 +2070,7 @@ public class HOWL extends Parser {
 									_errHandler.reportMatch(this);
 									consume();
 								}
-								setState(356);
+								setState(348);
 								dataTypeExpression(0);
 								}
 								}
@@ -2187,9 +2078,9 @@ public class HOWL extends Parser {
 							default:
 								throw new NoViableAltException(this);
 							}
-							setState(359); 
+							setState(351); 
 							_errHandler.sync(this);
-							_alt = getInterpreter().adaptivePredict(_input,33,_ctx);
+							_alt = getInterpreter().adaptivePredict(_input,31,_ctx);
 						} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 						}
 						break;
@@ -2199,9 +2090,9 @@ public class HOWL extends Parser {
 						_localctx.setIntersection = _prevctx;
 						_localctx.setIntersection = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_dataTypeExpression);
-						setState(361);
-						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(364); 
+						setState(353);
+						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
+						setState(356); 
 						_errHandler.sync(this);
 						_alt = 1;
 						do {
@@ -2209,7 +2100,7 @@ public class HOWL extends Parser {
 							case 1:
 								{
 								{
-								setState(362);
+								setState(354);
 								_la = _input.LA(1);
 								if ( !(_la==COMMA || _la==AND) ) {
 								_errHandler.recoverInline(this);
@@ -2219,7 +2110,7 @@ public class HOWL extends Parser {
 									_errHandler.reportMatch(this);
 									consume();
 								}
-								setState(363);
+								setState(355);
 								dataTypeExpression(0);
 								}
 								}
@@ -2227,18 +2118,18 @@ public class HOWL extends Parser {
 							default:
 								throw new NoViableAltException(this);
 							}
-							setState(366); 
+							setState(358); 
 							_errHandler.sync(this);
-							_alt = getInterpreter().adaptivePredict(_input,34,_ctx);
+							_alt = getInterpreter().adaptivePredict(_input,32,_ctx);
 						} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 						}
 						break;
 					}
 					} 
 				}
-				setState(372);
+				setState(364);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,36,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,34,_ctx);
 			}
 			}
 		}
@@ -2283,33 +2174,33 @@ public class HOWL extends Parser {
 
 	public final DataTypeRestrictionContext dataTypeRestriction() throws RecognitionException {
 		DataTypeRestrictionContext _localctx = new DataTypeRestrictionContext(_ctx, getState());
-		enterRule(_localctx, 48, RULE_dataTypeRestriction);
+		enterRule(_localctx, 46, RULE_dataTypeRestriction);
 		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(374);
+			setState(366);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==NOT) {
 				{
-				setState(373);
+				setState(365);
 				match(NOT);
 				}
 			}
 
-			setState(377);
+			setState(369);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << INTEGER) | (1L << ONLY) | (1L << NO) | (1L << A) | (1L << EVERY) | (1L << EXACT) | (1L << LESS_THAN) | (1L << LESS_THAN_OR_EQUAL) | (1L << MORE_THAN) | (1L << MORE_THAN_OR_EQUAL) | (1L << SOME) | (1L << THE))) != 0)) {
 				{
-				setState(376);
+				setState(368);
 				quant();
 				}
 			}
 
-			setState(379);
+			setState(371);
 			_la = _input.LA(1);
 			if ( !(_la==DATATYPE || _la==AMBIG_WORD) ) {
 			_errHandler.recoverInline(this);
@@ -2319,25 +2210,25 @@ public class HOWL extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(380);
+			setState(372);
 			dataFacetExpression();
-			setState(385);
+			setState(377);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,39,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,37,_ctx);
 			while ( _alt!=1 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1+1 ) {
 					{
 					{
-					setState(381);
+					setState(373);
 					match(AND);
-					setState(382);
+					setState(374);
 					dataFacetExpression();
 					}
 					} 
 				}
-				setState(387);
+				setState(379);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,39,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,37,_ctx);
 			}
 			}
 		}
@@ -2377,19 +2268,19 @@ public class HOWL extends Parser {
 
 	public final DataFacetExpressionContext dataFacetExpression() throws RecognitionException {
 		DataFacetExpressionContext _localctx = new DataFacetExpressionContext(_ctx, getState());
-		enterRule(_localctx, 50, RULE_dataFacetExpression);
+		enterRule(_localctx, 48, RULE_dataFacetExpression);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(390);
+			setState(382);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==THAT) {
 				{
-				setState(388);
+				setState(380);
 				match(THAT);
-				setState(389);
+				setState(381);
 				_la = _input.LA(1);
 				if ( !(_la==HAS || _la==IS) ) {
 				_errHandler.recoverInline(this);
@@ -2402,22 +2293,22 @@ public class HOWL extends Parser {
 				}
 			}
 
-			setState(393);
+			setState(385);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==A) {
 				{
-				setState(392);
+				setState(384);
 				match(A);
 				}
 			}
 
-			setState(397);
+			setState(389);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case DATA_FACET:
 				{
-				setState(395);
+				setState(387);
 				match(DATA_FACET);
 				}
 				break;
@@ -2427,14 +2318,14 @@ public class HOWL extends Parser {
 			case MORE_THAN:
 			case MORE_THAN_OR_EQUAL:
 				{
-				setState(396);
+				setState(388);
 				quantNumeric();
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			setState(399);
+			setState(391);
 			dataValue();
 			}
 		}
@@ -2467,22 +2358,22 @@ public class HOWL extends Parser {
 
 	public final DataValuePhraseContext dataValuePhrase() throws RecognitionException {
 		DataValuePhraseContext _localctx = new DataValuePhraseContext(_ctx, getState());
-		enterRule(_localctx, 52, RULE_dataValuePhrase);
+		enterRule(_localctx, 50, RULE_dataValuePhrase);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(402);
+			setState(394);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==NOT) {
 				{
-				setState(401);
+				setState(393);
 				match(NOT);
 				}
 			}
 
-			setState(404);
+			setState(396);
 			dataValue();
 			}
 		}
@@ -2514,12 +2405,12 @@ public class HOWL extends Parser {
 
 	public final DataValueContext dataValue() throws RecognitionException {
 		DataValueContext _localctx = new DataValueContext(_ctx, getState());
-		enterRule(_localctx, 54, RULE_dataValue);
+		enterRule(_localctx, 52, RULE_dataValue);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(406);
+			setState(398);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << QUOTED_TEXT) | (1L << INTEGER) | (1L << DECIMAL))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -2529,88 +2420,6 @@ public class HOWL extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class OneOfDataContext extends ParserRuleContext {
-		public TerminalNode ONEOF() { return getToken(HOWL.ONEOF, 0); }
-		public List<DataValueContext> dataValue() {
-			return getRuleContexts(DataValueContext.class);
-		}
-		public DataValueContext dataValue(int i) {
-			return getRuleContext(DataValueContext.class,i);
-		}
-		public List<TerminalNode> OR() { return getTokens(HOWL.OR); }
-		public TerminalNode OR(int i) {
-			return getToken(HOWL.OR, i);
-		}
-		public List<TerminalNode> COMMA() { return getTokens(HOWL.COMMA); }
-		public TerminalNode COMMA(int i) {
-			return getToken(HOWL.COMMA, i);
-		}
-		public OneOfDataContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_oneOfData; }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof HOWLVisitor ) return ((HOWLVisitor<? extends T>)visitor).visitOneOfData(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final OneOfDataContext oneOfData() throws RecognitionException {
-		OneOfDataContext _localctx = new OneOfDataContext(_ctx, getState());
-		enterRule(_localctx, 56, RULE_oneOfData);
-		int _la;
-		try {
-			int _alt;
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(408);
-			match(ONEOF);
-			setState(409);
-			dataValue();
-			setState(412); 
-			_errHandler.sync(this);
-			_alt = 1;
-			do {
-				switch (_alt) {
-				case 1:
-					{
-					{
-					setState(410);
-					_la = _input.LA(1);
-					if ( !(_la==COMMA || _la==OR) ) {
-					_errHandler.recoverInline(this);
-					}
-					else {
-						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-						_errHandler.reportMatch(this);
-						consume();
-					}
-					setState(411);
-					dataValue();
-					}
-					}
-					break;
-				default:
-					throw new NoViableAltException(this);
-				}
-				setState(414); 
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,44,_ctx);
-			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 			}
 		}
 		catch (RecognitionException re) {
@@ -2647,50 +2456,50 @@ public class HOWL extends Parser {
 
 	public final QuantContext quant() throws RecognitionException {
 		QuantContext _localctx = new QuantContext(_ctx, getState());
-		enterRule(_localctx, 58, RULE_quant);
+		enterRule(_localctx, 54, RULE_quant);
 		try {
-			setState(423);
+			setState(407);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case A:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(416);
+				setState(400);
 				match(A);
 				}
 				break;
 			case THE:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(417);
+				setState(401);
 				match(THE);
 				}
 				break;
 			case EVERY:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(418);
+				setState(402);
 				match(EVERY);
 				}
 				break;
 			case SOME:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(419);
+				setState(403);
 				match(SOME);
 				}
 				break;
 			case NO:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(420);
+				setState(404);
 				match(NO);
 				}
 				break;
 			case ONLY:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(421);
+				setState(405);
 				match(ONLY);
 				}
 				break;
@@ -2702,7 +2511,7 @@ public class HOWL extends Parser {
 			case MORE_THAN_OR_EQUAL:
 				enterOuterAlt(_localctx, 7);
 				{
-				setState(422);
+				setState(406);
 				quantNumericExpression();
 				}
 				break;
@@ -2740,12 +2549,12 @@ public class HOWL extends Parser {
 
 	public final QuantNumericContext quantNumeric() throws RecognitionException {
 		QuantNumericContext _localctx = new QuantNumericContext(_ctx, getState());
-		enterRule(_localctx, 60, RULE_quantNumeric);
+		enterRule(_localctx, 56, RULE_quantNumeric);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(425);
+			setState(409);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << EXACT) | (1L << LESS_THAN) | (1L << LESS_THAN_OR_EQUAL) | (1L << MORE_THAN) | (1L << MORE_THAN_OR_EQUAL))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -2786,22 +2595,22 @@ public class HOWL extends Parser {
 
 	public final QuantNumericExpressionContext quantNumericExpression() throws RecognitionException {
 		QuantNumericExpressionContext _localctx = new QuantNumericExpressionContext(_ctx, getState());
-		enterRule(_localctx, 62, RULE_quantNumericExpression);
+		enterRule(_localctx, 58, RULE_quantNumericExpression);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(428);
+			setState(412);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << EXACT) | (1L << LESS_THAN) | (1L << LESS_THAN_OR_EQUAL) | (1L << MORE_THAN) | (1L << MORE_THAN_OR_EQUAL))) != 0)) {
 				{
-				setState(427);
+				setState(411);
 				quantNumeric();
 				}
 			}
 
-			setState(430);
+			setState(414);
 			match(INTEGER);
 			}
 		}
@@ -2833,11 +2642,11 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionObjectContext predicateExpressionObject() throws RecognitionException {
 		PredicateExpressionObjectContext _localctx = new PredicateExpressionObjectContext(_ctx, getState());
-		enterRule(_localctx, 64, RULE_predicateExpressionObject);
+		enterRule(_localctx, 60, RULE_predicateExpressionObject);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(432);
+			setState(416);
 			predicateExpression();
 			}
 		}
@@ -2869,11 +2678,11 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionDataContext predicateExpressionData() throws RecognitionException {
 		PredicateExpressionDataContext _localctx = new PredicateExpressionDataContext(_ctx, getState());
-		enterRule(_localctx, 66, RULE_predicateExpressionData);
+		enterRule(_localctx, 62, RULE_predicateExpressionData);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(434);
+			setState(418);
 			predicateExpression();
 			}
 		}
@@ -2905,11 +2714,11 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionAnnotationContext predicateExpressionAnnotation() throws RecognitionException {
 		PredicateExpressionAnnotationContext _localctx = new PredicateExpressionAnnotationContext(_ctx, getState());
-		enterRule(_localctx, 68, RULE_predicateExpressionAnnotation);
+		enterRule(_localctx, 64, RULE_predicateExpressionAnnotation);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(436);
+			setState(420);
 			predicateExpression();
 			}
 		}
@@ -2941,11 +2750,11 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionVerbDataContext predicateExpressionVerbData() throws RecognitionException {
 		PredicateExpressionVerbDataContext _localctx = new PredicateExpressionVerbDataContext(_ctx, getState());
-		enterRule(_localctx, 70, RULE_predicateExpressionVerbData);
+		enterRule(_localctx, 66, RULE_predicateExpressionVerbData);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(438);
+			setState(422);
 			predicateExpressionVerb();
 			}
 		}
@@ -2980,22 +2789,22 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionContext predicateExpression() throws RecognitionException {
 		PredicateExpressionContext _localctx = new PredicateExpressionContext(_ctx, getState());
-		enterRule(_localctx, 72, RULE_predicateExpression);
+		enterRule(_localctx, 68, RULE_predicateExpression);
 		try {
-			setState(442);
+			setState(426);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,47,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,44,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(440);
+				setState(424);
 				predicateExpressionVerb();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(441);
+				setState(425);
 				predicateExpressionState();
 				}
 				break;
@@ -3044,50 +2853,50 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionVerbContext predicateExpressionVerb() throws RecognitionException {
 		PredicateExpressionVerbContext _localctx = new PredicateExpressionVerbContext(_ctx, getState());
-		enterRule(_localctx, 74, RULE_predicateExpressionVerb);
+		enterRule(_localctx, 70, RULE_predicateExpressionVerb);
 		try {
-			setState(450);
+			setState(434);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,48,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,45,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(444);
+				setState(428);
 				predicateExpressionSimple();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(445);
+				setState(429);
 				predicateExpressionParticle();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(446);
+				setState(430);
 				predicateExpressionPassive();
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(447);
+				setState(431);
 				predicateExpressionNoun();
 				}
 				break;
 			case 5:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(448);
+				setState(432);
 				predicateExpressionHAS();
 				}
 				break;
 			case 6:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(449);
+				setState(433);
 				predicateExpressionDO();
 				}
 				break;
@@ -3124,22 +2933,22 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionStateContext predicateExpressionState() throws RecognitionException {
 		PredicateExpressionStateContext _localctx = new PredicateExpressionStateContext(_ctx, getState());
-		enterRule(_localctx, 76, RULE_predicateExpressionState);
+		enterRule(_localctx, 72, RULE_predicateExpressionState);
 		try {
-			setState(454);
+			setState(438);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,49,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,46,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(452);
+				setState(436);
 				predicateExpressionBE();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(453);
+				setState(437);
 				predicateExpressionSameAs();
 				}
 				break;
@@ -3175,24 +2984,24 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionSimpleContext predicateExpressionSimple() throws RecognitionException {
 		PredicateExpressionSimpleContext _localctx = new PredicateExpressionSimpleContext(_ctx, getState());
-		enterRule(_localctx, 78, RULE_predicateExpressionSimple);
+		enterRule(_localctx, 74, RULE_predicateExpressionSimple);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(458);
+			setState(442);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==DOES) {
 				{
-				setState(456);
+				setState(440);
 				match(DOES);
-				setState(457);
+				setState(441);
 				match(NOT);
 				}
 			}
 
-			setState(460);
+			setState(444);
 			predicate();
 			}
 		}
@@ -3228,17 +3037,17 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionParticleContext predicateExpressionParticle() throws RecognitionException {
 		PredicateExpressionParticleContext _localctx = new PredicateExpressionParticleContext(_ctx, getState());
-		enterRule(_localctx, 80, RULE_predicateExpressionParticle);
+		enterRule(_localctx, 76, RULE_predicateExpressionParticle);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(463);
+			setState(447);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==DOES || _la==IS) {
 				{
-				setState(462);
+				setState(446);
 				_la = _input.LA(1);
 				if ( !(_la==DOES || _la==IS) ) {
 				_errHandler.recoverInline(this);
@@ -3251,19 +3060,19 @@ public class HOWL extends Parser {
 				}
 			}
 
-			setState(466);
+			setState(450);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==NOT) {
 				{
-				setState(465);
+				setState(449);
 				match(NOT);
 				}
 			}
 
-			setState(468);
+			setState(452);
 			predicate();
-			setState(469);
+			setState(453);
 			match(PARTICLE);
 			}
 		}
@@ -3299,36 +3108,36 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionPassiveContext predicateExpressionPassive() throws RecognitionException {
 		PredicateExpressionPassiveContext _localctx = new PredicateExpressionPassiveContext(_ctx, getState());
-		enterRule(_localctx, 82, RULE_predicateExpressionPassive);
+		enterRule(_localctx, 78, RULE_predicateExpressionPassive);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(471);
+			setState(455);
 			match(IS);
-			setState(473);
+			setState(457);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==NOT) {
 				{
-				setState(472);
+				setState(456);
 				match(NOT);
 				}
 			}
 
-			setState(475);
+			setState(459);
 			predicate();
-			setState(477);
+			setState(461);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==PARTICLE) {
 				{
-				setState(476);
+				setState(460);
 				match(PARTICLE);
 				}
 			}
 
-			setState(479);
+			setState(463);
 			match(BY);
 			}
 		}
@@ -3369,52 +3178,52 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionNounContext predicateExpressionNoun() throws RecognitionException {
 		PredicateExpressionNounContext _localctx = new PredicateExpressionNounContext(_ctx, getState());
-		enterRule(_localctx, 84, RULE_predicateExpressionNoun);
+		enterRule(_localctx, 80, RULE_predicateExpressionNoun);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(484);
+			setState(468);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case IS:
 				{
-				setState(481);
+				setState(465);
 				match(IS);
 				}
 				break;
 			case HAS:
 				{
-				setState(482);
+				setState(466);
 				match(HAS);
 				}
 				break;
 			case PREDICATE:
 			case AMBIG_WORD:
 				{
-				setState(483);
+				setState(467);
 				predicate();
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			setState(487);
+			setState(471);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==NOT) {
 				{
-				setState(486);
+				setState(470);
 				match(NOT);
 				}
 			}
 
-			setState(490);
+			setState(474);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==A || _la==THE) {
 				{
-				setState(489);
+				setState(473);
 				_la = _input.LA(1);
 				if ( !(_la==A || _la==THE) ) {
 				_errHandler.recoverInline(this);
@@ -3427,17 +3236,17 @@ public class HOWL extends Parser {
 				}
 			}
 
-			setState(493);
+			setState(477);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << ADJECTIVE) | (1L << COMMON_NOUN) | (1L << PROPER_NOUN) | (1L << AMBIG_WORD))) != 0)) {
 				{
-				setState(492);
+				setState(476);
 				adjp();
 				}
 			}
 
-			setState(495);
+			setState(479);
 			match(PARTICLE);
 			}
 		}
@@ -3469,24 +3278,24 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionSameAsContext predicateExpressionSameAs() throws RecognitionException {
 		PredicateExpressionSameAsContext _localctx = new PredicateExpressionSameAsContext(_ctx, getState());
-		enterRule(_localctx, 86, RULE_predicateExpressionSameAs);
+		enterRule(_localctx, 82, RULE_predicateExpressionSameAs);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(497);
+			setState(481);
 			match(IS);
-			setState(499);
+			setState(483);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==NOT) {
 				{
-				setState(498);
+				setState(482);
 				match(NOT);
 				}
 			}
 
-			setState(501);
+			setState(485);
 			match(SAME_AS);
 			}
 		}
@@ -3517,18 +3326,18 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionBEContext predicateExpressionBE() throws RecognitionException {
 		PredicateExpressionBEContext _localctx = new PredicateExpressionBEContext(_ctx, getState());
-		enterRule(_localctx, 88, RULE_predicateExpressionBE);
+		enterRule(_localctx, 84, RULE_predicateExpressionBE);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(503);
+			setState(487);
 			match(IS);
-			setState(505);
+			setState(489);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,60,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,57,_ctx) ) {
 			case 1:
 				{
-				setState(504);
+				setState(488);
 				match(NOT);
 				}
 				break;
@@ -3562,18 +3371,18 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionDOContext predicateExpressionDO() throws RecognitionException {
 		PredicateExpressionDOContext _localctx = new PredicateExpressionDOContext(_ctx, getState());
-		enterRule(_localctx, 90, RULE_predicateExpressionDO);
+		enterRule(_localctx, 86, RULE_predicateExpressionDO);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(507);
+			setState(491);
 			match(DOES);
-			setState(509);
+			setState(493);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,61,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,58,_ctx) ) {
 			case 1:
 				{
-				setState(508);
+				setState(492);
 				match(NOT);
 				}
 				break;
@@ -3608,32 +3417,32 @@ public class HOWL extends Parser {
 
 	public final PredicateExpressionHASContext predicateExpressionHAS() throws RecognitionException {
 		PredicateExpressionHASContext _localctx = new PredicateExpressionHASContext(_ctx, getState());
-		enterRule(_localctx, 92, RULE_predicateExpressionHAS);
+		enterRule(_localctx, 88, RULE_predicateExpressionHAS);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(512);
+			setState(496);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==DOES) {
 				{
-				setState(511);
+				setState(495);
 				match(DOES);
 				}
 			}
 
-			setState(515);
+			setState(499);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==NOT) {
 				{
-				setState(514);
+				setState(498);
 				match(NOT);
 				}
 			}
 
-			setState(517);
+			setState(501);
 			match(HAS);
 			}
 		}
@@ -3664,12 +3473,12 @@ public class HOWL extends Parser {
 
 	public final PredicateContext predicate() throws RecognitionException {
 		PredicateContext _localctx = new PredicateContext(_ctx, getState());
-		enterRule(_localctx, 94, RULE_predicate);
+		enterRule(_localctx, 90, RULE_predicate);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(519);
+			setState(503);
 			_la = _input.LA(1);
 			if ( !(_la==PREDICATE || _la==AMBIG_WORD) ) {
 			_errHandler.recoverInline(this);
@@ -3696,8 +3505,8 @@ public class HOWL extends Parser {
 		public PredicateExpressionObjectContext predicateExpressionObject() {
 			return getRuleContext(PredicateExpressionObjectContext.class,0);
 		}
-		public NounPhraseContext nounPhrase() {
-			return getRuleContext(NounPhraseContext.class,0);
+		public CompoundNounPhraseContext compoundNounPhrase() {
+			return getRuleContext(CompoundNounPhraseContext.class,0);
 		}
 		public PredicatePhraseNounContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3712,14 +3521,14 @@ public class HOWL extends Parser {
 
 	public final PredicatePhraseNounContext predicatePhraseNoun() throws RecognitionException {
 		PredicatePhraseNounContext _localctx = new PredicatePhraseNounContext(_ctx, getState());
-		enterRule(_localctx, 96, RULE_predicatePhraseNoun);
+		enterRule(_localctx, 92, RULE_predicatePhraseNoun);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(521);
+			setState(505);
 			predicateExpressionObject();
-			setState(522);
-			nounPhrase();
+			setState(506);
+			compoundNounPhrase(0);
 			}
 		}
 		catch (RecognitionException re) {
@@ -3753,13 +3562,13 @@ public class HOWL extends Parser {
 
 	public final PredicatePhraseDataTypeContext predicatePhraseDataType() throws RecognitionException {
 		PredicatePhraseDataTypeContext _localctx = new PredicatePhraseDataTypeContext(_ctx, getState());
-		enterRule(_localctx, 98, RULE_predicatePhraseDataType);
+		enterRule(_localctx, 94, RULE_predicatePhraseDataType);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(524);
+			setState(508);
 			predicateExpressionData();
-			setState(525);
+			setState(509);
 			dataTypeExpression(0);
 			}
 		}
@@ -3794,13 +3603,13 @@ public class HOWL extends Parser {
 
 	public final PredicatePhraseDataValueContext predicatePhraseDataValue() throws RecognitionException {
 		PredicatePhraseDataValueContext _localctx = new PredicatePhraseDataValueContext(_ctx, getState());
-		enterRule(_localctx, 100, RULE_predicatePhraseDataValue);
+		enterRule(_localctx, 96, RULE_predicatePhraseDataValue);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(527);
+			setState(511);
 			predicateExpressionVerbData();
-			setState(528);
+			setState(512);
 			dataValuePhrase();
 			}
 		}
@@ -3838,29 +3647,29 @@ public class HOWL extends Parser {
 
 	public final PredicatePhraseContext predicatePhrase() throws RecognitionException {
 		PredicatePhraseContext _localctx = new PredicatePhraseContext(_ctx, getState());
-		enterRule(_localctx, 102, RULE_predicatePhrase);
+		enterRule(_localctx, 98, RULE_predicatePhrase);
 		try {
-			setState(533);
+			setState(517);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,64,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,61,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(530);
+				setState(514);
 				predicatePhraseNoun();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(531);
+				setState(515);
 				predicatePhraseDataType();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(532);
+				setState(516);
 				predicatePhraseDataValue();
 				}
 				break;
@@ -3878,8 +3687,8 @@ public class HOWL extends Parser {
 	}
 
 	public static class SinglePhraseObjectContext extends ParserRuleContext {
-		public NounPhraseContext nounPhrase() {
-			return getRuleContext(NounPhraseContext.class,0);
+		public CompoundNounPhraseContext compoundNounPhrase() {
+			return getRuleContext(CompoundNounPhraseContext.class,0);
 		}
 		public PredicatePhraseNounContext predicatePhraseNoun() {
 			return getRuleContext(PredicatePhraseNounContext.class,0);
@@ -3900,29 +3709,29 @@ public class HOWL extends Parser {
 
 	public final SinglePhraseObjectContext singlePhraseObject() throws RecognitionException {
 		SinglePhraseObjectContext _localctx = new SinglePhraseObjectContext(_ctx, getState());
-		enterRule(_localctx, 104, RULE_singlePhraseObject);
+		enterRule(_localctx, 100, RULE_singlePhraseObject);
 		try {
-			setState(538);
+			setState(522);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,65,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,62,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(535);
-				nounPhrase();
+				setState(519);
+				compoundNounPhrase(0);
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(536);
+				setState(520);
 				predicatePhraseNoun();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(537);
+				setState(521);
 				predicateExpression();
 				}
 				break;
@@ -3965,36 +3774,36 @@ public class HOWL extends Parser {
 
 	public final SinglePhraseDataContext singlePhraseData() throws RecognitionException {
 		SinglePhraseDataContext _localctx = new SinglePhraseDataContext(_ctx, getState());
-		enterRule(_localctx, 106, RULE_singlePhraseData);
+		enterRule(_localctx, 102, RULE_singlePhraseData);
 		try {
-			setState(544);
+			setState(528);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,66,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,63,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(540);
+				setState(524);
 				dataTypeExpression(0);
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(541);
+				setState(525);
 				predicatePhraseDataType();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(542);
+				setState(526);
 				predicatePhraseDataValue();
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(543);
+				setState(527);
 				dataFacetExpression();
 				}
 				break;
@@ -4053,54 +3862,54 @@ public class HOWL extends Parser {
 
 	public final CatchSetContext catchSet() throws RecognitionException {
 		CatchSetContext _localctx = new CatchSetContext(_ctx, getState());
-		enterRule(_localctx, 108, RULE_catchSet);
+		enterRule(_localctx, 104, RULE_catchSet);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(552); 
+			setState(536); 
 			_errHandler.sync(this);
 			_alt = 1+1;
 			do {
 				switch (_alt) {
 				case 1+1:
 					{
-					setState(552);
+					setState(536);
 					_errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,67,_ctx) ) {
+					switch ( getInterpreter().adaptivePredict(_input,64,_ctx) ) {
 					case 1:
 						{
-						setState(546);
+						setState(530);
 						singlePhraseObject();
 						}
 						break;
 					case 2:
 						{
-						setState(547);
+						setState(531);
 						singlePhraseData();
 						}
 						break;
 					case 3:
 						{
-						setState(548);
+						setState(532);
 						match(AND);
 						}
 						break;
 					case 4:
 						{
-						setState(549);
+						setState(533);
 						match(OR);
 						}
 						break;
 					case 5:
 						{
-						setState(550);
+						setState(534);
 						match(COMMA);
 						}
 						break;
 					case 6:
 						{
-						setState(551);
+						setState(535);
 						match(PERIOD);
 						}
 						break;
@@ -4110,9 +3919,9 @@ public class HOWL extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(554); 
+				setState(538); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,68,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,65,_ctx);
 			} while ( _alt!=1 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 			}
 		}
@@ -4145,30 +3954,30 @@ public class HOWL extends Parser {
 
 	public final BadSentenceContext badSentence() throws RecognitionException {
 		BadSentenceContext _localctx = new BadSentenceContext(_ctx, getState());
-		enterRule(_localctx, 110, RULE_badSentence);
+		enterRule(_localctx, 106, RULE_badSentence);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
 			{
-			setState(559);
+			setState(543);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,69,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,66,_ctx);
 			while ( _alt!=1 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1+1 ) {
 					{
 					{
-					setState(556);
+					setState(540);
 					matchWildcard();
 					}
 					} 
 				}
-				setState(561);
+				setState(545);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,69,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,66,_ctx);
 			}
 			}
-			setState(563); 
+			setState(547); 
 			_errHandler.sync(this);
 			_alt = 1;
 			do {
@@ -4176,7 +3985,7 @@ public class HOWL extends Parser {
 				case 1:
 					{
 					{
-					setState(562);
+					setState(546);
 					match(BADWORD);
 					}
 					}
@@ -4184,26 +3993,26 @@ public class HOWL extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(565); 
+				setState(549); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,70,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,67,_ctx);
 			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 			{
-			setState(570);
+			setState(554);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,71,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,68,_ctx);
 			while ( _alt!=1 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1+1 ) {
 					{
 					{
-					setState(567);
+					setState(551);
 					matchWildcard();
 					}
 					} 
 				}
-				setState(572);
+				setState(556);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,71,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,68,_ctx);
 			}
 			}
 			}
@@ -4237,13 +4046,13 @@ public class HOWL extends Parser {
 
 	public final WordSequenceContext wordSequence() throws RecognitionException {
 		WordSequenceContext _localctx = new WordSequenceContext(_ctx, getState());
-		enterRule(_localctx, 112, RULE_wordSequence);
+		enterRule(_localctx, 108, RULE_wordSequence);
 		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(574); 
+			setState(558); 
 			_errHandler.sync(this);
 			_alt = 1+1;
 			do {
@@ -4251,7 +4060,7 @@ public class HOWL extends Parser {
 				case 1+1:
 					{
 					{
-					setState(573);
+					setState(557);
 					_la = _input.LA(1);
 					if ( _la <= 0 || (_la==WORD_TYPE) ) {
 					_errHandler.recoverInline(this);
@@ -4267,9 +4076,9 @@ public class HOWL extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(576); 
+				setState(560); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,72,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,69,_ctx);
 			} while ( _alt!=1 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 			}
 		}
@@ -4302,13 +4111,13 @@ public class HOWL extends Parser {
 
 	public final DeclareWordSequenceContext declareWordSequence() throws RecognitionException {
 		DeclareWordSequenceContext _localctx = new DeclareWordSequenceContext(_ctx, getState());
-		enterRule(_localctx, 114, RULE_declareWordSequence);
+		enterRule(_localctx, 110, RULE_declareWordSequence);
 		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(579); 
+			setState(563); 
 			_errHandler.sync(this);
 			_alt = 1+1;
 			do {
@@ -4316,7 +4125,7 @@ public class HOWL extends Parser {
 				case 1+1:
 					{
 					{
-					setState(578);
+					setState(562);
 					_la = _input.LA(1);
 					if ( _la <= 0 || (_la==WORD_TYPE) ) {
 					_errHandler.recoverInline(this);
@@ -4332,9 +4141,9 @@ public class HOWL extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(581); 
+				setState(565); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,73,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,70,_ctx);
 			} while ( _alt!=1 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 			}
 		}
@@ -4363,12 +4172,12 @@ public class HOWL extends Parser {
 
 	public final DebugWordSequenceContext debugWordSequence() throws RecognitionException {
 		DebugWordSequenceContext _localctx = new DebugWordSequenceContext(_ctx, getState());
-		enterRule(_localctx, 116, RULE_debugWordSequence);
+		enterRule(_localctx, 112, RULE_debugWordSequence);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(584); 
+			setState(568); 
 			_errHandler.sync(this);
 			_alt = 1+1;
 			do {
@@ -4376,7 +4185,7 @@ public class HOWL extends Parser {
 				case 1+1:
 					{
 					{
-					setState(583);
+					setState(567);
 					matchWildcard();
 					}
 					}
@@ -4384,9 +4193,9 @@ public class HOWL extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(586); 
+				setState(570); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,74,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,71,_ctx);
 			} while ( _alt!=1 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 			}
 		}
@@ -4403,9 +4212,9 @@ public class HOWL extends Parser {
 
 	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
-		case 18:
+		case 17:
 			return compoundNounPhrase_sempred((CompoundNounPhraseContext)_localctx, predIndex);
-		case 23:
+		case 22:
 			return dataTypeExpression_sempred((DataTypeExpressionContext)_localctx, predIndex);
 		}
 		return true;
@@ -4413,254 +4222,247 @@ public class HOWL extends Parser {
 	private boolean compoundNounPhrase_sempred(CompoundNounPhraseContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0:
-			return precpred(_ctx, 5);
+			return precpred(_ctx, 6);
 		case 1:
-			return precpred(_ctx, 4);
+			return precpred(_ctx, 5);
 		}
 		return true;
 	}
 	private boolean dataTypeExpression_sempred(DataTypeExpressionContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 2:
-			return precpred(_ctx, 2);
+			return precpred(_ctx, 6);
 		case 3:
-			return precpred(_ctx, 1);
+			return precpred(_ctx, 5);
 		}
 		return true;
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\66\u024f\4\2\t\2"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\66\u023f\4\2\t\2"+
 		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
 		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
 		"\4\32\t\32\4\33\t\33\4\34\t\34\4\35\t\35\4\36\t\36\4\37\t\37\4 \t \4!"+
 		"\t!\4\"\t\"\4#\t#\4$\t$\4%\t%\4&\t&\4\'\t\'\4(\t(\4)\t)\4*\t*\4+\t+\4"+
 		",\t,\4-\t-\4.\t.\4/\t/\4\60\t\60\4\61\t\61\4\62\t\62\4\63\t\63\4\64\t"+
-		"\64\4\65\t\65\4\66\t\66\4\67\t\67\48\t8\49\t9\4:\t:\4;\t;\4<\t<\3\2\3"+
-		"\2\3\2\3\2\3\2\3\2\6\2\177\n\2\r\2\16\2\u0080\3\3\3\3\3\3\3\3\3\3\3\3"+
-		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3\u0091\n\3\3\4\3\4\3\4\3\4\3\4\5\4"+
-		"\u0098\n\4\3\5\3\5\3\5\3\6\3\6\3\6\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3\t"+
-		"\3\t\5\t\u00aa\n\t\3\t\3\t\3\t\3\t\3\t\3\n\3\n\5\n\u00b3\n\n\3\n\3\n\3"+
-		"\n\3\n\3\n\3\13\3\13\3\13\5\13\u00bd\n\13\3\13\3\13\3\13\3\13\3\13\3\f"+
-		"\3\f\3\f\3\f\3\f\3\f\3\r\3\r\3\r\3\r\3\r\3\r\3\16\3\16\3\16\3\16\3\16"+
-		"\3\16\3\16\3\16\3\17\3\17\3\17\3\17\3\17\3\17\3\20\3\20\3\20\3\20\3\20"+
-		"\5\20\u00e3\n\20\3\20\5\20\u00e6\n\20\3\20\5\20\u00e9\n\20\3\20\3\20\3"+
-		"\20\5\20\u00ee\n\20\3\21\3\21\3\21\3\21\3\21\3\21\3\21\5\21\u00f7\n\21"+
-		"\3\22\3\22\3\22\3\22\3\22\3\23\3\23\5\23\u0100\n\23\3\24\3\24\3\24\3\24"+
-		"\3\24\6\24\u0107\n\24\r\24\16\24\u0108\3\24\3\24\3\24\3\24\6\24\u010f"+
-		"\n\24\r\24\16\24\u0110\3\24\3\24\5\24\u0115\n\24\3\24\3\24\3\24\6\24\u011a"+
-		"\n\24\r\24\16\24\u011b\3\24\3\24\3\24\6\24\u0121\n\24\r\24\16\24\u0122"+
-		"\7\24\u0125\n\24\f\24\16\24\u0128\13\24\3\25\5\25\u012b\n\25\3\25\3\25"+
-		"\3\26\6\26\u0130\n\26\r\26\16\26\u0131\3\27\5\27\u0135\n\27\3\27\5\27"+
-		"\u0138\n\27\3\27\5\27\u013b\n\27\3\27\3\27\3\27\3\27\3\27\3\27\7\27\u0143"+
-		"\n\27\f\27\16\27\u0146\13\27\5\27\u0148\n\27\3\30\6\30\u014b\n\30\r\30"+
-		"\16\30\u014c\3\31\3\31\5\31\u0151\n\31\3\31\5\31\u0154\n\31\3\31\3\31"+
-		"\5\31\u0158\n\31\3\31\5\31\u015b\n\31\3\31\3\31\3\31\3\31\3\31\3\31\5"+
-		"\31\u0163\n\31\3\31\3\31\3\31\6\31\u0168\n\31\r\31\16\31\u0169\3\31\3"+
-		"\31\3\31\6\31\u016f\n\31\r\31\16\31\u0170\7\31\u0173\n\31\f\31\16\31\u0176"+
-		"\13\31\3\32\5\32\u0179\n\32\3\32\5\32\u017c\n\32\3\32\3\32\3\32\3\32\7"+
-		"\32\u0182\n\32\f\32\16\32\u0185\13\32\3\33\3\33\5\33\u0189\n\33\3\33\5"+
-		"\33\u018c\n\33\3\33\3\33\5\33\u0190\n\33\3\33\3\33\3\34\5\34\u0195\n\34"+
-		"\3\34\3\34\3\35\3\35\3\36\3\36\3\36\3\36\6\36\u019f\n\36\r\36\16\36\u01a0"+
-		"\3\37\3\37\3\37\3\37\3\37\3\37\3\37\5\37\u01aa\n\37\3 \3 \3!\5!\u01af"+
-		"\n!\3!\3!\3\"\3\"\3#\3#\3$\3$\3%\3%\3&\3&\5&\u01bd\n&\3\'\3\'\3\'\3\'"+
-		"\3\'\3\'\5\'\u01c5\n\'\3(\3(\5(\u01c9\n(\3)\3)\5)\u01cd\n)\3)\3)\3*\5"+
-		"*\u01d2\n*\3*\5*\u01d5\n*\3*\3*\3*\3+\3+\5+\u01dc\n+\3+\3+\5+\u01e0\n"+
-		"+\3+\3+\3,\3,\3,\5,\u01e7\n,\3,\5,\u01ea\n,\3,\5,\u01ed\n,\3,\5,\u01f0"+
-		"\n,\3,\3,\3-\3-\5-\u01f6\n-\3-\3-\3.\3.\5.\u01fc\n.\3/\3/\5/\u0200\n/"+
-		"\3\60\5\60\u0203\n\60\3\60\5\60\u0206\n\60\3\60\3\60\3\61\3\61\3\62\3"+
-		"\62\3\62\3\63\3\63\3\63\3\64\3\64\3\64\3\65\3\65\3\65\5\65\u0218\n\65"+
-		"\3\66\3\66\3\66\5\66\u021d\n\66\3\67\3\67\3\67\3\67\5\67\u0223\n\67\3"+
-		"8\38\38\38\38\38\68\u022b\n8\r8\168\u022c\39\79\u0230\n9\f9\169\u0233"+
-		"\139\39\69\u0236\n9\r9\169\u0237\39\79\u023b\n9\f9\169\u023e\139\3:\6"+
-		":\u0241\n:\r:\16:\u0242\3;\6;\u0246\n;\r;\16;\u0247\3<\6<\u024b\n<\r<"+
-		"\16<\u024c\3<\n\u0144\u0183\u022c\u0231\u023c\u0242\u0247\u024c\4&\60"+
-		"=\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668:<>@BDF"+
-		"HJLNPRTVXZ\\^`bdfhjlnprtv\2\20\4\2..\66\66\4\2\35\35%%\4\2\n\n\27\27\4"+
-		"\2\n\n\25\25\4\2\23\23\66\66\7\2\3\3\5\5\23\23\64\64\66\66\6\2\3\3\5\5"+
-		"\23\23\66\66\4\2\20\20\22\22\4\2\6\6\f\r\3\2\37#\4\2\16\16\22\22\4\2\35"+
-		"\35&&\4\2\24\24\66\66\3\2\63\63\2\u0285\2~\3\2\2\2\4\u0090\3\2\2\2\6\u0097"+
-		"\3\2\2\2\b\u0099\3\2\2\2\n\u009c\3\2\2\2\f\u009f\3\2\2\2\16\u00a2\3\2"+
-		"\2\2\20\u00a7\3\2\2\2\22\u00b0\3\2\2\2\24\u00b9\3\2\2\2\26\u00c3\3\2\2"+
-		"\2\30\u00c9\3\2\2\2\32\u00cf\3\2\2\2\34\u00d7\3\2\2\2\36\u00dd\3\2\2\2"+
-		" \u00ef\3\2\2\2\"\u00f8\3\2\2\2$\u00ff\3\2\2\2&\u0114\3\2\2\2(\u012a\3"+
-		"\2\2\2*\u012f\3\2\2\2,\u0134\3\2\2\2.\u014a\3\2\2\2\60\u0162\3\2\2\2\62"+
-		"\u0178\3\2\2\2\64\u0188\3\2\2\2\66\u0194\3\2\2\28\u0198\3\2\2\2:\u019a"+
-		"\3\2\2\2<\u01a9\3\2\2\2>\u01ab\3\2\2\2@\u01ae\3\2\2\2B\u01b2\3\2\2\2D"+
-		"\u01b4\3\2\2\2F\u01b6\3\2\2\2H\u01b8\3\2\2\2J\u01bc\3\2\2\2L\u01c4\3\2"+
-		"\2\2N\u01c8\3\2\2\2P\u01cc\3\2\2\2R\u01d1\3\2\2\2T\u01d9\3\2\2\2V\u01e6"+
-		"\3\2\2\2X\u01f3\3\2\2\2Z\u01f9\3\2\2\2\\\u01fd\3\2\2\2^\u0202\3\2\2\2"+
-		"`\u0209\3\2\2\2b\u020b\3\2\2\2d\u020e\3\2\2\2f\u0211\3\2\2\2h\u0217\3"+
-		"\2\2\2j\u021c\3\2\2\2l\u0222\3\2\2\2n\u022a\3\2\2\2p\u0231\3\2\2\2r\u0240"+
-		"\3\2\2\2t\u0245\3\2\2\2v\u024a\3\2\2\2xy\5\4\3\2yz\7\t\2\2z\177\3\2\2"+
-		"\2{|\5\6\4\2|}\7\t\2\2}\177\3\2\2\2~x\3\2\2\2~{\3\2\2\2\177\u0080\3\2"+
-		"\2\2\u0080~\3\2\2\2\u0080\u0081\3\2\2\2\u0081\3\3\2\2\2\u0082\u0091\5"+
-		"\n\6\2\u0083\u0091\5\b\5\2\u0084\u0091\5\f\7\2\u0085\u0091\5\16\b\2\u0086"+
-		"\u0091\5\22\n\2\u0087\u0091\5\20\t\2\u0088\u0091\5\30\r\2\u0089\u0091"+
-		"\5\26\f\2\u008a\u0091\5 \21\2\u008b\u0091\5\"\22\2\u008c\u0091\5\34\17"+
-		"\2\u008d\u0091\5\36\20\2\u008e\u0091\5\24\13\2\u008f\u0091\5\32\16\2\u0090"+
-		"\u0082\3\2\2\2\u0090\u0083\3\2\2\2\u0090\u0084\3\2\2\2\u0090\u0085\3\2"+
-		"\2\2\u0090\u0086\3\2\2\2\u0090\u0087\3\2\2\2\u0090\u0088\3\2\2\2\u0090"+
-		"\u0089\3\2\2\2\u0090\u008a\3\2\2\2\u0090\u008b\3\2\2\2\u0090\u008c\3\2"+
-		"\2\2\u0090\u008d\3\2\2\2\u0090\u008e\3\2\2\2\u0090\u008f\3\2\2\2\u0091"+
-		"\5\3\2\2\2\u0092\u0098\5j\66\2\u0093\u0098\5l\67\2\u0094\u0098\5n8\2\u0095"+
-		"\u0098\5p9\2\u0096\u0098\5v<\2\u0097\u0092\3\2\2\2\u0097\u0093\3\2\2\2"+
-		"\u0097\u0094\3\2\2\2\u0097\u0095\3\2\2\2\u0097\u0096\3\2\2\2\u0098\7\3"+
-		"\2\2\2\u0099\u009a\5(\25\2\u009a\u009b\5f\64\2\u009b\t\3\2\2\2\u009c\u009d"+
-		"\5(\25\2\u009d\u009e\5b\62\2\u009e\13\3\2\2\2\u009f\u00a0\5&\24\2\u00a0"+
-		"\u00a1\5b\62\2\u00a1\r\3\2\2\2\u00a2\u00a3\7\35\2\2\u00a3\u00a4\t\2\2"+
-		"\2\u00a4\u00a5\5N(\2\u00a5\u00a6\5\60\31\2\u00a6\17\3\2\2\2\u00a7\u00a9"+
-		"\7\31\2\2\u00a8\u00aa\7\35\2\2\u00a9\u00a8\3\2\2\2\u00a9\u00aa\3\2\2\2"+
-		"\u00aa\u00ab\3\2\2\2\u00ab\u00ac\5&\24\2\u00ac\u00ad\5D#\2\u00ad\u00ae"+
-		"\t\3\2\2\u00ae\u00af\7\65\2\2\u00af\21\3\2\2\2\u00b0\u00b2\7\31\2\2\u00b1"+
-		"\u00b3\7\35\2\2\u00b2\u00b1\3\2\2\2\u00b2\u00b3\3\2\2\2\u00b3\u00b4\3"+
-		"\2\2\2\u00b4\u00b5\5&\24\2\u00b5\u00b6\5B\"\2\u00b6\u00b7\t\3\2\2\u00b7"+
-		"\u00b8\7\64\2\2\u00b8\23\3\2\2\2\u00b9\u00ba\7,\2\2\u00ba\u00bc\7\31\2"+
-		"\2\u00bb\u00bd\7\35\2\2\u00bc\u00bb\3\2\2\2\u00bc\u00bd\3\2\2\2\u00bd"+
-		"\u00be\3\2\2\2\u00be\u00bf\5r:\2\u00bf\u00c0\5F$\2\u00c0\u00c1\t\3\2\2"+
-		"\u00c1\u00c2\7\64\2\2\u00c2\25\3\2\2\2\u00c3\u00c4\t\3\2\2\u00c4\u00c5"+
-		"\7\64\2\2\u00c5\u00c6\5D#\2\u00c6\u00c7\7\31\2\2\u00c7\u00c8\5\60\31\2"+
-		"\u00c8\27\3\2\2\2\u00c9\u00ca\t\3\2\2\u00ca\u00cb\7\64\2\2\u00cb\u00cc"+
-		"\5B\"\2\u00cc\u00cd\7\31\2\2\u00cd\u00ce\5&\24\2\u00ce\31\3\2\2\2\u00cf"+
-		"\u00d0\7,\2\2\u00d0\u00d1\t\3\2\2\u00d1\u00d2\7\64\2\2\u00d2\u00d3\5F"+
-		"$\2\u00d3\u00d4\7\31\2\2\u00d4\u00d5\7\35\2\2\u00d5\u00d6\5r:\2\u00d6"+
-		"\33\3\2\2\2\u00d7\u00d8\7&\2\2\u00d8\u00d9\5r:\2\u00d9\u00da\7\63\2\2"+
-		"\u00da\u00db\7\22\2\2\u00db\u00dc\7\61\2\2\u00dc\35\3\2\2\2\u00dd\u00de"+
-		"\7&\2\2\u00de\u00df\5r:\2\u00df\u00e0\7\63\2\2\u00e0\u00e2\7\22\2\2\u00e1"+
-		"\u00e3\7\34\2\2\u00e2\u00e1\3\2\2\2\u00e2\u00e3\3\2\2\2\u00e3\u00e5\3"+
-		"\2\2\2\u00e4\u00e6\7\'\2\2\u00e5\u00e4\3\2\2\2\u00e5\u00e6\3\2\2\2\u00e6"+
-		"\u00e8\3\2\2\2\u00e7\u00e9\7(\2\2\u00e8\u00e7\3\2\2\2\u00e8\u00e9\3\2"+
-		"\2\2\u00e9\u00ea\3\2\2\2\u00ea\u00eb\7&\2\2\u00eb\u00ed\5r:\2\u00ec\u00ee"+
-		"\7\63\2\2\u00ed\u00ec\3\2\2\2\u00ed\u00ee\3\2\2\2\u00ee\37\3\2\2\2\u00ef"+
-		"\u00f0\7,\2\2\u00f0\u00f1\5r:\2\u00f1\u00f2\7-\2\2\u00f2\u00f3\5r:\2\u00f3"+
-		"\u00f6\7-\2\2\u00f4\u00f7\58\35\2\u00f5\u00f7\5r:\2\u00f6\u00f4\3\2\2"+
-		"\2\u00f6\u00f5\3\2\2\2\u00f7!\3\2\2\2\u00f8\u00f9\5t;\2\u00f9\u00fa\7"+
-		"\22\2\2\u00fa\u00fb\7\35\2\2\u00fb\u00fc\7\63\2\2\u00fc#\3\2\2\2\u00fd"+
-		"\u0100\5(\25\2\u00fe\u0100\5&\24\2\u00ff\u00fd\3\2\2\2\u00ff\u00fe\3\2"+
-		"\2\2\u0100%\3\2\2\2\u0101\u0102\b\24\1\2\u0102\u0103\7\26\2\2\u0103\u0106"+
-		"\5(\25\2\u0104\u0105\t\4\2\2\u0105\u0107\5(\25\2\u0106\u0104\3\2\2\2\u0107"+
-		"\u0108\3\2\2\2\u0108\u0106\3\2\2\2\u0108\u0109\3\2\2\2\u0109\u0115\3\2"+
-		"\2\2\u010a\u010b\7\26\2\2\u010b\u010e\5&\24\2\u010c\u010d\t\4\2\2\u010d"+
-		"\u010f\5&\24\2\u010e\u010c\3\2\2\2\u010f\u0110\3\2\2\2\u0110\u010e\3\2"+
-		"\2\2\u0110\u0111\3\2\2\2\u0111\u0115\3\2\2\2\u0112\u0115\5,\27\2\u0113"+
-		"\u0115\7/\2\2\u0114\u0101\3\2\2\2\u0114\u010a\3\2\2\2\u0114\u0112\3\2"+
-		"\2\2\u0114\u0113\3\2\2\2\u0115\u0126\3\2\2\2\u0116\u0119\f\7\2\2\u0117"+
-		"\u0118\t\5\2\2\u0118\u011a\5&\24\2\u0119\u0117\3\2\2\2\u011a\u011b\3\2"+
-		"\2\2\u011b\u0119\3\2\2\2\u011b\u011c\3\2\2\2\u011c\u0125\3\2\2\2\u011d"+
-		"\u0120\f\6\2\2\u011e\u011f\t\4\2\2\u011f\u0121\5&\24\2\u0120\u011e\3\2"+
-		"\2\2\u0121\u0122\3\2\2\2\u0122\u0120\3\2\2\2\u0122\u0123\3\2\2\2\u0123"+
-		"\u0125\3\2\2\2\u0124\u0116\3\2\2\2\u0124\u011d\3\2\2\2\u0125\u0128\3\2"+
-		"\2\2\u0126\u0124\3\2\2\2\u0126\u0127\3\2\2\2\u0127\'\3\2\2\2\u0128\u0126"+
-		"\3\2\2\2\u0129\u012b\7&\2\2\u012a\u0129\3\2\2\2\u012a\u012b\3\2\2\2\u012b"+
-		"\u012c\3\2\2\2\u012c\u012d\5*\26\2\u012d)\3\2\2\2\u012e\u0130\t\6\2\2"+
-		"\u012f\u012e\3\2\2\2\u0130\u0131\3\2\2\2\u0131\u012f\3\2\2\2\u0131\u0132"+
-		"\3\2\2\2\u0132+\3\2\2\2\u0133\u0135\7\34\2\2\u0134\u0133\3\2\2\2\u0134"+
-		"\u0135\3\2\2\2\u0135\u0137\3\2\2\2\u0136\u0138\5<\37\2\u0137\u0136\3\2"+
-		"\2\2\u0137\u0138\3\2\2\2\u0138\u013a\3\2\2\2\u0139\u013b\5.\30\2\u013a"+
-		"\u0139\3\2\2\2\u013a\u013b\3\2\2\2\u013b\u013c\3\2\2\2\u013c\u0147\t\7"+
-		"\2\2\u013d\u013e\7)\2\2\u013e\u0144\5h\65\2\u013f\u0140\7\25\2\2\u0140"+
-		"\u0141\7)\2\2\u0141\u0143\5h\65\2\u0142\u013f\3\2\2\2\u0143\u0146\3\2"+
-		"\2\2\u0144\u0145\3\2\2\2\u0144\u0142\3\2\2\2\u0145\u0148\3\2\2\2\u0146"+
-		"\u0144\3\2\2\2\u0147\u013d\3\2\2\2\u0147\u0148\3\2\2\2\u0148-\3\2\2\2"+
-		"\u0149\u014b\t\b\2\2\u014a\u0149\3\2\2\2\u014b\u014c\3\2\2\2\u014c\u014a"+
-		"\3\2\2\2\u014c\u014d\3\2\2\2\u014d/\3\2\2\2\u014e\u0150\b\31\1\2\u014f"+
-		"\u0151\7\34\2\2\u0150\u014f\3\2\2\2\u0150\u0151\3\2\2\2\u0151\u0153\3"+
-		"\2\2\2\u0152\u0154\5<\37\2\u0153\u0152\3\2\2\2\u0153\u0154\3\2\2\2\u0154"+
-		"\u0155\3\2\2\2\u0155\u0163\7.\2\2\u0156\u0158\7\34\2\2\u0157\u0156\3\2"+
-		"\2\2\u0157\u0158\3\2\2\2\u0158\u015a\3\2\2\2\u0159\u015b\5<\37\2\u015a"+
-		"\u0159\3\2\2\2\u015a\u015b\3\2\2\2\u015b\u015c\3\2\2\2\u015c\u0163\7\66"+
-		"\2\2\u015d\u015e\7\34\2\2\u015e\u0163\5\60\31\b\u015f\u0163\5\62\32\2"+
-		"\u0160\u0163\5:\36\2\u0161\u0163\5\66\34\2\u0162\u014e\3\2\2\2\u0162\u0157"+
-		"\3\2\2\2\u0162\u015d\3\2\2\2\u0162\u015f\3\2\2\2\u0162\u0160\3\2\2\2\u0162"+
-		"\u0161\3\2\2\2\u0163\u0174\3\2\2\2\u0164\u0167\f\4\2\2\u0165\u0166\t\4"+
-		"\2\2\u0166\u0168\5\60\31\2\u0167\u0165\3\2\2\2\u0168\u0169\3\2\2\2\u0169"+
-		"\u0167\3\2\2\2\u0169\u016a\3\2\2\2\u016a\u0173\3\2\2\2\u016b\u016e\f\3"+
-		"\2\2\u016c\u016d\t\5\2\2\u016d\u016f\5\60\31\2\u016e\u016c\3\2\2\2\u016f"+
-		"\u0170\3\2\2\2\u0170\u016e\3\2\2\2\u0170\u0171\3\2\2\2\u0171\u0173\3\2"+
-		"\2\2\u0172\u0164\3\2\2\2\u0172\u016b\3\2\2\2\u0173\u0176\3\2\2\2\u0174"+
-		"\u0172\3\2\2\2\u0174\u0175\3\2\2\2\u0175\61\3\2\2\2\u0176\u0174\3\2\2"+
-		"\2\u0177\u0179\7\34\2\2\u0178\u0177\3\2\2\2\u0178\u0179\3\2\2\2\u0179"+
-		"\u017b\3\2\2\2\u017a\u017c\5<\37\2\u017b\u017a\3\2\2\2\u017b\u017c\3\2"+
-		"\2\2\u017c\u017d\3\2\2\2\u017d\u017e\t\2\2\2\u017e\u0183\5\64\33\2\u017f"+
-		"\u0180\7\25\2\2\u0180\u0182\5\64\33\2\u0181\u017f\3\2\2\2\u0182\u0185"+
-		"\3\2\2\2\u0183\u0184\3\2\2\2\u0183\u0181\3\2\2\2\u0184\63\3\2\2\2\u0185"+
-		"\u0183\3\2\2\2\u0186\u0187\7)\2\2\u0187\u0189\t\t\2\2\u0188\u0186\3\2"+
-		"\2\2\u0188\u0189\3\2\2\2\u0189\u018b\3\2\2\2\u018a\u018c\7\35\2\2\u018b"+
-		"\u018a\3\2\2\2\u018b\u018c\3\2\2\2\u018c\u018f\3\2\2\2\u018d\u0190\7$"+
-		"\2\2\u018e\u0190\5> \2\u018f\u018d\3\2\2\2\u018f\u018e\3\2\2\2\u0190\u0191"+
-		"\3\2\2\2\u0191\u0192\58\35\2\u0192\65\3\2\2\2\u0193\u0195\7\34\2\2\u0194"+
-		"\u0193\3\2\2\2\u0194\u0195\3\2\2\2\u0195\u0196\3\2\2\2\u0196\u0197\58"+
-		"\35\2\u0197\67\3\2\2\2\u0198\u0199\t\n\2\2\u01999\3\2\2\2\u019a\u019b"+
-		"\7\26\2\2\u019b\u019e\58\35\2\u019c\u019d\t\4\2\2\u019d\u019f\58\35\2"+
-		"\u019e\u019c\3\2\2\2\u019f\u01a0\3\2\2\2\u01a0\u019e\3\2\2\2\u01a0\u01a1"+
-		"\3\2\2\2\u01a1;\3\2\2\2\u01a2\u01aa\7\35\2\2\u01a3\u01aa\7&\2\2\u01a4"+
-		"\u01aa\7\36\2\2\u01a5\u01aa\7%\2\2\u01a6\u01aa\7\32\2\2\u01a7\u01aa\7"+
-		"\31\2\2\u01a8\u01aa\5@!\2\u01a9\u01a2\3\2\2\2\u01a9\u01a3\3\2\2\2\u01a9"+
-		"\u01a4\3\2\2\2\u01a9\u01a5\3\2\2\2\u01a9\u01a6\3\2\2\2\u01a9\u01a7\3\2"+
-		"\2\2\u01a9\u01a8\3\2\2\2\u01aa=\3\2\2\2\u01ab\u01ac\t\13\2\2\u01ac?\3"+
-		"\2\2\2\u01ad\u01af\5> \2\u01ae\u01ad\3\2\2\2\u01ae\u01af\3\2\2\2\u01af"+
-		"\u01b0\3\2\2\2\u01b0\u01b1\7\f\2\2\u01b1A\3\2\2\2\u01b2\u01b3\5J&\2\u01b3"+
-		"C\3\2\2\2\u01b4\u01b5\5J&\2\u01b5E\3\2\2\2\u01b6\u01b7\5J&\2\u01b7G\3"+
-		"\2\2\2\u01b8\u01b9\5L\'\2\u01b9I\3\2\2\2\u01ba\u01bd\5L\'\2\u01bb\u01bd"+
-		"\5N(\2\u01bc\u01ba\3\2\2\2\u01bc\u01bb\3\2\2\2\u01bdK\3\2\2\2\u01be\u01c5"+
-		"\5P)\2\u01bf\u01c5\5R*\2\u01c0\u01c5\5T+\2\u01c1\u01c5\5V,\2\u01c2\u01c5"+
-		"\5^\60\2\u01c3\u01c5\5\\/\2\u01c4\u01be\3\2\2\2\u01c4\u01bf\3\2\2\2\u01c4"+
-		"\u01c0\3\2\2\2\u01c4\u01c1\3\2\2\2\u01c4\u01c2\3\2\2\2\u01c4\u01c3\3\2"+
-		"\2\2\u01c5M\3\2\2\2\u01c6\u01c9\5Z.\2\u01c7\u01c9\5X-\2\u01c8\u01c6\3"+
-		"\2\2\2\u01c8\u01c7\3\2\2\2\u01c9O\3\2\2\2\u01ca\u01cb\7\16\2\2\u01cb\u01cd"+
-		"\7\34\2\2\u01cc\u01ca\3\2\2\2\u01cc\u01cd\3\2\2\2\u01cd\u01ce\3\2\2\2"+
-		"\u01ce\u01cf\5`\61\2\u01cfQ\3\2\2\2\u01d0\u01d2\t\f\2\2\u01d1\u01d0\3"+
-		"\2\2\2\u01d1\u01d2\3\2\2\2\u01d2\u01d4\3\2\2\2\u01d3\u01d5\7\34\2\2\u01d4"+
-		"\u01d3\3\2\2\2\u01d4\u01d5\3\2\2\2\u01d5\u01d6\3\2\2\2\u01d6\u01d7\5`"+
-		"\61\2\u01d7\u01d8\7\21\2\2\u01d8S\3\2\2\2\u01d9\u01db\7\22\2\2\u01da\u01dc"+
-		"\7\34\2\2\u01db\u01da\3\2\2\2\u01db\u01dc\3\2\2\2\u01dc\u01dd\3\2\2\2"+
-		"\u01dd\u01df\5`\61\2\u01de\u01e0\7\21\2\2\u01df\u01de\3\2\2\2\u01df\u01e0"+
-		"\3\2\2\2\u01e0\u01e1\3\2\2\2\u01e1\u01e2\7\30\2\2\u01e2U\3\2\2\2\u01e3"+
-		"\u01e7\7\22\2\2\u01e4\u01e7\7\20\2\2\u01e5\u01e7\5`\61\2\u01e6\u01e3\3"+
-		"\2\2\2\u01e6\u01e4\3\2\2\2\u01e6\u01e5\3\2\2\2\u01e7\u01e9\3\2\2\2\u01e8"+
-		"\u01ea\7\34\2\2\u01e9\u01e8\3\2\2\2\u01e9\u01ea\3\2\2\2\u01ea\u01ec\3"+
-		"\2\2\2\u01eb\u01ed\t\r\2\2\u01ec\u01eb\3\2\2\2\u01ec\u01ed\3\2\2\2\u01ed"+
-		"\u01ef\3\2\2\2\u01ee\u01f0\5.\30\2\u01ef\u01ee\3\2\2\2\u01ef\u01f0\3\2"+
-		"\2\2\u01f0\u01f1\3\2\2\2\u01f1\u01f2\7\21\2\2\u01f2W\3\2\2\2\u01f3\u01f5"+
-		"\7\22\2\2\u01f4\u01f6\7\34\2\2\u01f5\u01f4\3\2\2\2\u01f5\u01f6\3\2\2\2"+
-		"\u01f6\u01f7\3\2\2\2\u01f7\u01f8\7\'\2\2\u01f8Y\3\2\2\2\u01f9\u01fb\7"+
-		"\22\2\2\u01fa\u01fc\7\34\2\2\u01fb\u01fa\3\2\2\2\u01fb\u01fc\3\2\2\2\u01fc"+
-		"[\3\2\2\2\u01fd\u01ff\7\16\2\2\u01fe\u0200\7\34\2\2\u01ff\u01fe\3\2\2"+
-		"\2\u01ff\u0200\3\2\2\2\u0200]\3\2\2\2\u0201\u0203\7\16\2\2\u0202\u0201"+
-		"\3\2\2\2\u0202\u0203\3\2\2\2\u0203\u0205\3\2\2\2\u0204\u0206\7\34\2\2"+
-		"\u0205\u0204\3\2\2\2\u0205\u0206\3\2\2\2\u0206\u0207\3\2\2\2\u0207\u0208"+
-		"\7\20\2\2\u0208_\3\2\2\2\u0209\u020a\t\16\2\2\u020aa\3\2\2\2\u020b\u020c"+
-		"\5B\"\2\u020c\u020d\5$\23\2\u020dc\3\2\2\2\u020e\u020f\5D#\2\u020f\u0210"+
-		"\5\60\31\2\u0210e\3\2\2\2\u0211\u0212\5H%\2\u0212\u0213\5\66\34\2\u0213"+
-		"g\3\2\2\2\u0214\u0218\5b\62\2\u0215\u0218\5d\63\2\u0216\u0218\5f\64\2"+
-		"\u0217\u0214\3\2\2\2\u0217\u0215\3\2\2\2\u0217\u0216\3\2\2\2\u0218i\3"+
-		"\2\2\2\u0219\u021d\5$\23\2\u021a\u021d\5b\62\2\u021b\u021d\5J&\2\u021c"+
-		"\u0219\3\2\2\2\u021c\u021a\3\2\2\2\u021c\u021b\3\2\2\2\u021dk\3\2\2\2"+
-		"\u021e\u0223\5\60\31\2\u021f\u0223\5d\63\2\u0220\u0223\5f\64\2\u0221\u0223"+
-		"\5\64\33\2\u0222\u021e\3\2\2\2\u0222\u021f\3\2\2\2\u0222\u0220\3\2\2\2"+
-		"\u0222\u0221\3\2\2\2\u0223m\3\2\2\2\u0224\u022b\5j\66\2\u0225\u022b\5"+
-		"l\67\2\u0226\u022b\7\25\2\2\u0227\u022b\7\27\2\2\u0228\u022b\7\n\2\2\u0229"+
-		"\u022b\7\t\2\2\u022a\u0224\3\2\2\2\u022a\u0225\3\2\2\2\u022a\u0226\3\2"+
-		"\2\2\u022a\u0227\3\2\2\2\u022a\u0228\3\2\2\2\u022a\u0229\3\2\2\2\u022b"+
-		"\u022c\3\2\2\2\u022c\u022d\3\2\2\2\u022c\u022a\3\2\2\2\u022do\3\2\2\2"+
-		"\u022e\u0230\13\2\2\2\u022f\u022e\3\2\2\2\u0230\u0233\3\2\2\2\u0231\u0232"+
-		"\3\2\2\2\u0231\u022f\3\2\2\2\u0232\u0235\3\2\2\2\u0233\u0231\3\2\2\2\u0234"+
-		"\u0236\7\4\2\2\u0235\u0234\3\2\2\2\u0236\u0237\3\2\2\2\u0237\u0235\3\2"+
-		"\2\2\u0237\u0238\3\2\2\2\u0238\u023c\3\2\2\2\u0239\u023b\13\2\2\2\u023a"+
-		"\u0239\3\2\2\2\u023b\u023e\3\2\2\2\u023c\u023d\3\2\2\2\u023c\u023a\3\2"+
-		"\2\2\u023dq\3\2\2\2\u023e\u023c\3\2\2\2\u023f\u0241\n\17\2\2\u0240\u023f"+
-		"\3\2\2\2\u0241\u0242\3\2\2\2\u0242\u0243\3\2\2\2\u0242\u0240\3\2\2\2\u0243"+
-		"s\3\2\2\2\u0244\u0246\n\17\2\2\u0245\u0244\3\2\2\2\u0246\u0247\3\2\2\2"+
-		"\u0247\u0248\3\2\2\2\u0247\u0245\3\2\2\2\u0248u\3\2\2\2\u0249\u024b\13"+
-		"\2\2\2\u024a\u0249\3\2\2\2\u024b\u024c\3\2\2\2\u024c\u024d\3\2\2\2\u024c"+
-		"\u024a\3\2\2\2\u024dw\3\2\2\2M~\u0080\u0090\u0097\u00a9\u00b2\u00bc\u00e2"+
-		"\u00e5\u00e8\u00ed\u00f6\u00ff\u0108\u0110\u0114\u011b\u0122\u0124\u0126"+
-		"\u012a\u0131\u0134\u0137\u013a\u0144\u0147\u014c\u0150\u0153\u0157\u015a"+
-		"\u0162\u0169\u0170\u0172\u0174\u0178\u017b\u0183\u0188\u018b\u018f\u0194"+
-		"\u01a0\u01a9\u01ae\u01bc\u01c4\u01c8\u01cc\u01d1\u01d4\u01db\u01df\u01e6"+
-		"\u01e9\u01ec\u01ef\u01f5\u01fb\u01ff\u0202\u0205\u0217\u021c\u0222\u022a"+
-		"\u022c\u0231\u0237\u023c\u0242\u0247\u024c";
+		"\64\4\65\t\65\4\66\t\66\4\67\t\67\48\t8\49\t9\4:\t:\3\2\3\2\3\2\3\2\3"+
+		"\2\3\2\6\2{\n\2\r\2\16\2|\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3"+
+		"\3\3\3\3\3\3\5\3\u008d\n\3\3\4\3\4\3\4\3\4\3\4\5\4\u0094\n\4\3\5\3\5\3"+
+		"\5\3\6\3\6\3\6\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3\t\3\t\3\t\3\t\3\t\3\t"+
+		"\3\n\3\n\3\n\3\n\3\n\3\n\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\f\3\f\3"+
+		"\f\3\f\5\f\u00bb\n\f\3\f\3\f\3\f\3\r\3\r\3\r\3\r\5\r\u00c4\n\r\3\r\3\r"+
+		"\3\r\3\16\3\16\3\16\3\16\3\16\5\16\u00ce\n\16\3\16\3\16\3\16\3\17\3\17"+
+		"\3\17\3\17\3\17\3\17\3\20\3\20\3\20\3\20\3\20\5\20\u00de\n\20\3\20\5\20"+
+		"\u00e1\n\20\3\20\5\20\u00e4\n\20\3\20\3\20\3\20\5\20\u00e9\n\20\3\21\3"+
+		"\21\3\21\3\21\3\21\3\21\3\21\5\21\u00f2\n\21\3\22\3\22\3\22\3\22\3\22"+
+		"\3\23\3\23\3\23\3\23\3\23\7\23\u00fe\n\23\f\23\16\23\u0101\13\23\3\23"+
+		"\3\23\3\23\3\23\3\23\3\23\5\23\u0109\n\23\3\23\3\23\3\23\7\23\u010e\n"+
+		"\23\f\23\16\23\u0111\13\23\3\23\3\23\3\23\3\23\3\23\7\23\u0118\n\23\f"+
+		"\23\16\23\u011b\13\23\3\23\3\23\7\23\u011f\n\23\f\23\16\23\u0122\13\23"+
+		"\3\24\5\24\u0125\n\24\3\24\5\24\u0128\n\24\3\24\3\24\3\25\6\25\u012d\n"+
+		"\25\r\25\16\25\u012e\3\26\5\26\u0132\n\26\3\26\5\26\u0135\n\26\3\26\5"+
+		"\26\u0138\n\26\3\26\3\26\3\26\3\26\3\26\3\26\7\26\u0140\n\26\f\26\16\26"+
+		"\u0143\13\26\5\26\u0145\n\26\3\27\6\27\u0148\n\27\r\27\16\27\u0149\3\30"+
+		"\3\30\5\30\u014e\n\30\3\30\5\30\u0151\n\30\3\30\3\30\5\30\u0155\n\30\3"+
+		"\30\3\30\3\30\3\30\5\30\u015b\n\30\3\30\3\30\3\30\6\30\u0160\n\30\r\30"+
+		"\16\30\u0161\3\30\3\30\3\30\6\30\u0167\n\30\r\30\16\30\u0168\7\30\u016b"+
+		"\n\30\f\30\16\30\u016e\13\30\3\31\5\31\u0171\n\31\3\31\5\31\u0174\n\31"+
+		"\3\31\3\31\3\31\3\31\7\31\u017a\n\31\f\31\16\31\u017d\13\31\3\32\3\32"+
+		"\5\32\u0181\n\32\3\32\5\32\u0184\n\32\3\32\3\32\5\32\u0188\n\32\3\32\3"+
+		"\32\3\33\5\33\u018d\n\33\3\33\3\33\3\34\3\34\3\35\3\35\3\35\3\35\3\35"+
+		"\3\35\3\35\5\35\u019a\n\35\3\36\3\36\3\37\5\37\u019f\n\37\3\37\3\37\3"+
+		" \3 \3!\3!\3\"\3\"\3#\3#\3$\3$\5$\u01ad\n$\3%\3%\3%\3%\3%\3%\5%\u01b5"+
+		"\n%\3&\3&\5&\u01b9\n&\3\'\3\'\5\'\u01bd\n\'\3\'\3\'\3(\5(\u01c2\n(\3("+
+		"\5(\u01c5\n(\3(\3(\3(\3)\3)\5)\u01cc\n)\3)\3)\5)\u01d0\n)\3)\3)\3*\3*"+
+		"\3*\5*\u01d7\n*\3*\5*\u01da\n*\3*\5*\u01dd\n*\3*\5*\u01e0\n*\3*\3*\3+"+
+		"\3+\5+\u01e6\n+\3+\3+\3,\3,\5,\u01ec\n,\3-\3-\5-\u01f0\n-\3.\5.\u01f3"+
+		"\n.\3.\5.\u01f6\n.\3.\3.\3/\3/\3\60\3\60\3\60\3\61\3\61\3\61\3\62\3\62"+
+		"\3\62\3\63\3\63\3\63\5\63\u0208\n\63\3\64\3\64\3\64\5\64\u020d\n\64\3"+
+		"\65\3\65\3\65\3\65\5\65\u0213\n\65\3\66\3\66\3\66\3\66\3\66\3\66\6\66"+
+		"\u021b\n\66\r\66\16\66\u021c\3\67\7\67\u0220\n\67\f\67\16\67\u0223\13"+
+		"\67\3\67\6\67\u0226\n\67\r\67\16\67\u0227\3\67\7\67\u022b\n\67\f\67\16"+
+		"\67\u022e\13\67\38\68\u0231\n8\r8\168\u0232\39\69\u0236\n9\r9\169\u0237"+
+		"\3:\6:\u023b\n:\r:\16:\u023c\3:\n\u0141\u017b\u021c\u0221\u022c\u0232"+
+		"\u0237\u023c\4$.;\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62"+
+		"\64\668:<>@BDFHJLNPRTVXZ\\^`bdfhjlnpr\2\20\4\2..\66\66\4\2\35\35%%\4\2"+
+		"\n\n\27\27\4\2\n\n\25\25\4\2\23\23\66\66\7\2\3\3\5\5\23\23\64\64\66\66"+
+		"\6\2\3\3\5\5\23\23\66\66\4\2\20\20\22\22\4\2\6\6\f\r\3\2\37#\4\2\16\16"+
+		"\22\22\4\2\35\35&&\4\2\24\24\66\66\3\2\63\63\2\u0272\2z\3\2\2\2\4\u008c"+
+		"\3\2\2\2\6\u0093\3\2\2\2\b\u0095\3\2\2\2\n\u0098\3\2\2\2\f\u009b\3\2\2"+
+		"\2\16\u009e\3\2\2\2\20\u00a3\3\2\2\2\22\u00a9\3\2\2\2\24\u00af\3\2\2\2"+
+		"\26\u00b6\3\2\2\2\30\u00bf\3\2\2\2\32\u00c8\3\2\2\2\34\u00d2\3\2\2\2\36"+
+		"\u00d8\3\2\2\2 \u00ea\3\2\2\2\"\u00f3\3\2\2\2$\u0108\3\2\2\2&\u0124\3"+
+		"\2\2\2(\u012c\3\2\2\2*\u0131\3\2\2\2,\u0147\3\2\2\2.\u015a\3\2\2\2\60"+
+		"\u0170\3\2\2\2\62\u0180\3\2\2\2\64\u018c\3\2\2\2\66\u0190\3\2\2\28\u0199"+
+		"\3\2\2\2:\u019b\3\2\2\2<\u019e\3\2\2\2>\u01a2\3\2\2\2@\u01a4\3\2\2\2B"+
+		"\u01a6\3\2\2\2D\u01a8\3\2\2\2F\u01ac\3\2\2\2H\u01b4\3\2\2\2J\u01b8\3\2"+
+		"\2\2L\u01bc\3\2\2\2N\u01c1\3\2\2\2P\u01c9\3\2\2\2R\u01d6\3\2\2\2T\u01e3"+
+		"\3\2\2\2V\u01e9\3\2\2\2X\u01ed\3\2\2\2Z\u01f2\3\2\2\2\\\u01f9\3\2\2\2"+
+		"^\u01fb\3\2\2\2`\u01fe\3\2\2\2b\u0201\3\2\2\2d\u0207\3\2\2\2f\u020c\3"+
+		"\2\2\2h\u0212\3\2\2\2j\u021a\3\2\2\2l\u0221\3\2\2\2n\u0230\3\2\2\2p\u0235"+
+		"\3\2\2\2r\u023a\3\2\2\2tu\5\4\3\2uv\7\t\2\2v{\3\2\2\2wx\5\6\4\2xy\7\t"+
+		"\2\2y{\3\2\2\2zt\3\2\2\2zw\3\2\2\2{|\3\2\2\2|z\3\2\2\2|}\3\2\2\2}\3\3"+
+		"\2\2\2~\u008d\5\n\6\2\177\u008d\5\b\5\2\u0080\u008d\5\22\n\2\u0081\u008d"+
+		"\5\20\t\2\u0082\u008d\5\30\r\2\u0083\u008d\5\26\f\2\u0084\u008d\5\f\7"+
+		"\2\u0085\u008d\5\16\b\2\u0086\u008d\5 \21\2\u0087\u008d\5\"\22\2\u0088"+
+		"\u008d\5\34\17\2\u0089\u008d\5\36\20\2\u008a\u008d\5\24\13\2\u008b\u008d"+
+		"\5\32\16\2\u008c~\3\2\2\2\u008c\177\3\2\2\2\u008c\u0080\3\2\2\2\u008c"+
+		"\u0081\3\2\2\2\u008c\u0082\3\2\2\2\u008c\u0083\3\2\2\2\u008c\u0084\3\2"+
+		"\2\2\u008c\u0085\3\2\2\2\u008c\u0086\3\2\2\2\u008c\u0087\3\2\2\2\u008c"+
+		"\u0088\3\2\2\2\u008c\u0089\3\2\2\2\u008c\u008a\3\2\2\2\u008c\u008b\3\2"+
+		"\2\2\u008d\5\3\2\2\2\u008e\u0094\5f\64\2\u008f\u0094\5h\65\2\u0090\u0094"+
+		"\5j\66\2\u0091\u0094\5l\67\2\u0092\u0094\5r:\2\u0093\u008e\3\2\2\2\u0093"+
+		"\u008f\3\2\2\2\u0093\u0090\3\2\2\2\u0093\u0091\3\2\2\2\u0093\u0092\3\2"+
+		"\2\2\u0094\7\3\2\2\2\u0095\u0096\5&\24\2\u0096\u0097\5b\62\2\u0097\t\3"+
+		"\2\2\2\u0098\u0099\5&\24\2\u0099\u009a\5^\60\2\u009a\13\3\2\2\2\u009b"+
+		"\u009c\5$\23\2\u009c\u009d\5^\60\2\u009d\r\3\2\2\2\u009e\u009f\7\35\2"+
+		"\2\u009f\u00a0\t\2\2\2\u00a0\u00a1\5J&\2\u00a1\u00a2\5.\30\2\u00a2\17"+
+		"\3\2\2\2\u00a3\u00a4\7\31\2\2\u00a4\u00a5\5$\23\2\u00a5\u00a6\5@!\2\u00a6"+
+		"\u00a7\t\3\2\2\u00a7\u00a8\7\65\2\2\u00a8\21\3\2\2\2\u00a9\u00aa\7\31"+
+		"\2\2\u00aa\u00ab\5$\23\2\u00ab\u00ac\5> \2\u00ac\u00ad\t\3\2\2\u00ad\u00ae"+
+		"\7\64\2\2\u00ae\23\3\2\2\2\u00af\u00b0\7,\2\2\u00b0\u00b1\7\31\2\2\u00b1"+
+		"\u00b2\5n8\2\u00b2\u00b3\5B\"\2\u00b3\u00b4\t\3\2\2\u00b4\u00b5\7\64\2"+
+		"\2\u00b5\25\3\2\2\2\u00b6\u00b7\t\3\2\2\u00b7\u00b8\7\64\2\2\u00b8\u00ba"+
+		"\5@!\2\u00b9\u00bb\7\34\2\2\u00ba\u00b9\3\2\2\2\u00ba\u00bb\3\2\2\2\u00bb"+
+		"\u00bc\3\2\2\2\u00bc\u00bd\7\31\2\2\u00bd\u00be\5.\30\2\u00be\27\3\2\2"+
+		"\2\u00bf\u00c0\t\3\2\2\u00c0\u00c1\7\64\2\2\u00c1\u00c3\5> \2\u00c2\u00c4"+
+		"\7\34\2\2\u00c3\u00c2\3\2\2\2\u00c3\u00c4\3\2\2\2\u00c4\u00c5\3\2\2\2"+
+		"\u00c5\u00c6\7\31\2\2\u00c6\u00c7\5$\23\2\u00c7\31\3\2\2\2\u00c8\u00c9"+
+		"\7,\2\2\u00c9\u00ca\t\3\2\2\u00ca\u00cb\7\64\2\2\u00cb\u00cd\5B\"\2\u00cc"+
+		"\u00ce\7\34\2\2\u00cd\u00cc\3\2\2\2\u00cd\u00ce\3\2\2\2\u00ce\u00cf\3"+
+		"\2\2\2\u00cf\u00d0\7\31\2\2\u00d0\u00d1\5n8\2\u00d1\33\3\2\2\2\u00d2\u00d3"+
+		"\7&\2\2\u00d3\u00d4\5n8\2\u00d4\u00d5\7\63\2\2\u00d5\u00d6\7\22\2\2\u00d6"+
+		"\u00d7\7\61\2\2\u00d7\35\3\2\2\2\u00d8\u00d9\7&\2\2\u00d9\u00da\5n8\2"+
+		"\u00da\u00db\7\63\2\2\u00db\u00dd\7\22\2\2\u00dc\u00de\7\34\2\2\u00dd"+
+		"\u00dc\3\2\2\2\u00dd\u00de\3\2\2\2\u00de\u00e0\3\2\2\2\u00df\u00e1\7\'"+
+		"\2\2\u00e0\u00df\3\2\2\2\u00e0\u00e1\3\2\2\2\u00e1\u00e3\3\2\2\2\u00e2"+
+		"\u00e4\7(\2\2\u00e3\u00e2\3\2\2\2\u00e3\u00e4\3\2\2\2\u00e4\u00e5\3\2"+
+		"\2\2\u00e5\u00e6\7&\2\2\u00e6\u00e8\5n8\2\u00e7\u00e9\7\63\2\2\u00e8\u00e7"+
+		"\3\2\2\2\u00e8\u00e9\3\2\2\2\u00e9\37\3\2\2\2\u00ea\u00eb\7,\2\2\u00eb"+
+		"\u00ec\5n8\2\u00ec\u00ed\7-\2\2\u00ed\u00ee\5n8\2\u00ee\u00f1\7-\2\2\u00ef"+
+		"\u00f2\5\66\34\2\u00f0\u00f2\5n8\2\u00f1\u00ef\3\2\2\2\u00f1\u00f0\3\2"+
+		"\2\2\u00f2!\3\2\2\2\u00f3\u00f4\5p9\2\u00f4\u00f5\7\22\2\2\u00f5\u00f6"+
+		"\7\35\2\2\u00f6\u00f7\7\63\2\2\u00f7#\3\2\2\2\u00f8\u00f9\b\23\1\2\u00f9"+
+		"\u00fa\7\26\2\2\u00fa\u00ff\5$\23\2\u00fb\u00fc\t\4\2\2\u00fc\u00fe\5"+
+		"$\23\2\u00fd\u00fb\3\2\2\2\u00fe\u0101\3\2\2\2\u00ff\u00fd\3\2\2\2\u00ff"+
+		"\u0100\3\2\2\2\u0100\u0102\3\2\2\2\u0101\u00ff\3\2\2\2\u0102\u0103\7\27"+
+		"\2\2\u0103\u0104\5$\23\6\u0104\u0109\3\2\2\2\u0105\u0109\5&\24\2\u0106"+
+		"\u0109\5*\26\2\u0107\u0109\7/\2\2\u0108\u00f8\3\2\2\2\u0108\u0105\3\2"+
+		"\2\2\u0108\u0106\3\2\2\2\u0108\u0107\3\2\2\2\u0109\u0120\3\2\2\2\u010a"+
+		"\u010f\f\b\2\2\u010b\u010c\t\4\2\2\u010c\u010e\5$\23\2\u010d\u010b\3\2"+
+		"\2\2\u010e\u0111\3\2\2\2\u010f\u010d\3\2\2\2\u010f\u0110\3\2\2\2\u0110"+
+		"\u0112\3\2\2\2\u0111\u010f\3\2\2\2\u0112\u0113\7\27\2\2\u0113\u011f\5"+
+		"$\23\t\u0114\u0119\f\7\2\2\u0115\u0116\t\5\2\2\u0116\u0118\5$\23\2\u0117"+
+		"\u0115\3\2\2\2\u0118\u011b\3\2\2\2\u0119\u0117\3\2\2\2\u0119\u011a\3\2"+
+		"\2\2\u011a\u011c\3\2\2\2\u011b\u0119\3\2\2\2\u011c\u011d\7\25\2\2\u011d"+
+		"\u011f\5$\23\b\u011e\u010a\3\2\2\2\u011e\u0114\3\2\2\2\u011f\u0122\3\2"+
+		"\2\2\u0120\u011e\3\2\2\2\u0120\u0121\3\2\2\2\u0121%\3\2\2\2\u0122\u0120"+
+		"\3\2\2\2\u0123\u0125\7\34\2\2\u0124\u0123\3\2\2\2\u0124\u0125\3\2\2\2"+
+		"\u0125\u0127\3\2\2\2\u0126\u0128\7&\2\2\u0127\u0126\3\2\2\2\u0127\u0128"+
+		"\3\2\2\2\u0128\u0129\3\2\2\2\u0129\u012a\5(\25\2\u012a\'\3\2\2\2\u012b"+
+		"\u012d\t\6\2\2\u012c\u012b\3\2\2\2\u012d\u012e\3\2\2\2\u012e\u012c\3\2"+
+		"\2\2\u012e\u012f\3\2\2\2\u012f)\3\2\2\2\u0130\u0132\7\34\2\2\u0131\u0130"+
+		"\3\2\2\2\u0131\u0132\3\2\2\2\u0132\u0134\3\2\2\2\u0133\u0135\58\35\2\u0134"+
+		"\u0133\3\2\2\2\u0134\u0135\3\2\2\2\u0135\u0137\3\2\2\2\u0136\u0138\5,"+
+		"\27\2\u0137\u0136\3\2\2\2\u0137\u0138\3\2\2\2\u0138\u0139\3\2\2\2\u0139"+
+		"\u0144\t\7\2\2\u013a\u013b\7)\2\2\u013b\u0141\5d\63\2\u013c\u013d\7\25"+
+		"\2\2\u013d\u013e\7)\2\2\u013e\u0140\5d\63\2\u013f\u013c\3\2\2\2\u0140"+
+		"\u0143\3\2\2\2\u0141\u0142\3\2\2\2\u0141\u013f\3\2\2\2\u0142\u0145\3\2"+
+		"\2\2\u0143\u0141\3\2\2\2\u0144\u013a\3\2\2\2\u0144\u0145\3\2\2\2\u0145"+
+		"+\3\2\2\2\u0146\u0148\t\b\2\2\u0147\u0146\3\2\2\2\u0148\u0149\3\2\2\2"+
+		"\u0149\u0147\3\2\2\2\u0149\u014a\3\2\2\2\u014a-\3\2\2\2\u014b\u014d\b"+
+		"\30\1\2\u014c\u014e\7\34\2\2\u014d\u014c\3\2\2\2\u014d\u014e\3\2\2\2\u014e"+
+		"\u0150\3\2\2\2\u014f\u0151\58\35\2\u0150\u014f\3\2\2\2\u0150\u0151\3\2"+
+		"\2\2\u0151\u0154\3\2\2\2\u0152\u0155\7.\2\2\u0153\u0155\7\66\2\2\u0154"+
+		"\u0152\3\2\2\2\u0154\u0153\3\2\2\2\u0155\u015b\3\2\2\2\u0156\u0157\7\34"+
+		"\2\2\u0157\u015b\5.\30\5\u0158\u015b\5\60\31\2\u0159\u015b\5\64\33\2\u015a"+
+		"\u014b\3\2\2\2\u015a\u0156\3\2\2\2\u015a\u0158\3\2\2\2\u015a\u0159\3\2"+
+		"\2\2\u015b\u016c\3\2\2\2\u015c\u015f\f\b\2\2\u015d\u015e\t\4\2\2\u015e"+
+		"\u0160\5.\30\2\u015f\u015d\3\2\2\2\u0160\u0161\3\2\2\2\u0161\u015f\3\2"+
+		"\2\2\u0161\u0162\3\2\2\2\u0162\u016b\3\2\2\2\u0163\u0166\f\7\2\2\u0164"+
+		"\u0165\t\5\2\2\u0165\u0167\5.\30\2\u0166\u0164\3\2\2\2\u0167\u0168\3\2"+
+		"\2\2\u0168\u0166\3\2\2\2\u0168\u0169\3\2\2\2\u0169\u016b\3\2\2\2\u016a"+
+		"\u015c\3\2\2\2\u016a\u0163\3\2\2\2\u016b\u016e\3\2\2\2\u016c\u016a\3\2"+
+		"\2\2\u016c\u016d\3\2\2\2\u016d/\3\2\2\2\u016e\u016c\3\2\2\2\u016f\u0171"+
+		"\7\34\2\2\u0170\u016f\3\2\2\2\u0170\u0171\3\2\2\2\u0171\u0173\3\2\2\2"+
+		"\u0172\u0174\58\35\2\u0173\u0172\3\2\2\2\u0173\u0174\3\2\2\2\u0174\u0175"+
+		"\3\2\2\2\u0175\u0176\t\2\2\2\u0176\u017b\5\62\32\2\u0177\u0178\7\25\2"+
+		"\2\u0178\u017a\5\62\32\2\u0179\u0177\3\2\2\2\u017a\u017d\3\2\2\2\u017b"+
+		"\u017c\3\2\2\2\u017b\u0179\3\2\2\2\u017c\61\3\2\2\2\u017d\u017b\3\2\2"+
+		"\2\u017e\u017f\7)\2\2\u017f\u0181\t\t\2\2\u0180\u017e\3\2\2\2\u0180\u0181"+
+		"\3\2\2\2\u0181\u0183\3\2\2\2\u0182\u0184\7\35\2\2\u0183\u0182\3\2\2\2"+
+		"\u0183\u0184\3\2\2\2\u0184\u0187\3\2\2\2\u0185\u0188\7$\2\2\u0186\u0188"+
+		"\5:\36\2\u0187\u0185\3\2\2\2\u0187\u0186\3\2\2\2\u0188\u0189\3\2\2\2\u0189"+
+		"\u018a\5\66\34\2\u018a\63\3\2\2\2\u018b\u018d\7\34\2\2\u018c\u018b\3\2"+
+		"\2\2\u018c\u018d\3\2\2\2\u018d\u018e\3\2\2\2\u018e\u018f\5\66\34\2\u018f"+
+		"\65\3\2\2\2\u0190\u0191\t\n\2\2\u0191\67\3\2\2\2\u0192\u019a\7\35\2\2"+
+		"\u0193\u019a\7&\2\2\u0194\u019a\7\36\2\2\u0195\u019a\7%\2\2\u0196\u019a"+
+		"\7\32\2\2\u0197\u019a\7\31\2\2\u0198\u019a\5<\37\2\u0199\u0192\3\2\2\2"+
+		"\u0199\u0193\3\2\2\2\u0199\u0194\3\2\2\2\u0199\u0195\3\2\2\2\u0199\u0196"+
+		"\3\2\2\2\u0199\u0197\3\2\2\2\u0199\u0198\3\2\2\2\u019a9\3\2\2\2\u019b"+
+		"\u019c\t\13\2\2\u019c;\3\2\2\2\u019d\u019f\5:\36\2\u019e\u019d\3\2\2\2"+
+		"\u019e\u019f\3\2\2\2\u019f\u01a0\3\2\2\2\u01a0\u01a1\7\f\2\2\u01a1=\3"+
+		"\2\2\2\u01a2\u01a3\5F$\2\u01a3?\3\2\2\2\u01a4\u01a5\5F$\2\u01a5A\3\2\2"+
+		"\2\u01a6\u01a7\5F$\2\u01a7C\3\2\2\2\u01a8\u01a9\5H%\2\u01a9E\3\2\2\2\u01aa"+
+		"\u01ad\5H%\2\u01ab\u01ad\5J&\2\u01ac\u01aa\3\2\2\2\u01ac\u01ab\3\2\2\2"+
+		"\u01adG\3\2\2\2\u01ae\u01b5\5L\'\2\u01af\u01b5\5N(\2\u01b0\u01b5\5P)\2"+
+		"\u01b1\u01b5\5R*\2\u01b2\u01b5\5Z.\2\u01b3\u01b5\5X-\2\u01b4\u01ae\3\2"+
+		"\2\2\u01b4\u01af\3\2\2\2\u01b4\u01b0\3\2\2\2\u01b4\u01b1\3\2\2\2\u01b4"+
+		"\u01b2\3\2\2\2\u01b4\u01b3\3\2\2\2\u01b5I\3\2\2\2\u01b6\u01b9\5V,\2\u01b7"+
+		"\u01b9\5T+\2\u01b8\u01b6\3\2\2\2\u01b8\u01b7\3\2\2\2\u01b9K\3\2\2\2\u01ba"+
+		"\u01bb\7\16\2\2\u01bb\u01bd\7\34\2\2\u01bc\u01ba\3\2\2\2\u01bc\u01bd\3"+
+		"\2\2\2\u01bd\u01be\3\2\2\2\u01be\u01bf\5\\/\2\u01bfM\3\2\2\2\u01c0\u01c2"+
+		"\t\f\2\2\u01c1\u01c0\3\2\2\2\u01c1\u01c2\3\2\2\2\u01c2\u01c4\3\2\2\2\u01c3"+
+		"\u01c5\7\34\2\2\u01c4\u01c3\3\2\2\2\u01c4\u01c5\3\2\2\2\u01c5\u01c6\3"+
+		"\2\2\2\u01c6\u01c7\5\\/\2\u01c7\u01c8\7\21\2\2\u01c8O\3\2\2\2\u01c9\u01cb"+
+		"\7\22\2\2\u01ca\u01cc\7\34\2\2\u01cb\u01ca\3\2\2\2\u01cb\u01cc\3\2\2\2"+
+		"\u01cc\u01cd\3\2\2\2\u01cd\u01cf\5\\/\2\u01ce\u01d0\7\21\2\2\u01cf\u01ce"+
+		"\3\2\2\2\u01cf\u01d0\3\2\2\2\u01d0\u01d1\3\2\2\2\u01d1\u01d2\7\30\2\2"+
+		"\u01d2Q\3\2\2\2\u01d3\u01d7\7\22\2\2\u01d4\u01d7\7\20\2\2\u01d5\u01d7"+
+		"\5\\/\2\u01d6\u01d3\3\2\2\2\u01d6\u01d4\3\2\2\2\u01d6\u01d5\3\2\2\2\u01d7"+
+		"\u01d9\3\2\2\2\u01d8\u01da\7\34\2\2\u01d9\u01d8\3\2\2\2\u01d9\u01da\3"+
+		"\2\2\2\u01da\u01dc\3\2\2\2\u01db\u01dd\t\r\2\2\u01dc\u01db\3\2\2\2\u01dc"+
+		"\u01dd\3\2\2\2\u01dd\u01df\3\2\2\2\u01de\u01e0\5,\27\2\u01df\u01de\3\2"+
+		"\2\2\u01df\u01e0\3\2\2\2\u01e0\u01e1\3\2\2\2\u01e1\u01e2\7\21\2\2\u01e2"+
+		"S\3\2\2\2\u01e3\u01e5\7\22\2\2\u01e4\u01e6\7\34\2\2\u01e5\u01e4\3\2\2"+
+		"\2\u01e5\u01e6\3\2\2\2\u01e6\u01e7\3\2\2\2\u01e7\u01e8\7\'\2\2\u01e8U"+
+		"\3\2\2\2\u01e9\u01eb\7\22\2\2\u01ea\u01ec\7\34\2\2\u01eb\u01ea\3\2\2\2"+
+		"\u01eb\u01ec\3\2\2\2\u01ecW\3\2\2\2\u01ed\u01ef\7\16\2\2\u01ee\u01f0\7"+
+		"\34\2\2\u01ef\u01ee\3\2\2\2\u01ef\u01f0\3\2\2\2\u01f0Y\3\2\2\2\u01f1\u01f3"+
+		"\7\16\2\2\u01f2\u01f1\3\2\2\2\u01f2\u01f3\3\2\2\2\u01f3\u01f5\3\2\2\2"+
+		"\u01f4\u01f6\7\34\2\2\u01f5\u01f4\3\2\2\2\u01f5\u01f6\3\2\2\2\u01f6\u01f7"+
+		"\3\2\2\2\u01f7\u01f8\7\20\2\2\u01f8[\3\2\2\2\u01f9\u01fa\t\16\2\2\u01fa"+
+		"]\3\2\2\2\u01fb\u01fc\5> \2\u01fc\u01fd\5$\23\2\u01fd_\3\2\2\2\u01fe\u01ff"+
+		"\5@!\2\u01ff\u0200\5.\30\2\u0200a\3\2\2\2\u0201\u0202\5D#\2\u0202\u0203"+
+		"\5\64\33\2\u0203c\3\2\2\2\u0204\u0208\5^\60\2\u0205\u0208\5`\61\2\u0206"+
+		"\u0208\5b\62\2\u0207\u0204\3\2\2\2\u0207\u0205\3\2\2\2\u0207\u0206\3\2"+
+		"\2\2\u0208e\3\2\2\2\u0209\u020d\5$\23\2\u020a\u020d\5^\60\2\u020b\u020d"+
+		"\5F$\2\u020c\u0209\3\2\2\2\u020c\u020a\3\2\2\2\u020c\u020b\3\2\2\2\u020d"+
+		"g\3\2\2\2\u020e\u0213\5.\30\2\u020f\u0213\5`\61\2\u0210\u0213\5b\62\2"+
+		"\u0211\u0213\5\62\32\2\u0212\u020e\3\2\2\2\u0212\u020f\3\2\2\2\u0212\u0210"+
+		"\3\2\2\2\u0212\u0211\3\2\2\2\u0213i\3\2\2\2\u0214\u021b\5f\64\2\u0215"+
+		"\u021b\5h\65\2\u0216\u021b\7\25\2\2\u0217\u021b\7\27\2\2\u0218\u021b\7"+
+		"\n\2\2\u0219\u021b\7\t\2\2\u021a\u0214\3\2\2\2\u021a\u0215\3\2\2\2\u021a"+
+		"\u0216\3\2\2\2\u021a\u0217\3\2\2\2\u021a\u0218\3\2\2\2\u021a\u0219\3\2"+
+		"\2\2\u021b\u021c\3\2\2\2\u021c\u021d\3\2\2\2\u021c\u021a\3\2\2\2\u021d"+
+		"k\3\2\2\2\u021e\u0220\13\2\2\2\u021f\u021e\3\2\2\2\u0220\u0223\3\2\2\2"+
+		"\u0221\u0222\3\2\2\2\u0221\u021f\3\2\2\2\u0222\u0225\3\2\2\2\u0223\u0221"+
+		"\3\2\2\2\u0224\u0226\7\4\2\2\u0225\u0224\3\2\2\2\u0226\u0227\3\2\2\2\u0227"+
+		"\u0225\3\2\2\2\u0227\u0228\3\2\2\2\u0228\u022c\3\2\2\2\u0229\u022b\13"+
+		"\2\2\2\u022a\u0229\3\2\2\2\u022b\u022e\3\2\2\2\u022c\u022d\3\2\2\2\u022c"+
+		"\u022a\3\2\2\2\u022dm\3\2\2\2\u022e\u022c\3\2\2\2\u022f\u0231\n\17\2\2"+
+		"\u0230\u022f\3\2\2\2\u0231\u0232\3\2\2\2\u0232\u0233\3\2\2\2\u0232\u0230"+
+		"\3\2\2\2\u0233o\3\2\2\2\u0234\u0236\n\17\2\2\u0235\u0234\3\2\2\2\u0236"+
+		"\u0237\3\2\2\2\u0237\u0238\3\2\2\2\u0237\u0235\3\2\2\2\u0238q\3\2\2\2"+
+		"\u0239\u023b\13\2\2\2\u023a\u0239\3\2\2\2\u023b\u023c\3\2\2\2\u023c\u023d"+
+		"\3\2\2\2\u023c\u023a\3\2\2\2\u023ds\3\2\2\2Jz|\u008c\u0093\u00ba\u00c3"+
+		"\u00cd\u00dd\u00e0\u00e3\u00e8\u00f1\u00ff\u0108\u010f\u0119\u011e\u0120"+
+		"\u0124\u0127\u012e\u0131\u0134\u0137\u0141\u0144\u0149\u014d\u0150\u0154"+
+		"\u015a\u0161\u0168\u016a\u016c\u0170\u0173\u017b\u0180\u0183\u0187\u018c"+
+		"\u0199\u019e\u01ac\u01b4\u01b8\u01bc\u01c1\u01c4\u01cb\u01cf\u01d6\u01d9"+
+		"\u01dc\u01df\u01e5\u01eb\u01ef\u01f2\u01f5\u0207\u020c\u0212\u021a\u021c"+
+		"\u0221\u0227\u022c\u0232\u0237\u023c";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

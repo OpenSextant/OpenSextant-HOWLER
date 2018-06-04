@@ -39,6 +39,8 @@ import org.opensextant.howler.Howler;
 import org.opensextant.howler.abstraction.Document;
 import org.opensextant.howler.abstraction.Statement;
 import org.opensextant.howler.abstraction.Word;
+import org.opensextant.howler.abstraction.words.BadWord;
+import org.opensextant.howler.abstraction.words.DataValue;
 import org.opensextant.howler.abstraction.words.enumerated.WordType;
 import org.opensextant.howler.kanban.elements.Board;
 import org.opensextant.howler.kanban.elements.Card;
@@ -316,26 +318,31 @@ public class Kanban {
     for (Statement spo : doc.getStatements()) {
 
       // all the words used in the SPO
-      // Set<Word> words = spo.getWords();
+      List<Word> words = spo.getWords();
 
       // TODO
       // create and populate a Sentence
       Sentence sent = new Sentence();
-      // sent.setWords(words);
+      sent.setWords(words);
       sent.setBoardId(boardId);
       // a sentence is inferred if the raw text was inferred
       sent.setInferred(inferred);
 
       // create the keys based on the words in the sentence
       // key is of the form: logicalform|wordtype|boardID
-      /*
-       * for (Word w : words) { if (w instanceof Thing || w instanceof Nothing || w instanceof DataValue || w instanceof
-       * AuxiliaryWord || w instanceof BadWord) { continue; } String tmpKey = w.getLogicalForm() + "|" + w.getWordType()
-       * + "|" + boardId; sent.addKey(tmpKey); }
-       */
+
+      for (Word w : words) {
+        if (w instanceof DataValue || w instanceof BadWord) {
+          continue;
+        }
+        String tmpKey = w.getLogicalForm() + "|" + w.getWordType() + "|" + boardId;
+        sent.addKey(tmpKey);
+      }
+
       // get the clean text from the SPO
       Sentence cleanText = howler.toText(spo);
-      // sent.setText(cleanText);
+     //TODO
+      //  sent.setText(cleanText);
       sentences.add(sent);
 
     }

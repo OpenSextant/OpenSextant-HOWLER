@@ -114,8 +114,7 @@ public class ToText {
       if (st.isAnnotationStatement()) {
         sent.addWord(Vocabulary.ANNO_FLAG);
       }
-      sent.addWord(Quantifier.ONLY);
-      //subj.setQuantifierType(Quantifier.A);
+      subj.setQuantifierType(Quantifier.ONLY);
       sent.addWords(convert(subj));
       sent.addWords(convert(pExp));
       sent.addWord(Quantifier.SOME);
@@ -135,8 +134,7 @@ public class ToText {
       sent.addWord(Quantifier.A);
       sent.addWord(Vocabulary.THING);
       sent.addWords(convert(pExp));
-      sent.addWord(Quantifier.ONLY);
-      //obj.setQuantifierType(Quantifier.A);
+      // obj.setQuantifierType(Quantifier.ONLY);
       sent.addWords(convert(obj));
     }
 
@@ -259,9 +257,6 @@ public class ToText {
   private Sentence convert(DeclarationStatement st) {
     Sentence sent = new Sentence();
     sent.setSentenceType(SentenceType.DECLARATION);
-    if (st.isDerived()) {
-      // return sent;
-    }
 
     Word subjWord = st.getWord();
 
@@ -313,10 +308,6 @@ public class ToText {
     return null;
   }
 
-  /*
-   * private List<Word> convert(SubjectObjectPhrase ph) { List<Word> wrds = new ArrayList<Word>(); return null; }
-   */
-
   private List<Word> convert(CategoryPhrase<?> ph) {
     List<Word> wrds = new ArrayList<Word>();
 
@@ -342,7 +333,11 @@ public class ToText {
 
   private List<Word> convert(InstancePhrase<?> ph) {
     List<Word> wrds = new ArrayList<Word>();
-    wrds.addAll(convert(ph.getQuantifierExpression()));
+
+    if (ph.isNegative()) {
+      wrds.add(Negative.NOT);
+    }
+
     wrds.add(ph.getHead());
     return wrds;
   }
@@ -353,61 +348,23 @@ public class ToText {
 
     if (!phrases.isEmpty()) {
 
-      boolean neg = ph.getQuantifierExpression().isNegative();
+      boolean neg = ph.isNegative();
       boolean exclusive = ph.isDisjoint();
 
-      BooleanSetType setType = ph.getSetType();
+      if (exclusive) {
+        wrds.add(Vocabulary.EITHER);
+      }
+      // add first phrase
+      wrds.addAll(convert(phrases.get(0)));
 
-      if (setType.equals(BooleanSetType.ONEOF)) {
-
-        if (exclusive) {
-          wrds.add(Vocabulary.EITHER);
-        }
-
-        if (phrases.size() > 1) {
-          wrds.add((setType));
-        }
-
-        // add first phrase
+      for (int i = 1; i < phrases.size(); i++) {
+        List<Word> tmpWrds = convert(phrases.get(i));
+        wrds.add(ph.getSetType());
         if (neg) {
           wrds.add(Negative.NOT);
         }
-
-        
-        
-        wrds.addAll(convert(phrases.get(0)));
-
-        for (int i = 1; i < phrases.size(); i++) {
-          List<Word> tmpWrds = convert(phrases.get(i));
-          wrds.add(BooleanSetType.OR);
-          if (neg) {
-            wrds.add(Negative.NOT);
-          }
-          wrds.addAll(tmpWrds);
-        }
-
-      } else {
-
-        if (exclusive) {
-          wrds.add(Vocabulary.EITHER);
-        }
-
-        
-        wrds.addAll(convert(ph.getQuantifierExpression()));
-        
-        // add first phrase
-        wrds.addAll(convert(phrases.get(0)));
-
-        for (int i = 1; i < phrases.size(); i++) {
-          List<Word> tmpWrds = convert(phrases.get(i));
-          wrds.add(ph.getSetType());
-          if (neg) {
-            wrds.add(Negative.NOT);
-          }
-          wrds.addAll(tmpWrds);
-        }
+        wrds.addAll(tmpWrds);
       }
-
     }
 
     return wrds;
@@ -423,13 +380,24 @@ public class ToText {
     List<Word> wrds = new ArrayList<Word>();
 
     PredicateExpression pe = ph.getPredicateExpression();
+
     SubjectObjectPhrase obj = ph.getObject();
+
     // move negative obj to predicate expression
     if (obj.isNegative()) {
       pe.flipNegative();
       obj.flipNegative();
-      // change quantifier to A
-      obj.setQuantifierType(Quantifier.A);
+      // flip quantifer some<=>every
+      if (obj.getQuantifierType().equals(Quantifier.SOME) || obj.getQuantifierType().equals(Quantifier.A)) {
+        obj.setQuantifierType(Quantifier.EVERY);
+      } else if (obj.getQuantifierType().equals(Quantifier.EVERY)) {
+        obj.setQuantifierType(Quantifier.SOME);
+      } else if (obj.getQuantifierType().equals(Quantifier.ONLY)) {
+        obj.setQuantifierType(Quantifier.ONLY);
+      } else {
+        LOGGER.warn("Ambigous quantifier in negative expression:" + ph);
+        obj.setQuantifierType(Quantifier.EVERY);
+      }
     }
 
     wrds.addAll(convert(pe));
@@ -438,17 +406,18 @@ public class ToText {
     return wrds;
   }
 
-  private List<Word> convert(QuantifierExpression ph) {
+  private List<Word> convert(QuantifierExpression qe) {
     List<Word> wrds = new ArrayList<Word>();
 
-    if (ph.isNegative()) {
+    Quantifier q = qe.getQuantifierType();
+    if (qe.isNegative()) {
       wrds.add(Negative.NOT);
     }
 
-    Quantifier q = ph.getQuantifierType();
     wrds.add(q);
+
     if (q.isNumeric()) {
-      wrds.add(new GenericWord(ph.getQuantity().toString(), "CD"));
+      wrds.add(new GenericWord(qe.getQuantity().toString(), "CD"));
     }
 
     return wrds;

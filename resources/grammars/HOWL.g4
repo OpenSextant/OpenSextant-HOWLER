@@ -78,12 +78,12 @@ statement
 :
 	factStatementObject
 	| factStatementData
-	| descriptionStatementObject
-	| descriptionStatementDataType
 	| domainStatementObject
 	| domainStatementDataType
 	| rangeStatementObject
 	| rangeStatementDataType
+	| descriptionStatementObject
+	| descriptionStatementDataType
 	| annotationStatement
 	| declarationStatement
 	| predicateCharacteristicStatement
@@ -129,32 +129,32 @@ descriptionStatementDataType
 //TODO Object should be some value?
 domainStatementDataType
 :
-	ONLY A? subj=compoundNounPhrase pred=predicateExpressionData (A|SOME) DATA_VALUE
+	ONLY  subj=compoundNounPhrase pred=predicateExpressionData (A|SOME) DATA_VALUE
 ;
 
 domainStatementObject
 :
-	ONLY A? subj=compoundNounPhrase pred=predicateExpressionObject (A|SOME) THING
+	ONLY  subj=compoundNounPhrase pred=predicateExpressionObject (A|SOME) THING
 ;
 
 domainStatementAnnotation
 :
-	ANNOTATION_MARKER ONLY A? subj=wordSequence pred=predicateExpressionAnnotation (A|SOME) THING
+	ANNOTATION_MARKER ONLY  subj=wordSequence pred=predicateExpressionAnnotation (A|SOME) THING
 ;
 
 rangeStatementDataType
 :
-	(A|SOME) THING pred=predicateExpressionData ONLY  obj=dataTypeExpression
+	(A|SOME) THING pred=predicateExpressionData NOT ? ONLY  obj=dataTypeExpression
 ;
 
 rangeStatementObject
 :
-	(A|SOME) THING pred=predicateExpressionObject ONLY  obj=compoundNounPhrase
+	(A|SOME) THING pred=predicateExpressionObject NOT? ONLY  obj=compoundNounPhrase
 ;
 
 rangeStatementAnnotation
 :
-	ANNOTATION_MARKER (A|SOME) THING pred=predicateExpressionAnnotation ONLY A obj=wordSequence
+	ANNOTATION_MARKER (A|SOME) THING pred=predicateExpressionAnnotation NOT ? ONLY obj=wordSequence
 ;
 
 predicateCharacteristicStatement
@@ -177,13 +177,13 @@ declarationStatement: subj=declareWordSequence IS A WORD_TYPE;
 
 //---------- Nouns and Noun Phrases --------------
 
-nounPhrase: properNounPhrase | compoundNounPhrase;
+//nounPhrase: compoundNounPhrase (AND compoundNounPhrase)+;
 
 compoundNounPhrase:
-	 ONEOF oneof=             properNounPhrase  ((OR|COMMA)  properNounPhrase)+
-	| setIntersection = 	compoundNounPhrase ((AND|COMMA)compoundNounPhrase)+	 
-	| setUnion =  			compoundNounPhrase ((OR|COMMA) compoundNounPhrase)+
-	| ONEOF disjointUnion = compoundNounPhrase ((OR|COMMA) compoundNounPhrase)+
+	 setUnion =  			compoundNounPhrase ((OR|COMMA)  compoundNounPhrase)* OR  compoundNounPhrase
+	| setIntersection = 	compoundNounPhrase ((AND|COMMA) compoundNounPhrase)* AND compoundNounPhrase
+	| ONEOF disjointUnion = compoundNounPhrase ((OR|COMMA)  compoundNounPhrase)* OR  compoundNounPhrase
+	| proper = properNounPhrase
 	| common = commonNounPhrase
 	| itself = ITSELF
 ;
@@ -191,7 +191,7 @@ compoundNounPhrase:
 /* InstancePhrase<ProperNoun> */
 properNounPhrase
 :
-	THE? nProperSequence
+	NOT? THE? nProperSequence
 ;
 // a sequence of proper nouns, to be interpreted as a single instance
 nProperSequence
@@ -219,25 +219,22 @@ adjp
 	(COMMON_NOUN|PROPER_NOUN|AMBIG_WORD|ADJECTIVE)+
 ;
 
-// a set of proper nouns
-//oneOfProperNoun: ONEOF properNounPhrase ((OR|COMMA) properNounPhrase)+;
 
 //--------------------- Data and Data values -----------------
 
 /* DataType Expressions => CategoryPhrase<DatatType> or PhraseSet => OWL DataRange*/
 dataTypeExpression
 :
-	NOT? quant? dt=DATATYPE
-	| NOT? quant? ambig=AMBIG_WORD
+	  setUnion = dataTypeExpression ((OR|COMMA) dataTypeExpression)+
+	| setIntersection = dataTypeExpression ((AND|COMMA) dataTypeExpression)+
+	| NOT? quant? (dt=DATATYPE|ambig=AMBIG_WORD)
 	| NOT comp = dataTypeExpression
 	| rest = dataTypeRestriction
-	| oneof = oneOfData
 	| dv = dataValuePhrase
-	| setUnion = dataTypeExpression ((OR|COMMA) dataTypeExpression)+
-	| setIntersection = dataTypeExpression ((AND|COMMA) dataTypeExpression)+
+
 ;
 
-/*  CategoryPhrase<DataType> with Realtive pharses  e.g. integer <that is> greater than 7, string that has the pattern "AbCD" */
+/*  CategoryPhrase<DataType> with Relative phrases  e.g. integer <that is> greater than 7, string that has the pattern "AbCD" */
 dataTypeRestriction
 :
 	NOT? quant? (DATATYPE|AMBIG_WORD) dataFacetExpression (AND dataFacetExpression)*?
@@ -253,9 +250,6 @@ dataValuePhrase
 ;
 // the type of data values
 dataValue: QUOTED_TEXT | INTEGER | DECIMAL;
-
-// a set of data values (XOR semantics?) TODO allow only one value?
-oneOfData : ONEOF dataValue ((OR|COMMA) dataValue)+;
 
 //---------- Quantifiers --------------
 
@@ -377,7 +371,7 @@ predicate: PREDICATE|AMBIG_WORD;
 
 predicatePhraseNoun
 :
-	predicateExpressionObject nounPhrase
+	predicateExpressionObject compoundNounPhrase
 ;
 
 // a predicate phrase with a datatype expression as its object
@@ -400,7 +394,7 @@ predicatePhrase: predicatePhraseNoun| predicatePhraseDataType | predicatePhraseD
 
 //---------- Debug and catch-all stuff --------------
 
-singlePhraseObject:nounPhrase| predicatePhraseNoun | predicateExpression ;
+singlePhraseObject:compoundNounPhrase| predicatePhraseNoun | predicateExpression ;
 singlePhraseData:dataTypeExpression| predicatePhraseDataType | predicatePhraseDataValue| dataFacetExpression;
 
 catchSet: (singlePhraseObject | singlePhraseData | AND|OR|COMMA|PERIOD)+?;

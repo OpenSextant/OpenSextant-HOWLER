@@ -65,6 +65,15 @@ public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhras
     this.disjoint = disjoint;
   }
 
+  public boolean isNested() {
+    for (T ph : phrases) {
+      if (ph instanceof PhraseSet) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public boolean allInstances() {
 
     for (T ph : phrases) {
@@ -95,11 +104,12 @@ public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhras
       op = " OR ";
     }
 
+    /*
     if (this.booleanSetType == BooleanSetType.ONEOF) {
       bldr.append(" either ");
       op = " OR ";
     }
-
+*/
     bldr.append(this.getQuantifierExpression());
     bldr.append(" ");
 

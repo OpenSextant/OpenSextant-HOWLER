@@ -115,12 +115,6 @@ public interface HOWLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDeclarationStatement(HOWL.DeclarationStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOWL#nounPhrase}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNounPhrase(HOWL.NounPhraseContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link HOWL#compoundNounPhrase}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -180,12 +174,6 @@ public interface HOWLVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitDataValue(HOWL.DataValueContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HOWL#oneOfData}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitOneOfData(HOWL.OneOfDataContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link HOWL#quant}.
 	 * @param ctx the parse tree
