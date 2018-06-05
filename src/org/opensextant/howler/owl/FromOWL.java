@@ -1555,7 +1555,7 @@ public class FromOWL {
   private Phrase convertOWL(OWLObjectComplementOf ce) {
     Phrase ph = convertOWL(ce.getOperand());
     ph.flipNegative();
-    return convertToSubjectObjectPhrase(ph, Quantifier.NULL);
+    return ph;
   }
 
   private PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> convertOWL(OWLObjectSomeValuesFrom ce) {
@@ -2159,13 +2159,13 @@ public class FromOWL {
 
   private SubjectObjectPhrase convertToSubjectObjectPhrase(Phrase phrase, Quantifier q) {
 
+/*    
     // TODO distributive logic?
     if (phrase instanceof PhraseSet) {
       PhraseSet<?> set = (PhraseSet<?>) phrase;
 
       if (set.getPhrases().size() == 1) {
         set.getPhrases().get(0).setQuantifierType(q);
-        set.getPhrases().get(0).setNegative(set.isNegative());
       } else {
         set.setQuantifierType(q);
         for (SubjectObjectPhrase elem : set.getPhrases()) {
@@ -2174,7 +2174,7 @@ public class FromOWL {
       }
       return set;
     }
-
+*/
     if (phrase instanceof SubjectObjectPhrase) {
       SubjectObjectPhrase so = (SubjectObjectPhrase) phrase;
       so.setQuantifierType(q);

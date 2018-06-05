@@ -513,7 +513,7 @@ public class HowlerLexer implements TokenSource {
       normal = "has";
     } else if (pos.startsWith("VB")) {
 
-      String base = lemmatizer.lemmatize(surfaceForm, pos);
+      //String base = lemmatizer.lemmatize(surfaceForm, pos);
 
       // uninflected present tense
       if (pos.equals("VB")) {
@@ -793,7 +793,7 @@ public class HowlerLexer implements TokenSource {
   private void initTypeMap(File typeFile) {
 
     try {
-      List<String> lines = FileUtils.readLines(typeFile);
+      List<String> lines = FileUtils.readLines(typeFile,"UTF-8");
 
       for (String line : lines) {
         if (line.startsWith("#")) {

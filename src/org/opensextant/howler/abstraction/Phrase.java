@@ -35,8 +35,6 @@ public interface Phrase {
 
   public boolean isNegative();
 
-  public void setNegative(boolean negative);
-
   public void flipNegative();
 
   public Scope getScope();

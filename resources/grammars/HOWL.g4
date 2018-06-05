@@ -117,7 +117,7 @@ factStatementObject
 
 descriptionStatementObject
 :
-	compoundNounPhrase predicatePhraseNoun //((AND|OR) predicatePhraseNoun)*
+	compoundNounPhrase predicatePhraseNoun //((AND|OR) predicatePhraseNoun)*?
 ;
 
 // Datatype definition
@@ -129,32 +129,32 @@ descriptionStatementDataType
 //TODO Object should be some value?
 domainStatementDataType
 :
-	ONLY  subj=compoundNounPhrase pred=predicateExpressionData (A|SOME) DATA_VALUE
+	(ONLY|NO)  subj=compoundNounPhrase pred=predicateExpressionData (A|SOME) DATA_VALUE
 ;
 
 domainStatementObject
 :
-	ONLY  subj=compoundNounPhrase pred=predicateExpressionObject (A|SOME) THING
+	(ONLY|NO)  subj=compoundNounPhrase pred=predicateExpressionObject (A|SOME) THING
 ;
 
 domainStatementAnnotation
 :
-	ANNOTATION_MARKER ONLY  subj=wordSequence pred=predicateExpressionAnnotation (A|SOME) THING
+	ANNOTATION_MARKER (ONLY|NO)  subj=wordSequence pred=predicateExpressionAnnotation (A|SOME) THING
 ;
 
 rangeStatementDataType
 :
-	(A|SOME) THING pred=predicateExpressionData NOT ? ONLY  obj=dataTypeExpression
+	(A|SOME) THING pred=predicateExpressionData (ONLY|NO)  obj=dataTypeExpression
 ;
 
 rangeStatementObject
 :
-	(A|SOME) THING pred=predicateExpressionObject NOT? ONLY  obj=compoundNounPhrase
+	(A|SOME) THING pred=predicateExpressionObject (ONLY|NO)  obj=compoundNounPhrase
 ;
 
 rangeStatementAnnotation
 :
-	ANNOTATION_MARKER (A|SOME) THING pred=predicateExpressionAnnotation NOT ? ONLY obj=wordSequence
+	ANNOTATION_MARKER (A|SOME) THING pred=predicateExpressionAnnotation (ONLY|NO) obj=wordSequence
 ;
 
 predicateCharacteristicStatement
@@ -225,8 +225,8 @@ adjp
 /* DataType Expressions => CategoryPhrase<DatatType> or PhraseSet => OWL DataRange*/
 dataTypeExpression
 :
-	  setUnion = dataTypeExpression ((OR|COMMA) dataTypeExpression)+
-	| setIntersection = dataTypeExpression ((AND|COMMA) dataTypeExpression)+
+	  setUnion =        dataTypeExpression ((OR|COMMA)  dataTypeExpression)* OR  dataTypeExpression
+	| setIntersection = dataTypeExpression ((AND|COMMA) dataTypeExpression)* AND dataTypeExpression
 	| NOT? quant? (dt=DATATYPE|ambig=AMBIG_WORD)
 	| NOT comp = dataTypeExpression
 	| rest = dataTypeRestriction
@@ -240,7 +240,7 @@ dataTypeRestriction
 	NOT? quant? (DATATYPE|AMBIG_WORD) dataFacetExpression (AND dataFacetExpression)*?
 ;
 
-// individual facet-value pair => PredicatePhrase<InstancePhrase<DataValue>,DataFacetPredicate>
+// individual facet-value pair
 dataFacetExpression: (THAT (HAS|IS))? A? (DATA_FACET|quantNumeric) dataValue;
 
 // an instance of data value

@@ -2,9 +2,7 @@ package org.opensextant.howler.text;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -369,6 +367,10 @@ public class FromText {
     DescriptionStatement<ObjectPredicate> statement = new DescriptionStatement<ObjectPredicate>();
     statement.setDomain(true);
     SubjectObjectPhrase subj = convertText(ctx.subj);
+
+    if (ctx.NO() != null) {
+      subj.flipNegative();
+    }
     statement.setSubject(subj);
 
     PredicateExpression<ObjectPredicate> pe = convertText(ctx.pred);
@@ -389,6 +391,10 @@ public class FromText {
     statement.setDomain(true);
 
     SubjectObjectPhrase subj = convertText(ctx.subj);
+    if (ctx.NO() != null) {
+      subj.flipNegative();
+    }
+
     statement.setSubject(subj);
 
     PredicateExpression<DataPredicate> pe = convertText(ctx.pred);
@@ -408,6 +414,11 @@ public class FromText {
 
     Word subjWord = convertWord(ctx.subj, WordType.GENERIC_WORD, true, true);
     WordPhrase subj = new WordPhrase(subjWord);
+
+    if (ctx.NO() != null) {
+      subj.flipNegative();
+    }
+
     statement.setSubject(subj);
 
     PredicateExpression<AnnotationPredicate> pe = convertText(ctx.pred);
@@ -432,7 +443,7 @@ public class FromText {
 
     SubjectObjectPhrase obj = convertText(ctx.obj);
 
-    if (ctx.NOT() != null) {
+    if (ctx.NO() != null) {
       obj.flipNegative();
     }
 
@@ -456,7 +467,7 @@ public class FromText {
 
     SubjectObjectPhrase obj = convertText(ctx.obj);
 
-    if (ctx.NOT() != null) {
+    if (ctx.NO() != null) {
       obj.flipNegative();
     }
     PredicatePhrase<SubjectObjectPhrase, DataPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, DataPredicate>(
@@ -478,7 +489,7 @@ public class FromText {
     Word objWord = convertWord(ctx.obj, WordType.GENERIC_WORD, true, true);
     WordPhrase obj = new WordPhrase(objWord);
 
-    if (ctx.NOT() != null) {
+    if (ctx.NO() != null) {
       obj.flipNegative();
     }
 
@@ -768,34 +779,24 @@ public class FromText {
       BooleanSetType type) {
 
     PhraseSet<SubjectObjectPhrase> set = new PhraseSet<SubjectObjectPhrase>();
-    Set<Quantifier> qes = new HashSet<Quantifier>();
+    set.setSetType(type);
 
     for (CompoundNounPhraseContext phCTX : phraseCTXs) {
       SubjectObjectPhrase elem = convertText(phCTX);
-      qes.add(elem.getQuantifierExpression().getQuantifierType());
+      
       if (elem instanceof PhraseSet) {
-        // TODO this only merges one level deep, should be recursive
         PhraseSet<?> innerSet = (PhraseSet<?>) elem;
-        // only merge same set types
         if (innerSet.getSetType().equals(type)) {
           LOGGER.debug("Merging Nested phrase sets" + innerSet.getPhrases() + " into " + set);
-          for (SubjectObjectPhrase iph : innerSet.getPhrases()) {
-            set.addPhrase(iph);
+          for (SubjectObjectPhrase inner : innerSet.getPhrases()) {
+            set.addPhrase(inner);
           }
         } else {
-          set.addPhrase(elem);
+          set.addPhrase(innerSet);
         }
       } else {
         set.addPhrase(elem);
       }
-    }
-
-    set.setSetType(type);
-
-    if (qes.contains(Quantifier.EVERY) || qes.contains(Quantifier.ONLY)) {
-      set.setQuantifierType(Quantifier.EVERY);
-    } else {
-      set.setQuantifierType(Quantifier.SOME);
     }
 
     return set;
@@ -830,7 +831,9 @@ public class FromText {
     List<Noun> adjs = convertText(ctx.adjp());
 
     QuantifierExpression quant = convertText(ctx.quant());
-    quant.setNegative(ctx.NOT() != null);
+    if (ctx.NOT() != null) {
+      quant.flipNegative();
+    }
 
     Noun head = null;
     CategoryPhrase<Noun> catPhrase = null;
@@ -1094,7 +1097,21 @@ public class FromText {
 
     SubjectObjectPhrase obj = convertText(ctx.dataTypeExpression());
     PredicateExpression<DataPredicate> pe = convertText(ctx.predicateExpressionData());
-
+/*
+    //move negative from predicate to object
+    if (pe.isNegative()) {
+      pe.flipNegative();
+      obj.flipNegative();
+    }
+*/
+    
+    //move negative  object to predicate
+    if (obj.isNegative()) {
+      pe.flipNegative();
+      obj.flipNegative();
+    }
+    
+    
     PredicatePhrase<SubjectObjectPhrase, DataPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, DataPredicate>(
         pe, obj);
     return predPhrase;
@@ -1103,6 +1120,19 @@ public class FromText {
   private PredicatePhrase<InstancePhrase<DataValue>, DataPredicate> convertText(PredicatePhraseDataValueContext ctx) {
     PredicateExpression<DataPredicate> pe = convertText(ctx.predicateExpressionVerbData());
     InstancePhrase<DataValue> obj = convertText(ctx.dataValuePhrase());
+/*
+    //move negative from predicate to object
+    if (pe.isNegative()) {
+      pe.flipNegative();
+      obj.flipNegative();
+    }
+*/
+    
+    if (obj.isNegative()) {
+      pe.flipNegative();
+      obj.flipNegative();
+    }
+    
     PredicatePhrase<InstancePhrase<DataValue>, DataPredicate> predPhrase = new PredicatePhrase<InstancePhrase<DataValue>, DataPredicate>(
         pe, obj);
     return predPhrase;
@@ -1115,14 +1145,21 @@ public class FromText {
 
   private PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> convertText(PredicatePhraseNounContext ctx) {
 
-    // SubjectObjectPhrase obj = convertText(ctx.nounPhrase());
     SubjectObjectPhrase obj = convertText(ctx.compoundNounPhrase());
     PredicateExpression<ObjectPredicate> pe = convertText(ctx.predicateExpressionObject());
-    /*
-     * // move negative predicate to object if (pe.isNegative()) { if (obj.getQuantifierType().equals(Quantifier.EXACT))
-     * { // dont change anything } else { pe.flipNegative(); obj.flipNegative();
-     * obj.setQuantifierType(obj.getQuantifierType().getNegation()); } }
-     */
+/*
+    //move negative from predicate to object
+    if (pe.isNegative()) {
+      pe.flipNegative();
+      obj.flipNegative();
+    }
+*/
+    
+    if (obj.isNegative()) {
+      pe.flipNegative();
+      obj.flipNegative();
+    }
+    
     PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(
         pe, obj);
 

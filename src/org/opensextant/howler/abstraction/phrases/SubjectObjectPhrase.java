@@ -27,10 +27,6 @@ public abstract class SubjectObjectPhrase implements Phrase {
     return this.quantifierExpression.isNegative();
   }
 
-  public void setNegative(boolean negative) {
-    this.quantifierExpression.setNegative(negative);
-  }
-
   public void flipNegative() {
     this.quantifierExpression.flipNegative();
   }

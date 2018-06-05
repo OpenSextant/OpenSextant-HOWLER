@@ -8,7 +8,7 @@ import org.opensextant.howler.utils.TextUtils;
 import org.semanticweb.owlapi.model.IRI;
 
 public enum BooleanSetType implements Word {
-  OR("or"), AND("and"), ONEOF("either");
+  OR("or"), AND("and");
 
   private final String logicalform;
   private String normalform;

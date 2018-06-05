@@ -29,6 +29,7 @@ import java.util.List;
 
 import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.words.enumerated.BooleanSetType;
+import org.opensextant.howler.abstraction.words.enumerated.Quantifier;
 import org.opensextant.howler.abstraction.words.enumerated.Scope;
 
 public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhrase {
@@ -36,6 +37,59 @@ public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhras
   List<T> phrases = new ArrayList<T>();
   BooleanSetType booleanSetType = BooleanSetType.AND;
   boolean disjoint = false;
+
+  @Override
+  public boolean isNegative() {
+    return false;
+  }
+
+  @Override
+  public void flipNegative() {
+
+    for (T elem : phrases) {
+      elem.flipNegative();
+    }
+
+    if (this.booleanSetType.equals(BooleanSetType.AND)) {
+      booleanSetType = BooleanSetType.OR;
+    }
+
+    if (this.booleanSetType.equals(BooleanSetType.OR)) {
+      booleanSetType = BooleanSetType.AND;
+    }
+
+  }
+
+  @Override
+  public QuantifierExpression getQuantifierExpression() {
+    return new QuantifierExpression(Quantifier.NULL);
+  }
+
+  @Override
+  public void setQuantifierExpression(QuantifierExpression qe) {
+    for (T elem : phrases) {
+      elem.setQuantifierExpression(qe);
+    }
+  }
+
+  @Override
+  public Quantifier getQuantifierType() {
+    return Quantifier.NULL;
+  }
+
+  @Override
+  public void setQuantifierType(Quantifier q) {
+
+    for (T elem : phrases) {
+      if (elem.isNegative()) {
+        //elem.setQuantifierType(q.getNegation());
+      } else {
+        elem.setQuantifierType(q);
+      }
+
+    }
+
+  }
 
   public List<T> getPhrases() {
     return phrases;
@@ -105,11 +159,8 @@ public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhras
     }
 
     /*
-    if (this.booleanSetType == BooleanSetType.ONEOF) {
-      bldr.append(" either ");
-      op = " OR ";
-    }
-*/
+     * if (this.booleanSetType == BooleanSetType.ONEOF) { bldr.append(" either "); op = " OR "; }
+     */
     bldr.append(this.getQuantifierExpression());
     bldr.append(" ");
 

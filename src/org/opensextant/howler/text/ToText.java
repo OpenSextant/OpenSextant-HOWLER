@@ -134,7 +134,6 @@ public class ToText {
       sent.addWord(Quantifier.A);
       sent.addWord(Vocabulary.THING);
       sent.addWords(convert(pExp));
-      // obj.setQuantifierType(Quantifier.ONLY);
       sent.addWords(convert(obj));
     }
 
@@ -144,8 +143,7 @@ public class ToText {
         return convertAnno(st);
       }
       sent.addWords(convert(subj));
-      sent.addWords(convert(pExp));
-      sent.addWords(convert(obj));
+      sent.addWords(convert(st.getPredicatePhrase()));
     }
 
     for (Footnote fn : st.getFootnotes()) {
@@ -387,17 +385,6 @@ public class ToText {
     if (obj.isNegative()) {
       pe.flipNegative();
       obj.flipNegative();
-      // flip quantifer some<=>every
-      if (obj.getQuantifierType().equals(Quantifier.SOME) || obj.getQuantifierType().equals(Quantifier.A)) {
-        obj.setQuantifierType(Quantifier.EVERY);
-      } else if (obj.getQuantifierType().equals(Quantifier.EVERY)) {
-        obj.setQuantifierType(Quantifier.SOME);
-      } else if (obj.getQuantifierType().equals(Quantifier.ONLY)) {
-        obj.setQuantifierType(Quantifier.ONLY);
-      } else {
-        LOGGER.warn("Ambigous quantifier in negative expression:" + ph);
-        obj.setQuantifierType(Quantifier.EVERY);
-      }
     }
 
     wrds.addAll(convert(pe));
@@ -410,9 +397,6 @@ public class ToText {
     List<Word> wrds = new ArrayList<Word>();
 
     Quantifier q = qe.getQuantifierType();
-    if (qe.isNegative()) {
-      wrds.add(Negative.NOT);
-    }
 
     wrds.add(q);
 

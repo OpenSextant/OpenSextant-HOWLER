@@ -28,11 +28,9 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
-import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.WordManager;
 import org.opensextant.howler.text.DocumentFactory;
 import org.opensextant.howler.text.DocumentFactory.FileStructure;
@@ -55,7 +53,7 @@ public class TextTest {
 
     File posDir = new File(resourceDir, "pos");
 
-    List<String> textDirs = FileUtils.readLines(inputDirsFile);
+    List<String> textDirs = FileUtils.readLines(inputDirsFile,"UTF-8");
 
     File lexFile = new File(posDir, "lexicon.txt");
     File gramFile = new File(posDir, "ngrams.txt");
@@ -71,8 +69,7 @@ public class TextTest {
     File baseTextTestDir = inputDirsFile.getParentFile();
 
     // write header to results
-    FileUtils.writeStringToFile(results,
-        "File\tStatement Type\tMatches\tOriginal text\tBack Text\n", false);
+    FileUtils.writeStringToFile(results, "File\tStatement Type\tMatches\tOriginal text\tBack Text\n", "UTF-8",false);
 
     for (String textDir : textDirs) {
 
@@ -112,13 +109,13 @@ public class TextTest {
           for (Sentence sentence : sentences) {
             String backText = sentence.toString().trim();
             boolean matchText = compare(originalTextDoc, backText);
-            //String clean = clean(originalTextDoc, backText);
+            // String clean = clean(originalTextDoc, backText);
             String parse = sentence.getParseTree();
-                String sentType = sentType(parse);
-                
+            String sentType = sentType(parse);
+
             // write the details to results
             FileUtils.writeStringToFile(results, txtFileName + "\t" + sentType + "\t" + matchText + "\t"
-                + originalTextDoc + "\t" + backText  + "\t" + parse+ "\n", true);
+                + originalTextDoc + "\t" + backText + "\t" + parse + "\n", "UTF-8",true);
           }
 
         }

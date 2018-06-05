@@ -35,7 +35,6 @@ import org.opensextant.howler.abstraction.words.enumerated.Quantifier;
 public class QuantifierExpression {
 
   private Quantifier quantifier = Quantifier.EVERY;
-  private boolean negative = false;
   private Integer quantity = 1;
 
   public QuantifierExpression(Quantifier type) {
@@ -51,15 +50,11 @@ public class QuantifierExpression {
   }
 
   public boolean isNegative() {
-    return negative;
-  }
-
-  public void setNegative(boolean negative) {
-    this.negative = negative;
+    return quantifier.equals(Quantifier.NO);
   }
 
   public void flipNegative() {
-    this.negative = !this.negative;
+    this.quantifier = this.quantifier.getNegation();
   }
 
   public Quantifier getQuantifierType() {
@@ -67,7 +62,12 @@ public class QuantifierExpression {
   }
 
   public void setQuantifierType(Quantifier quantType) {
-    this.quantifier = quantType;
+    if(isNegative()){
+      this.quantifier = quantType.getNegation();
+    }else{
+      this.quantifier = quantType;
+    }
+
   }
 
   public Integer getQuantity() {
@@ -82,10 +82,6 @@ public class QuantifierExpression {
   public String toString() {
     StringBuilder bldr = new StringBuilder();
 
-    if (negative) {
-      bldr.append("NOT ");
-    }
-
     bldr.append(quantifier.name());
 
     if (quantifier.isNumeric()) {
@@ -97,10 +93,6 @@ public class QuantifierExpression {
   public List<Word> getWords() {
     List<Word> wrds = new ArrayList<Word>();
 
-    if (negative) {
-      wrds.add(Negative.NOT);
-    }
-    
     if(! this.quantifier.equals(Quantifier.NULL)){
       wrds.add(this.quantifier);
       if (quantifier.isNumeric()) {

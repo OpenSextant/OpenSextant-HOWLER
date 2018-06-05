@@ -2,8 +2,10 @@ package org.opensextant.howler.owl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.opensextant.howler.abstraction.Document;
 import org.opensextant.howler.abstraction.Phrase;
@@ -1562,8 +1564,8 @@ public class ToOWL {
       obj = obj.getObjectComplementOf();
     }
 
-    QuantifierExpression quant = ph.getObject().getQuantifierExpression();
-    Quantifier qType = quant.getQuantifierType();
+    QuantifierExpression quant = objPhrase.getQuantifierExpression();
+    Quantifier qType = objPhrase.getQuantifierType();
 
     // NO = NOT every
     if (qType == Quantifier.NO) {
@@ -1574,11 +1576,7 @@ public class ToOWL {
       finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, obj);
     }
 
-    if (qType == Quantifier.EVERY) {
-      finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp, obj);
-    }
-
-    if (qType == Quantifier.ONLY) {
+    if (qType == Quantifier.EVERY || qType == Quantifier.ONLY) {
       finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp, obj);
     }
 
@@ -1606,7 +1604,7 @@ public class ToOWL {
     if (qType == Quantifier.NULL) {
 
       // check for single individual
-      if (obj.getClassExpressionType() == ClassExpressionType.OBJECT_ONE_OF) {
+      if (obj instanceof OWLObjectOneOf) {
         OWLObjectOneOf oof = (OWLObjectOneOf) obj;
         List<OWLIndividual> inds = OWLAPIStreamUtils.asList(oof.individuals());
         if (inds.size() == 1 && useHasValue) {
@@ -1614,14 +1612,41 @@ public class ToOWL {
         } else {
           finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, oof);
         }
-      } else {
-        if (builtin) {
-          finalCE = obj;
+      }else  if (objPhrase instanceof PhraseSet) {
+
+        PhraseSet<?> set = (PhraseSet<?>) objPhrase;
+        Set<Quantifier> qes = new HashSet<Quantifier>();
+        for (SubjectObjectPhrase elem : set.getPhrases()) {
+          if(!elem.getQuantifierType().equals(Quantifier.NULL)){
+            qes.add(elem.getQuantifierType());
+          }
+        }
+
+        if (qes.size() == 1) {
+          // LOGGER.debug("Phrase set quantifier for :" + qes + " " + set);
+          qType = qes.iterator().next();
         } else {
-          LOGGER.debug("Object Quantifier " + qType + " converted as SOME:" + objPhrase);
+          LOGGER.debug("Ambigous Quantifiers seen:" + qes + " " + set);
+          qType = Quantifier.SOME;
+        }
+
+        if (qType == Quantifier.NO) {
+          finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp, obj.getObjectComplementOf());
+        }
+
+        if (qType == Quantifier.SOME) {
           finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, obj);
         }
+
+        if (qType == Quantifier.EVERY || qType == Quantifier.ONLY) {
+          finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp, obj);
+        }
+
+      } else {
+        LOGGER.debug("Object Quantifier " + qType + " converted as SOME:" + objPhrase);
+        finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, obj);
       }
+
     }
 
     int count = quant.getQuantity();

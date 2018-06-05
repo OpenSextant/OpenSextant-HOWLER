@@ -8,7 +8,7 @@ import org.semanticweb.owlapi.model.IRI;
 
 public enum Quantifier implements Word {
   NULL("", false),
-  NO("no", false),
+  NO("not a", false),
   EVERY("every", false),
   SOME("some", false),
   ONLY("only a", false),
@@ -96,12 +96,12 @@ public enum Quantifier implements Word {
   public Quantifier getNegation(){
     
     if(this.equals(NULL)) return NO;
-    if(this.equals(NO)) return NULL;
+    if(this.equals(NO)) return A;
     if(this.equals(EVERY)) return SOME;
     if(this.equals(SOME)) return EVERY;
-    if(this.equals(ONLY)) return ONLY;
-    if(this.equals(A)) return A;
-    if(this.equals(THE)) return THE;
+    if(this.equals(ONLY)) return SOME;
+    if(this.equals(A)) return NO;
+    if(this.equals(THE)) return NO;
     //special case, should be intersection of more_than and less_than
     if(this.equals(EXACT)) return NULL;
     if(this.equals(MORE_THAN)) return LESS_THAN_OR_EQUAL;
