@@ -30,4 +30,35 @@ public abstract class SubjectObjectPhrase implements Phrase {
   public void flipNegative() {
     this.quantifierExpression.flipNegative();
   }
+
+  public void pushNegative() {
+    return;
+  }
+
+  public void pushQuantifier() {
+
+    if (this.isNegative()) {
+
+      if (this.getQuantifierType().equals(Quantifier.EVERY)) {
+        flipNegative();
+        this.setQuantifierType(Quantifier.SOME);
+        return;
+      }
+
+      if (this.getQuantifierType().equals(Quantifier.ONLY)) {
+        flipNegative();
+        this.setQuantifierType(Quantifier.SOME);
+        return;
+      }
+
+      if (this.getQuantifierType().equals(Quantifier.SOME)) {
+        flipNegative();
+        this.setQuantifierType(Quantifier.ONLY);
+        return;
+      }
+
+    }
+
+  }
+
 }

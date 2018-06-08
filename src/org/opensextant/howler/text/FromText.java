@@ -368,7 +368,7 @@ public class FromText {
     statement.setDomain(true);
     SubjectObjectPhrase subj = convertText(ctx.subj);
 
-    if (ctx.NO() != null) {
+    if (ctx.NOT() != null) {
       subj.flipNegative();
     }
     statement.setSubject(subj);
@@ -391,7 +391,7 @@ public class FromText {
     statement.setDomain(true);
 
     SubjectObjectPhrase subj = convertText(ctx.subj);
-    if (ctx.NO() != null) {
+    if (ctx.NOT() != null) {
       subj.flipNegative();
     }
 
@@ -415,7 +415,7 @@ public class FromText {
     Word subjWord = convertWord(ctx.subj, WordType.GENERIC_WORD, true, true);
     WordPhrase subj = new WordPhrase(subjWord);
 
-    if (ctx.NO() != null) {
+    if (ctx.NOT() != null) {
       subj.flipNegative();
     }
 
@@ -443,7 +443,7 @@ public class FromText {
 
     SubjectObjectPhrase obj = convertText(ctx.obj);
 
-    if (ctx.NO() != null) {
+    if (ctx.NOT() != null) {
       obj.flipNegative();
     }
 
@@ -467,7 +467,7 @@ public class FromText {
 
     SubjectObjectPhrase obj = convertText(ctx.obj);
 
-    if (ctx.NO() != null) {
+    if (ctx.NOT() != null) {
       obj.flipNegative();
     }
     PredicatePhrase<SubjectObjectPhrase, DataPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, DataPredicate>(
@@ -489,7 +489,7 @@ public class FromText {
     Word objWord = convertWord(ctx.obj, WordType.GENERIC_WORD, true, true);
     WordPhrase obj = new WordPhrase(objWord);
 
-    if (ctx.NO() != null) {
+    if (ctx.NOT() != null) {
       obj.flipNegative();
     }
 
@@ -783,7 +783,7 @@ public class FromText {
 
     for (CompoundNounPhraseContext phCTX : phraseCTXs) {
       SubjectObjectPhrase elem = convertText(phCTX);
-      
+
       if (elem instanceof PhraseSet) {
         PhraseSet<?> innerSet = (PhraseSet<?>) elem;
         if (innerSet.getSetType().equals(type)) {
@@ -831,6 +831,7 @@ public class FromText {
     List<Noun> adjs = convertText(ctx.adjp());
 
     QuantifierExpression quant = convertText(ctx.quant());
+
     if (ctx.NOT() != null) {
       quant.flipNegative();
     }
@@ -963,41 +964,40 @@ public class FromText {
 
   private QuantifierExpression convertText(QuantContext ctx) {
 
+    if (ctx == null) {
+      return new QuantifierExpression(Quantifier.NULL);
+    }
+
+    if (ctx.quantNumericExpression() != null) {
+      return convertText(ctx.quantNumericExpression());
+    }
+
     Quantifier qtype = Quantifier.NULL;
+
+    if (ctx.EVERY() != null) {
+      qtype = Quantifier.EVERY;
+    }
+
+    if (ctx.SOME() != null) {
+      qtype = Quantifier.SOME;
+    }
+
+    if (ctx.A() != null) {
+      qtype = Quantifier.A;
+    }
+
+    if (ctx.THE() != null) {
+      qtype = Quantifier.THE;
+    }
+
+    if (ctx.ONLY() != null) {
+      qtype = Quantifier.ONLY;
+    }
+
     QuantifierExpression qe = new QuantifierExpression(qtype);
 
-    if (ctx != null) {
-
-      if (ctx.NO() != null) {
-        qtype = Quantifier.NO;
-      }
-
-      if (ctx.EVERY() != null) {
-        qtype = Quantifier.EVERY;
-      }
-
-      if (ctx.SOME() != null) {
-        qtype = Quantifier.SOME;
-      }
-
-      if (ctx.A() != null) {
-        qtype = Quantifier.A;
-      }
-
-      if (ctx.THE() != null) {
-        qtype = Quantifier.THE;
-      }
-
-      if (ctx.ONLY() != null) {
-        qtype = Quantifier.ONLY;
-      }
-
-      qe = new QuantifierExpression(qtype);
-
-      if (ctx.quantNumericExpression() != null) {
-        qe = convertText(ctx.quantNumericExpression());
-      }
-
+    if (ctx.NO() != null) {
+      qe.flipNegative();
     }
 
     return qe;
@@ -1097,21 +1097,16 @@ public class FromText {
 
     SubjectObjectPhrase obj = convertText(ctx.dataTypeExpression());
     PredicateExpression<DataPredicate> pe = convertText(ctx.predicateExpressionData());
-/*
-    //move negative from predicate to object
-    if (pe.isNegative()) {
-      pe.flipNegative();
-      obj.flipNegative();
-    }
-*/
-    
-    //move negative  object to predicate
+    /*
+     * //move negative from predicate to object if (pe.isNegative()) { pe.flipNegative(); obj.flipNegative(); }
+     */
+
+    // move negative object to predicate
     if (obj.isNegative()) {
       pe.flipNegative();
       obj.flipNegative();
     }
-    
-    
+
     PredicatePhrase<SubjectObjectPhrase, DataPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, DataPredicate>(
         pe, obj);
     return predPhrase;
@@ -1120,19 +1115,15 @@ public class FromText {
   private PredicatePhrase<InstancePhrase<DataValue>, DataPredicate> convertText(PredicatePhraseDataValueContext ctx) {
     PredicateExpression<DataPredicate> pe = convertText(ctx.predicateExpressionVerbData());
     InstancePhrase<DataValue> obj = convertText(ctx.dataValuePhrase());
-/*
-    //move negative from predicate to object
-    if (pe.isNegative()) {
-      pe.flipNegative();
-      obj.flipNegative();
-    }
-*/
-    
+    /*
+     * //move negative from predicate to object if (pe.isNegative()) { pe.flipNegative(); obj.flipNegative(); }
+     */
+
     if (obj.isNegative()) {
       pe.flipNegative();
       obj.flipNegative();
     }
-    
+
     PredicatePhrase<InstancePhrase<DataValue>, DataPredicate> predPhrase = new PredicatePhrase<InstancePhrase<DataValue>, DataPredicate>(
         pe, obj);
     return predPhrase;
@@ -1147,19 +1138,12 @@ public class FromText {
 
     SubjectObjectPhrase obj = convertText(ctx.compoundNounPhrase());
     PredicateExpression<ObjectPredicate> pe = convertText(ctx.predicateExpressionObject());
-/*
-    //move negative from predicate to object
-    if (pe.isNegative()) {
-      pe.flipNegative();
-      obj.flipNegative();
-    }
-*/
-    
-    if (obj.isNegative()) {
-      pe.flipNegative();
-      obj.flipNegative();
-    }
-    
+    /*
+     * //move negative from predicate to object if (pe.isNegative()) { pe.flipNegative(); obj.flipNegative(); }
+     */
+    /*
+     * if (obj.isNegative()) { pe.flipNegative(); obj.flipNegative(); }
+     */
     PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(
         pe, obj);
 

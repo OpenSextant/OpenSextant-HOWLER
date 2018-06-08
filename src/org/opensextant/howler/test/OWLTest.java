@@ -72,11 +72,13 @@ public class OWLTest {
     // rewrite all axioms as subclass axioms?
     fromOWL.setRewriteAllAsSubclass(false);
 
+    fromOWL.setFlattenSingleSet(false);
+    
     // convert axiom to Negation Normal Form 
     fromOWL.setNegNormal(false);
     
     // if only one individual in set, use HasValue not SomeValuesFrom
-    toOWL.setUseHasValue(true);
+    toOWL.setUseHasValue(false);
     
     List<String> ontoDirs = FileUtils.readLines(inputDirsFile, "UTF-8");
 

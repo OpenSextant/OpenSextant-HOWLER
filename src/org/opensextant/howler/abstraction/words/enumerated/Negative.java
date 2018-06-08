@@ -9,7 +9,7 @@ import org.semanticweb.owlapi.model.IRI;
 
 public enum Negative implements Word {
   NOT("not"),
-  NONE("none");
+  NO("no");
 
 	private final String logicalform;
 	private String normalform;

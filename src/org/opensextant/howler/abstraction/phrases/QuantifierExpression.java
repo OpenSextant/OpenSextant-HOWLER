@@ -36,6 +36,7 @@ public class QuantifierExpression {
 
   private Quantifier quantifier = Quantifier.EVERY;
   private Integer quantity = 1;
+  private boolean negative = false;
 
   public QuantifierExpression(Quantifier type) {
     this.quantifier = type;
@@ -50,24 +51,21 @@ public class QuantifierExpression {
   }
 
   public boolean isNegative() {
-    return quantifier.equals(Quantifier.NO);
+    return negative;
   }
 
   public void flipNegative() {
-    this.quantifier = this.quantifier.getNegation();
+    this.negative = !this.negative;
   }
+
+
 
   public Quantifier getQuantifierType() {
     return quantifier;
   }
 
   public void setQuantifierType(Quantifier quantType) {
-    if(isNegative()){
-      this.quantifier = quantType.getNegation();
-    }else{
-      this.quantifier = quantType;
-    }
-
+    this.quantifier = quantType;
   }
 
   public Integer getQuantity() {
@@ -82,6 +80,10 @@ public class QuantifierExpression {
   public String toString() {
     StringBuilder bldr = new StringBuilder();
 
+    if (isNegative()) {
+      bldr.append(Negative.NOT.toString() + "-");
+    }
+
     bldr.append(quantifier.name());
 
     if (quantifier.isNumeric()) {
@@ -93,10 +95,14 @@ public class QuantifierExpression {
   public List<Word> getWords() {
     List<Word> wrds = new ArrayList<Word>();
 
-    if(! this.quantifier.equals(Quantifier.NULL)){
+    if (this.isNegative()) {
+      wrds.add(Negative.NOT);
+    }
+
+    if (!this.quantifier.equals(Quantifier.NULL)) {
       wrds.add(this.quantifier);
       if (quantifier.isNumeric()) {
-        wrds.add(new GenericWord(this.quantity.toString(),"CD"));
+        wrds.add(new GenericWord(this.quantity.toString(), "CD"));
       }
     }
 

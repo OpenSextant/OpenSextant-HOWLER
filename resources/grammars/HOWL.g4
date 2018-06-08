@@ -33,7 +33,6 @@ OR,
 BY,
 ONLY,
 NO,
-NONE,
 NOT,
 A,
 EVERY,
@@ -126,35 +125,34 @@ descriptionStatementDataType
 	A (DATATYPE|AMBIG_WORD) predicateExpressionState dataTypeExpression 
 ;
 
-//TODO Object should be some value?
 domainStatementDataType
 :
-	(ONLY|NO)  subj=compoundNounPhrase pred=predicateExpressionData (A|SOME) DATA_VALUE
+	(ONLY|NOT)  subj=compoundNounPhrase pred=predicateExpressionData (A|SOME) DATA_VALUE
 ;
 
 domainStatementObject
 :
-	(ONLY|NO)  subj=compoundNounPhrase pred=predicateExpressionObject (A|SOME) THING
+	(ONLY|NOT)  subj=compoundNounPhrase pred=predicateExpressionObject (A|SOME) THING
 ;
 
 domainStatementAnnotation
 :
-	ANNOTATION_MARKER (ONLY|NO)  subj=wordSequence pred=predicateExpressionAnnotation (A|SOME) THING
+	ANNOTATION_MARKER (ONLY|NOT)  subj=wordSequence pred=predicateExpressionAnnotation (A|SOME) THING
 ;
 
 rangeStatementDataType
 :
-	(A|SOME) THING pred=predicateExpressionData (ONLY|NO)  obj=dataTypeExpression
+	(A|SOME) THING pred=predicateExpressionData (ONLY|NOT)  obj=dataTypeExpression
 ;
 
 rangeStatementObject
 :
-	(A|SOME) THING pred=predicateExpressionObject (ONLY|NO)  obj=compoundNounPhrase
+	(A|SOME) THING pred=predicateExpressionObject (ONLY|NOT)  obj=compoundNounPhrase
 ;
 
 rangeStatementAnnotation
 :
-	ANNOTATION_MARKER (A|SOME) THING pred=predicateExpressionAnnotation (ONLY|NO) obj=wordSequence
+	ANNOTATION_MARKER (A|SOME) THING pred=predicateExpressionAnnotation (ONLY|NOT) obj=wordSequence
 ;
 
 predicateCharacteristicStatement

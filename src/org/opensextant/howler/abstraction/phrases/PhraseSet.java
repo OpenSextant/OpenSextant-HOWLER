@@ -31,60 +31,73 @@ import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.words.enumerated.BooleanSetType;
 import org.opensextant.howler.abstraction.words.enumerated.Quantifier;
 import org.opensextant.howler.abstraction.words.enumerated.Scope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhrase {
+
+  // Log object
+  private static final Logger LOGGER = LoggerFactory.getLogger(PhraseSet.class);
 
   List<T> phrases = new ArrayList<T>();
   BooleanSetType booleanSetType = BooleanSetType.AND;
   boolean disjoint = false;
 
-  @Override
-  public boolean isNegative() {
-    return false;
-  }
+  public void pushNegative() {
 
-  @Override
-  public void flipNegative() {
+    boolean neg = this.isNegative();
+
+    if (neg) {
+      this.flipNegative();
+    }
 
     for (T elem : phrases) {
-      elem.flipNegative();
+      if (neg) {
+        elem.flipNegative();
+      }
+
+      if (elem instanceof PhraseSet) {
+        ((PhraseSet<?>) elem).pushNegative();
+      }
+
     }
 
-    if (this.booleanSetType.equals(BooleanSetType.AND)) {
-      booleanSetType = BooleanSetType.OR;
-    }
+    if (neg) {
+      if (this.booleanSetType.equals(BooleanSetType.AND)) {
+        booleanSetType = BooleanSetType.OR;
+      }
 
-    if (this.booleanSetType.equals(BooleanSetType.OR)) {
-      booleanSetType = BooleanSetType.AND;
+      if (this.booleanSetType.equals(BooleanSetType.OR)) {
+        booleanSetType = BooleanSetType.AND;
+      }
     }
-
   }
 
-  @Override
-  public QuantifierExpression getQuantifierExpression() {
-    return new QuantifierExpression(Quantifier.NULL);
-  }
+  public void pushQuantifier() {
 
-  @Override
-  public void setQuantifierExpression(QuantifierExpression qe) {
+    pushNegative();
+
+    //dont push NULL
+    if (this.getQuantifierType().equals(Quantifier.NULL)) {
+      for (T elem : phrases) {
+        if (elem instanceof PhraseSet) {
+          ((PhraseSet<?>) elem).pushQuantifier();
+        }
+      }
+      return;
+    }
+ 
     for (T elem : phrases) {
-      elem.setQuantifierExpression(qe);
-    }
-  }
 
-  @Override
-  public Quantifier getQuantifierType() {
-    return Quantifier.NULL;
-  }
+      if (!elem.getQuantifierType().equals(Quantifier.NULL)
+          && !elem.getQuantifierType().equals(this.getQuantifierType())) {
+        LOGGER.warn("Posibly ambigous quantifier in phraseset:" + elem + " in " + this);
+      }
 
-  @Override
-  public void setQuantifierType(Quantifier q) {
+      elem.setQuantifierType(this.getQuantifierType());
 
-    for (T elem : phrases) {
-      if (elem.isNegative()) {
-        //elem.setQuantifierType(q.getNegation());
-      } else {
-        elem.setQuantifierType(q);
+      if (elem instanceof PhraseSet) {
+        ((PhraseSet<?>) elem).pushQuantifier();
       }
 
     }
@@ -158,16 +171,15 @@ public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhras
       op = " OR ";
     }
 
-    /*
-     * if (this.booleanSetType == BooleanSetType.ONEOF) { bldr.append(" either "); op = " OR "; }
-     */
     bldr.append(this.getQuantifierExpression());
-    bldr.append(" ");
+    bldr.append(":");
 
     bldr.append(phrases.get(0).toString());
 
     for (int i = 1; i < phrases.size(); i++) {
-      bldr.append(op);
+      bldr.append(" ");
+      bldr.append(this.booleanSetType);
+      bldr.append(" ");
       bldr.append(phrases.get(i).toString());
     }
 

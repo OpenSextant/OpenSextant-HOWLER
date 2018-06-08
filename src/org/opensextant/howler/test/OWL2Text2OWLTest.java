@@ -114,8 +114,6 @@ public class OWL2Text2OWLTest {
       for (File ontoFile : ontos) {
         String ontoName = ontoFile.getName();
 
-        
-
         System.out.println();
         System.out.println("Loading Ontology\t" + ontoFile);
         OWLOntology originalOnto = fromOWL.loadOWL(ontoFile);
@@ -136,21 +134,19 @@ public class OWL2Text2OWLTest {
         // converted ontology
         for (OWLAxiom originalAx : OWLAPIStreamUtils.asList(originalOnto.axioms())) {
           if (!compare(backOnto, originalAx)) {
-
+            
             if (nyi(originalAx)) {
               axiomErrorsNYI++;
-              FileUtils.writeStringToFile(results,
-                  ontoName + "\t" + "NYI" + "\t" + originalAx.getAxiomType() + "\t" + originalAx + "\n", "UTF-8", true);
-              FileUtils.writeStringToFile(totalResults,
-                  ontoName + "\t" + "NYI" + "\t" + originalAx.getAxiomType() + "\t" + originalAx + "\n", "UTF-8", true);
+              FileUtils.writeStringToFile(results, ontoName + "\t" + "NYI" + "\t" + originalAx.getAxiomType() + "\t"
+                  + originalAx.toString().replaceAll("\\s", " ")  + "\n", "UTF-8", true);
+              FileUtils.writeStringToFile(totalResults, ontoName + "\t" + "NYI" + "\t" + originalAx.getAxiomType()
+                  + "\t" + originalAx.toString().replaceAll("\\s", " ")  + "\n", "UTF-8", true);
             } else {
               axiomErrorsMissing++;
-              FileUtils.writeStringToFile(results,
-                  ontoName + "\t" + "Missing" + "\t" + originalAx.getAxiomType() + "\t" + originalAx + "\n", "UTF-8",
-                  true);
-              FileUtils.writeStringToFile(totalResults,
-                  ontoName + "\t" + "Missing" + "\t" + originalAx.getAxiomType() + "\t" + originalAx + "\n", "UTF-8",
-                  true);
+              FileUtils.writeStringToFile(results, ontoName + "\t" + "Missing" + "\t" + originalAx.getAxiomType() + "\t"
+                  + originalAx.toString().replaceAll("\\s", " ") + "\n", "UTF-8", true);
+              FileUtils.writeStringToFile(totalResults, ontoName + "\t" + "Missing" + "\t" + originalAx.getAxiomType()
+                  + "\t" + originalAx.toString().replaceAll("\\s", " ") + "\n", "UTF-8", true);
             }
           }
         }
@@ -160,10 +156,13 @@ public class OWL2Text2OWLTest {
         for (OWLAxiom backAx : OWLAPIStreamUtils.asList(backOnto.axioms())) {
           if (!compare(originalOnto, backAx)) {
             axiomErrorsExtra++;
-            FileUtils.writeStringToFile(results,
-                ontoName + "\t" + "Extra" + "\t" + backAx.getAxiomType() + "\t" + backAx + "\n", "UTF-8", true);
-            FileUtils.writeStringToFile(totalResults,
-                ontoName + "\t" + "Extra" + "\t" + backAx.getAxiomType() + "\t" + backAx + "\n", "UTF-8", true);
+            
+
+            
+            FileUtils.writeStringToFile(results, ontoName + "\t" + "Extra" + "\t" + backAx.getAxiomType() + "\t"
+                + backAx.toString().replaceAll("\\s", " ") + "\n", "UTF-8", true);
+            FileUtils.writeStringToFile(totalResults, ontoName + "\t" + "Extra" + "\t" + backAx.getAxiomType() + "\t"
+                + backAx.toString().replaceAll("\\s", " ") + "\n", "UTF-8", true);
           }
         }
 
@@ -202,9 +201,9 @@ public class OWL2Text2OWLTest {
 
         OWLNaryAxiom<?> nary = (OWLNaryAxiom<?>) originalAx;
         // for (OWLAxiom pairAx : nary.splitToAnnotatedPairs()) {
-        for (OWLAxiom pairAx : nary.asPairwiseAxioms()) {
-          changes.add(new AddAxiom(originalOnto, pairAx));
-        }
+          for (OWLAxiom pairAx : nary.asPairwiseAxioms()) {
+            changes.add(new AddAxiom(originalOnto, pairAx));
+          }
       }
     }
 

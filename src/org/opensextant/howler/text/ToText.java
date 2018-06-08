@@ -114,7 +114,6 @@ public class ToText {
       if (st.isAnnotationStatement()) {
         sent.addWord(Vocabulary.ANNO_FLAG);
       }
-      subj.setQuantifierType(Quantifier.ONLY);
       sent.addWords(convert(subj));
       sent.addWords(convert(pExp));
       sent.addWord(Quantifier.SOME);
@@ -131,8 +130,7 @@ public class ToText {
       if (st.isAnnotationStatement()) {
         sent.addWord(Vocabulary.ANNO_FLAG);
       }
-      sent.addWord(Quantifier.A);
-      sent.addWord(Vocabulary.THING);
+      sent.addWords(convert(subj));
       sent.addWords(convert(pExp));
       sent.addWords(convert(obj));
     }
@@ -200,9 +198,14 @@ public class ToText {
     sent.setSentenceType(SentenceType.PREDICATE_RELATION);
 
     PredicateExpression subjExp = st.getSubject();
+    PredicateExpression objExp = st.getObject();
 
     WordType wt = subjExp.getPredicate().getWordType();
-    // TODO check wordtype of object
+    WordType owt = objExp.getPredicate().getWordType();
+
+    if (!wt.equals(owt)) {
+      LOGGER.warn("Predicate types do not match in Predicate Relation statement:" + st);
+    }
 
     sent.addWord(Quantifier.THE);
     sent.addWords(convert(st.getSubject()));
@@ -227,6 +230,7 @@ public class ToText {
 
     PredicateExpression pred = st.getSubject();
     WordType wt = WordType.OBJECT_PREDICATE;
+
     if (pred.isObjectExpression()) {
       wt = WordType.OBJECT_PREDICATE;
     }
@@ -238,6 +242,7 @@ public class ToText {
     if (pred.isAnnotationExpression()) {
       wt = WordType.ANNOTATION_PREDICATE;
     }
+
     sent.addWord(Quantifier.THE);
     sent.addWords(convert(st.getSubject()));
     sent.addWord(wt);
@@ -344,29 +349,27 @@ public class ToText {
     List<Word> wrds = new ArrayList<Word>();
     List<? extends SubjectObjectPhrase> phrases = ph.getPhrases();
 
+    // push negatives and quantifiers to the objects
+    ph.pushQuantifier();
+
     if (!phrases.isEmpty()) {
 
-      boolean neg = ph.isNegative();
-      boolean exclusive = ph.isDisjoint();
-
-      if (exclusive) {
+      if (ph.isDisjoint()) {
         wrds.add(Vocabulary.EITHER);
       }
+
       // add first phrase
       wrds.addAll(convert(phrases.get(0)));
 
       for (int i = 1; i < phrases.size(); i++) {
-        List<Word> tmpWrds = convert(phrases.get(i));
         wrds.add(ph.getSetType());
-        if (neg) {
-          wrds.add(Negative.NOT);
-        }
-        wrds.addAll(tmpWrds);
+        wrds.addAll(convert(phrases.get(i)));
       }
     }
 
     return wrds;
   }
+
   private List<Word> convert(WordPhrase ph) {
     List<Word> wrds = new ArrayList<Word>();
     wrds.addAll(convert(ph.getQuantifierExpression()));
@@ -381,11 +384,7 @@ public class ToText {
 
     SubjectObjectPhrase obj = ph.getObject();
 
-    // move negative obj to predicate expression
-    if (obj.isNegative()) {
-      pe.flipNegative();
-      obj.flipNegative();
-    }
+    obj.pushQuantifier();
 
     wrds.addAll(convert(pe));
     wrds.addAll(convert(obj));
@@ -395,6 +394,10 @@ public class ToText {
 
   private List<Word> convert(QuantifierExpression qe) {
     List<Word> wrds = new ArrayList<Word>();
+
+    if (qe.isNegative()) {
+      wrds.add(Negative.NOT);
+    }
 
     Quantifier q = qe.getQuantifierType();
 

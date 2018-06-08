@@ -27,7 +27,13 @@ public class InstancePhrase<T extends Instance> extends SubjectObjectPhrase {
 
   @Override
   public String toString() {
-    return head.toString();
+    StringBuilder bldr = new StringBuilder();
+
+    bldr.append(this.getQuantifierExpression());
+    bldr.append(" ");
+    bldr.append(head.toString());
+    
+    return bldr.toString();
   }
 
   public boolean isObjectScope() {
