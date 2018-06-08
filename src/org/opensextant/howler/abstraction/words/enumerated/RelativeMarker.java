@@ -24,8 +24,6 @@ public enum RelativeMarker implements Word {
     return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(THAT);
   }
 
- 
-
   @Override
   public String getNormalForm() {
     return normalform;
@@ -78,8 +76,7 @@ public enum RelativeMarker implements Word {
 
   @Override
   public void setPrefix(String prefix) {
-    //ignore
+    // ignore
   }
-  
-  
+
 }

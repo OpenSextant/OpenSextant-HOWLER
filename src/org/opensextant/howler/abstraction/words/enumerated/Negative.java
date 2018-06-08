@@ -8,61 +8,57 @@ import org.opensextant.howler.utils.TextUtils;
 import org.semanticweb.owlapi.model.IRI;
 
 public enum Negative implements Word {
-  NOT("not"),
-  NO("no");
+  NOT("not"), NO("no");
 
-	private final String logicalform;
-	private String normalform;
-	private IRI key;
+  private final String logicalform;
+  private String normalform;
+  private IRI key;
 
-	Negative(String normalForm) {
-		this.logicalform = TextUtils.createLogicalFromNormal(normalForm);
-		this.normalform = normalForm;
-		this.key = IRI.create(Vocabulary.BUILTIN_NS.toString(), logicalform);
-	}
+  Negative(String normalForm) {
+    this.logicalform = TextUtils.createLogicalFromNormal(normalForm);
+    this.normalform = normalForm;
+    this.key = IRI.create(Vocabulary.BUILTIN_NS.toString(), logicalform);
+  }
 
-	public static Negative getTypeByNormalName(String normal) {
-		return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(NOT);
-	}
+  public static Negative getTypeByNormalName(String normal) {
+    return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(NOT);
+  }
 
+  @Override
+  public String getNormalForm() {
+    return normalform;
+  }
 
+  @Override
+  public void setNormalForm(String normalForm) {
+    // ignore
+  }
 
-	@Override
-	public String getNormalForm() {
-		return normalform;
-	}
+  @Override
+  public IRI getKey() {
+    return key;
+  }
 
-	@Override
-	public void setNormalForm(String normalForm) {
-		// ignore
-	}
+  @Override
+  public String getLogicalForm() {
+    return this.name();
+  }
 
-	@Override
-	public IRI getKey() {
-		return key;
-	}
+  @Override
+  public IRI getNamespace() {
+    return Vocabulary.BUILTIN_NS;
+  }
 
-	@Override
-	public String getLogicalForm() {
-	  return this.name();
-	}
+  @Override
+  public Scope getScope() {
+    return Scope.GENERAL_SCOPE;
+  }
 
-	@Override
-	public IRI getNamespace() {
-		return Vocabulary.BUILTIN_NS;
-	}
+  @Override
+  public WordType getWordType() {
+    return WordType.NEGATIVE;
+  }
 
-	@Override
-	public Scope getScope() {
-		return Scope.GENERAL_SCOPE;
-	}
-
-	@Override
-	public WordType getWordType() {
-		return WordType.NEGATIVE;
-	}
-
-	
   @Override
   public String getPOS() {
     return this.getClass().getSimpleName();
@@ -70,9 +66,9 @@ public enum Negative implements Word {
 
   @Override
   public void setPOS(String pos) {
-    //ignore
+    // ignore
   }
-  
+
   @Override
   public String getPrefix() {
     return Vocabulary.BUILTIN_PREFIX;
@@ -80,7 +76,7 @@ public enum Negative implements Word {
 
   @Override
   public void setPrefix(String prefix) {
-    //ignore
+    // ignore
   }
-  
+
 }

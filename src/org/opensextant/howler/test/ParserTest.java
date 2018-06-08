@@ -151,10 +151,10 @@ public class ParserTest {
           }
 
         }
-       // WordManager.getWordManager().reset();
+        // WordManager.getWordManager().reset();
       }
     }
-    //WordManager.getWordManager().dumpWordsToFile(wDump);
+    // WordManager.getWordManager().dumpWordsToFile(wDump);
   }
 
 }

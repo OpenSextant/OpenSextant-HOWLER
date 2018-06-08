@@ -26,9 +26,9 @@ public class PhraseSequence extends Statement {
   @Override
   public List<Word> getWords() {
     List<Word> wrds = new ArrayList<Word>();
-   for(Phrase p:this.phrases){
-     wrds.addAll(p.getWords());
-   }
+    for (Phrase p : this.phrases) {
+      wrds.addAll(p.getWords());
+    }
     return wrds;
   }
 

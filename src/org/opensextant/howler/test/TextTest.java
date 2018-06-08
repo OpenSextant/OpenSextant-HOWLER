@@ -53,7 +53,7 @@ public class TextTest {
 
     File posDir = new File(resourceDir, "pos");
 
-    List<String> textDirs = FileUtils.readLines(inputDirsFile,"UTF-8");
+    List<String> textDirs = FileUtils.readLines(inputDirsFile, "UTF-8");
 
     File lexFile = new File(posDir, "lexicon.txt");
     File gramFile = new File(posDir, "ngrams.txt");
@@ -69,7 +69,7 @@ public class TextTest {
     File baseTextTestDir = inputDirsFile.getParentFile();
 
     // write header to results
-    FileUtils.writeStringToFile(results, "File\tStatement Type\tMatches\tOriginal text\tBack Text\n", "UTF-8",false);
+    FileUtils.writeStringToFile(results, "File\tStatement Type\tMatches\tOriginal text\tBack Text\n", "UTF-8", false);
 
     for (String textDir : textDirs) {
 
@@ -115,7 +115,7 @@ public class TextTest {
 
             // write the details to results
             FileUtils.writeStringToFile(results, txtFileName + "\t" + sentType + "\t" + matchText + "\t"
-                + originalTextDoc + "\t" + backText + "\t" + parse + "\n", "UTF-8",true);
+                + originalTextDoc + "\t" + backText + "\t" + parse + "\n", "UTF-8", true);
           }
 
         }

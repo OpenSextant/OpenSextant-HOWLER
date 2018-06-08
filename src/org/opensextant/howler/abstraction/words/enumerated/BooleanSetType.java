@@ -24,7 +24,6 @@ public enum BooleanSetType implements Word {
     return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(OR);
   }
 
-
   @Override
   public String getNormalForm() {
     return normalform;
@@ -77,7 +76,7 @@ public enum BooleanSetType implements Word {
 
   @Override
   public void setPrefix(String prefix) {
-    //ignore
+    // ignore
   }
-  
+
 }

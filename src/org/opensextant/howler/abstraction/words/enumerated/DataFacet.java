@@ -49,8 +49,6 @@ public enum DataFacet implements Word {
     return word;
   }
 
-
-
   @Override
   public String getNormalForm() {
     return normalForm;
@@ -81,7 +79,6 @@ public enum DataFacet implements Word {
     return WordType.DATA_FACET;
   }
 
-  
   @Override
   public String getPOS() {
     return this.getClass().getSimpleName();
@@ -91,7 +88,7 @@ public enum DataFacet implements Word {
   public void setPOS(String pos) {
     // ignore
   }
-  
+
   @Override
   public String getPrefix() {
     return Vocabulary.BUILTIN_PREFIX;
@@ -99,6 +96,6 @@ public enum DataFacet implements Word {
 
   @Override
   public void setPrefix(String prefix) {
-    //ignore
+    // ignore
   }
 }

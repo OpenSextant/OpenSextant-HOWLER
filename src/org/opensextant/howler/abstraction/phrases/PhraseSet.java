@@ -77,7 +77,7 @@ public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhras
 
     pushNegative();
 
-    //dont push NULL
+    // dont push NULL
     if (this.getQuantifierType().equals(Quantifier.NULL)) {
       for (T elem : phrases) {
         if (elem instanceof PhraseSet) {
@@ -86,7 +86,7 @@ public class PhraseSet<T extends SubjectObjectPhrase> extends SubjectObjectPhras
       }
       return;
     }
- 
+
     for (T elem : phrases) {
 
       if (!elem.getQuantifierType().equals(Quantifier.NULL)

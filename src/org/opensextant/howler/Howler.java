@@ -65,8 +65,8 @@ public class Howler {
   private static final Logger LOGGER = LoggerFactory.getLogger(Howler.class);
 
   /** the default names space for the creation of new documents/ontologies */
-  private String defaultNamespace ="";
-  
+  private String defaultNamespace = "";
+
   /**
    * Instantiates a new Howler.
    * @param propertiesPath
@@ -95,7 +95,7 @@ public class Howler {
       fromText = new FromText(lexiconFile, ngramFile, typeInfoFile, phraseFile);
 
       defaultNamespace = props.getProperty("os.howler.defaultNamespace");
-        
+
     } catch (FileNotFoundException e) {
       LOGGER.error(
           "Couldnt not initialize Howler. Could not find properties file:" + propertiesPath + " " + e.getMessage());
@@ -142,11 +142,11 @@ public class Howler {
    * @return the sentence which is the equivalent of the input SPO
    */
   public Sentence toText(Statement spo) {
+    //TODO not finished
     org.opensextant.howler.text.Sentence zz = toText.convert(spo);
-    
+
     Sentence sent = new Sentence();
-    
-    
+
     return sent; // toText.convertAbstraction(spo);
   }
 
@@ -213,7 +213,7 @@ public class Howler {
     return fromOWL;
   }
 
-  public Document convertText(String title, String text) { 
+  public Document convertText(String title, String text) {
     return fromText.convertText(text, IRI.create(defaultNamespace, title.replace(" ", "_")), title);
   }
 

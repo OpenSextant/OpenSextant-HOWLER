@@ -31,7 +31,7 @@ public class WordSequence extends Statement {
   public void addWords(List<Word> words) {
     this.words.addAll(words);
   }
-  
+
   public void addWord(Word word) {
     this.words.add(word);
   }

@@ -83,14 +83,14 @@ public class Text2OWL {
         String txt = FileUtils.readFileToString(textFile, "UTF-8");
 
         IRI docIRI = IRI.create("http://example.org", "testDocument");
-        //convert to ontology
+        // convert to ontology
         Document doc = from.convertText(txt, docIRI, "testDocument");
         System.out.println("\tConverted Text to abstraction");
         OWLOntology onto = toOWL.convert(doc);
         System.out.println("\tConverted abstraction to OWL");
         File out = new File(resultsDir, txtFileName + ".owl");
         toOWL.saveOntology(onto, out);
-        
+
       }
       WordManager.getWordManager().reset();
     }

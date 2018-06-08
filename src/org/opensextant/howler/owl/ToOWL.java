@@ -1238,11 +1238,9 @@ public class ToOWL {
     OWLClassExpression finalCE = null;
 
     /*
-    // NO = NOT EVERY
-    if (qType == Quantifier.NO) {
-      finalCE = owlDataFactory.getOWLDataAllValuesFrom(propExp, owlDataFactory.getOWLDataComplementOf(obj));
-    }
-*/
+     * // NO = NOT EVERY if (qType == Quantifier.NO) { finalCE = owlDataFactory.getOWLDataAllValuesFrom(propExp,
+     * owlDataFactory.getOWLDataComplementOf(obj)); }
+     */
     if (qType == Quantifier.SOME) {
       finalCE = owlDataFactory.getOWLDataSomeValuesFrom(propExp, obj);
     }
@@ -1567,12 +1565,10 @@ public class ToOWL {
 
     QuantifierExpression quant = objPhrase.getQuantifierExpression();
     Quantifier qType = objPhrase.getQuantifierType();
-/*
-    // NO = NOT every
-    if (qType == Quantifier.NO) {
-      finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp, obj.getObjectComplementOf());
-    }
-*/
+    /*
+     * // NO = NOT every if (qType == Quantifier.NO) { finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp,
+     * obj.getObjectComplementOf()); }
+     */
     if (qType == Quantifier.SOME) {
       finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, obj);
     }
@@ -1613,12 +1609,12 @@ public class ToOWL {
         } else {
           finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, oof);
         }
-      }else  if (objPhrase instanceof PhraseSet) {
+      } else if (objPhrase instanceof PhraseSet) {
 
         PhraseSet<?> set = (PhraseSet<?>) objPhrase;
         Set<Quantifier> qes = new HashSet<Quantifier>();
         for (SubjectObjectPhrase elem : set.getPhrases()) {
-          if(!elem.getQuantifierType().equals(Quantifier.NULL)){
+          if (!elem.getQuantifierType().equals(Quantifier.NULL)) {
             qes.add(elem.getQuantifierType());
           }
         }
@@ -1630,11 +1626,10 @@ public class ToOWL {
           LOGGER.debug("Ambigous Quantifiers seen:" + qes + " " + set);
           qType = Quantifier.SOME;
         }
-/*
-        if (qType == Quantifier.NO) {
-          finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp, obj.getObjectComplementOf());
-        }
-*/
+        /*
+         * if (qType == Quantifier.NO) { finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp,
+         * obj.getObjectComplementOf()); }
+         */
         if (qType == Quantifier.SOME) {
           finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, obj);
         }

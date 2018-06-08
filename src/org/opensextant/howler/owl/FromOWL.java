@@ -2159,22 +2159,11 @@ public class FromOWL {
 
   private SubjectObjectPhrase convertToSubjectObjectPhrase(Phrase phrase, Quantifier q) {
 
-/*    
-    // TODO distributive logic?
-    if (phrase instanceof PhraseSet) {
-      PhraseSet<?> set = (PhraseSet<?>) phrase;
-
-      if (set.getPhrases().size() == 1) {
-        set.getPhrases().get(0).setQuantifierType(q);
-      } else {
-        set.setQuantifierType(q);
-        for (SubjectObjectPhrase elem : set.getPhrases()) {
-          elem.setQuantifierType(q);
-        }
-      }
-      return set;
-    }
-*/
+    /*
+     * // TODO distributive logic? if (phrase instanceof PhraseSet) { PhraseSet<?> set = (PhraseSet<?>) phrase; if
+     * (set.getPhrases().size() == 1) { set.getPhrases().get(0).setQuantifierType(q); } else { set.setQuantifierType(q);
+     * for (SubjectObjectPhrase elem : set.getPhrases()) { elem.setQuantifierType(q); } } return set; }
+     */
     if (phrase instanceof SubjectObjectPhrase) {
       SubjectObjectPhrase so = (SubjectObjectPhrase) phrase;
       so.setQuantifierType(q);

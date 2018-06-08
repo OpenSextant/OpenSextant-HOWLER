@@ -32,7 +32,7 @@ public class InstancePhrase<T extends Instance> extends SubjectObjectPhrase {
     bldr.append(this.getQuantifierExpression());
     bldr.append(" ");
     bldr.append(head.toString());
-    
+
     return bldr.toString();
   }
 

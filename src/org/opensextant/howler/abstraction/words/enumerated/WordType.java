@@ -51,7 +51,6 @@ public enum WordType implements Word {
     return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(BADWORD);
   }
 
- 
   @Override
   public String getNormalForm() {
     return normalForm;
@@ -91,7 +90,6 @@ public enum WordType implements Word {
     return abstractType;
   }
 
- 
   public boolean isEnumerated() {
     return enumerated;
   }
@@ -113,7 +111,7 @@ public enum WordType implements Word {
 
   @Override
   public void setPrefix(String prefix) {
-    //ignore
+    // ignore
   }
 
 }

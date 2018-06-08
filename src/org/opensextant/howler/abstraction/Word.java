@@ -28,8 +28,8 @@ public interface Word {
 
   Scope getScope();
   WordType getWordType();
-  
+
   String getPrefix();
   void setPrefix(String prefix);
-  
+
 }

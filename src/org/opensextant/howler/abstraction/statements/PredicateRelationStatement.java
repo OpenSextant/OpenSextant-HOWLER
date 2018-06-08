@@ -95,7 +95,7 @@ public class PredicateRelationStatement<P extends Predicate> extends Statement {
 
     List<Word> wrds = new ArrayList<Word>();
     wrds.addAll(this.subject.getWords());
-    
+
     if (relationType.equals(PredicateType.IS)) {
       if (this.isDataStatement()) {
         wrds.add(Vocabulary.IS_Data);

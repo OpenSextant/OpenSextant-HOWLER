@@ -105,13 +105,13 @@ public class WordManager {
       // if adding a non-GENERIC_WORD ...
       // see if there is a GENERIC_WORD with same key
       Optional<Word> existingGenericWord = lookupByKeyAndType(newWord.getKey(), WordType.GENERIC_WORD);
-      
+
       // if there is an existing GENERIC_WORD
       if (existingGenericWord.isPresent()) {
         // remove GENERIC_WORD
         words.remove(existingGenericWord.get());
         LOGGER.trace("Replacing GENERIC_WORD with typed word:" + newWord);
-      }else{
+      } else {
         LOGGER.trace("Adding ambigous word:" + newWord + " + " + existingWordsByKey);
       }
 
@@ -119,7 +119,7 @@ public class WordManager {
       if (labelMap.containsKey(newWord.getKey())) {
         newWord.setNormalForm(labelMap.get(newWord.getKey()));
       }
-      
+
       // TODO any further checks for duplicate/ambigous words?
       words.add(newWord);
     }
@@ -215,9 +215,7 @@ public class WordManager {
 
     String logical = TextUtils.createLogicalFromNormal(normal);
     IRI key = IRI.create(ns.toString() + "#", logical);
-    /*
-     * if (wordType.equals(WordType.ADJECTIVE)) { key = IRI.create(ns.toString() + "#", logical + "_thing"); }
-     */
+
     List<T> newWrds = new ArrayList<T>();
     newWrds.add(createByNormalKeyAndType(normal, key, wordType, add));
     return newWrds;
@@ -263,7 +261,6 @@ public class WordManager {
     if (wordType.equals(WordType.BADWORD)) {
       BadWord wrd = new BadWord(normal, Vocabulary.getBuiltInKey(normal));
       wrd.setPrefix(pref);
-      // if(add){addWord(wrd);}
       return (T) wrd;
     }
 
@@ -318,7 +315,7 @@ public class WordManager {
       GenericWord wrd = new GenericWord(normal, key);
       wrd.setPrefix(pref);
       if (add) {
-        // LOGGER.warn("Creating a GENERIC_WORD in word manager:" + normal + " (" + key + ")");
+        LOGGER.trace("Creating a GENERIC_WORD in word manager:" + normal + " (" + key + ")");
         addWord(wrd);
       }
       return (T) wrd;
@@ -373,10 +370,7 @@ public class WordManager {
     if (this.nsPrefixMap.containsKey(ns)) {
       String pref = nsPrefixMap.get(ns);
       return pref;
-    } else {
-      // LOGGER.warn("No prefix for namespace:" + ns);
     }
-
     return "";
   }
 

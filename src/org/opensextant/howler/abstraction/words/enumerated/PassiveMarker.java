@@ -8,59 +8,56 @@ import org.opensextant.howler.utils.TextUtils;
 import org.semanticweb.owlapi.model.IRI;
 
 public enum PassiveMarker implements Word {
-	BY("by");
+  BY("by");
 
-	private final String logicalform;
-	private String normalform;
-	private IRI key;
+  private final String logicalform;
+  private String normalform;
+  private IRI key;
 
-	PassiveMarker(String normalForm) {
-		this.logicalform = TextUtils.createLogicalFromNormal(normalForm);
-		this.normalform = normalForm;
-		this.key = IRI.create(Vocabulary.BUILTIN_NS.toString(), logicalform);
-	}
+  PassiveMarker(String normalForm) {
+    this.logicalform = TextUtils.createLogicalFromNormal(normalForm);
+    this.normalform = normalForm;
+    this.key = IRI.create(Vocabulary.BUILTIN_NS.toString(), logicalform);
+  }
 
-	public static PassiveMarker getTypeByNormalName(String normal) {
-		return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(BY);
-	}
+  public static PassiveMarker getTypeByNormalName(String normal) {
+    return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(BY);
+  }
 
+  @Override
+  public String getNormalForm() {
+    return normalform;
+  }
 
+  @Override
+  public void setNormalForm(String normalForm) {
+    // ignore
+  }
 
-	@Override
-	public String getNormalForm() {
-		return normalform;
-	}
+  @Override
+  public IRI getKey() {
+    return key;
+  }
 
-	@Override
-	public void setNormalForm(String normalForm) {
-		// ignore
-	}
+  @Override
+  public String getLogicalForm() {
+    return this.name();
+  }
 
-	@Override
-	public IRI getKey() {
-		return key;
-	}
+  @Override
+  public IRI getNamespace() {
+    return Vocabulary.BUILTIN_NS;
+  }
 
-	@Override
-	public String getLogicalForm() {
-	  return this.name();
-	}
+  @Override
+  public Scope getScope() {
+    return Scope.GENERAL_SCOPE;
+  }
 
-	@Override
-	public IRI getNamespace() {
-		return Vocabulary.BUILTIN_NS;
-	}
-
-	@Override
-	public Scope getScope() {
-		return Scope.GENERAL_SCOPE;
-	}
-
-	@Override
-	public WordType getWordType() {
-		return WordType.BY;
-	}
-
+  @Override
+  public WordType getWordType() {
+    return WordType.BY;
+  }
 
   @Override
   public String getPOS() {
@@ -69,9 +66,9 @@ public enum PassiveMarker implements Word {
 
   @Override
   public void setPOS(String pos) {
-    //ignore
+    // ignore
   }
-	
+
   @Override
   public String getPrefix() {
     return Vocabulary.BUILTIN_PREFIX;
@@ -79,7 +76,7 @@ public enum PassiveMarker implements Word {
 
   @Override
   public void setPrefix(String prefix) {
-    //ignore
+    // ignore
   }
-  
+
 }

@@ -10,7 +10,7 @@ public abstract class Predicate extends WordBase {
   }
 
   private boolean passiveForm = false;
-  
+
   protected PredicateType predicateType = PredicateType.VERB;
 
   public Predicate(String normal, IRI key) {
@@ -23,7 +23,6 @@ public abstract class Predicate extends WordBase {
     this.predicateType = type;
     this.setPOS("VB");
   }
-
 
   public PredicateType getPredicateType() {
     return predicateType;

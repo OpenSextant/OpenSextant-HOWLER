@@ -226,7 +226,7 @@ public class HowlerLexer implements TokenSource {
     if (quoteTokenIndices.size() % 2 != 0) {
       LOGGER.debug("Ambigous Quotes in " + txt);
       int first = quoteTokenIndices.get(0);
-      int last = quoteTokenIndices.get(quoteTokenIndices.size()-1);
+      int last = quoteTokenIndices.get(quoteTokenIndices.size() - 1);
       quoteTokenIndices.clear();
       quoteTokenIndices.add(first);
       quoteTokenIndices.add(last);
@@ -326,7 +326,7 @@ public class HowlerLexer implements TokenSource {
     int first = tokens.get(0).getStartIndex();
     int last = tokens.get(tokens.size() - 1).getStopIndex() + 1;
     String cleanSentence = cleanString.substring(first, last);
- 
+
     Collection<Emit> matches = phraser.parseText(cleanSentence);
 
     for (Emit e : matches) {
@@ -494,17 +494,14 @@ public class HowlerLexer implements TokenSource {
     String surfaceForm = token.getText();
     String pos = token.getPos();
 
-
-    
     // create normal form based on surface form and part of speech
     String normal = surfaceForm;
 
-    if(!token.getTokenTypeName().isEmpty()){
+    if (!token.getTokenTypeName().isEmpty()) {
       token.setNormalForm(normal);
       return;
     }
-    
-    
+
     if (pos.startsWith("BE")) {
       normal = "is";
     } else if (pos.startsWith("DO")) {
@@ -513,7 +510,7 @@ public class HowlerLexer implements TokenSource {
       normal = "has";
     } else if (pos.startsWith("VB")) {
 
-      //String base = lemmatizer.lemmatize(surfaceForm, pos);
+      // String base = lemmatizer.lemmatize(surfaceForm, pos);
 
       // uninflected present tense
       if (pos.equals("VB")) {
@@ -793,7 +790,7 @@ public class HowlerLexer implements TokenSource {
   private void initTypeMap(File typeFile) {
 
     try {
-      List<String> lines = FileUtils.readLines(typeFile,"UTF-8");
+      List<String> lines = FileUtils.readLines(typeFile, "UTF-8");
 
       for (String line : lines) {
         if (line.startsWith("#")) {
@@ -892,12 +889,12 @@ public class HowlerLexer implements TokenSource {
 
   // add a known phrase to the lexer
   public void addKnownPhrase(Word ph, boolean init) {
-    
-    if(Vocabulary.isBuiltInVocabulary(ph)){
+
+    if (Vocabulary.isBuiltInVocabulary(ph)) {
       LOGGER.warn("Attempt to redefine built in Word:" + ph);
       return;
     }
-    
+
     String phraseKey = ph.getNormalForm().toLowerCase();
     if (!knownPhrases.containsKey(phraseKey)) {
       knownPhrases.put(phraseKey, tokenTypeFromWord(ph));

@@ -8,7 +8,6 @@ import org.semanticweb.owlapi.model.IRI;
 
 public enum Quantifier implements Word {
   NULL("", false),
- // NO("not a", false),
   EVERY("every", false),
   SOME("some", false),
   ONLY("only a", false),

@@ -341,8 +341,8 @@ public class Kanban {
 
       // get the clean text from the SPO
       Sentence cleanText = howler.toText(spo);
-     //TODO
-      //  sent.setText(cleanText);
+      // TODO
+      // sent.setText(cleanText);
       sentences.add(sent);
 
     }

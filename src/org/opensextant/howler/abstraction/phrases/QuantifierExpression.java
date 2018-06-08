@@ -58,8 +58,6 @@ public class QuantifierExpression {
     this.negative = !this.negative;
   }
 
-
-
   public Quantifier getQuantifierType() {
     return quantifier;
   }

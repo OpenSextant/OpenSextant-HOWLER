@@ -118,12 +118,12 @@ public class FactStatement<P extends Predicate, O extends Instance> extends Stat
   public List<Word> getWords() {
     List<Word> wrds = new ArrayList<Word>();
     wrds.addAll(this.subject.getWords());
-    
-    if(this.isInstanceObject()){
+
+    if (this.isInstanceObject()) {
       wrds.addAll(this.getInstancePredicatePhrase().getWords());
     }
-    
-    if(this.isSubjectObjectObject()){
+
+    if (this.isSubjectObjectObject()) {
       wrds.addAll(this.getSubjectObjectPredicatePhrase().getWords());
     }
     wrds.add(Vocabulary.PERIOD);

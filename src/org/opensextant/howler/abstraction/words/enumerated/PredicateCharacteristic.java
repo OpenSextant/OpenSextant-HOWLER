@@ -30,8 +30,6 @@ public enum PredicateCharacteristic implements Word {
     return Stream.of(values()).filter(v -> v.getNormalForm().equals(normal)).findAny().orElse(FUNCTIONAL);
   }
 
-
-
   @Override
   public String getNormalForm() {
     return normalform;
@@ -67,7 +65,6 @@ public enum PredicateCharacteristic implements Word {
     return WordType.PREDICATE_CHARACTERISTIC;
   }
 
-
   @Override
   public String getPOS() {
     return this.getClass().getSimpleName();
@@ -85,7 +82,7 @@ public enum PredicateCharacteristic implements Word {
 
   @Override
   public void setPrefix(String prefix) {
-    //ignore
+    // ignore
   }
   
 }
