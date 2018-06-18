@@ -18,6 +18,9 @@ some	many,several	SOME
 only	no thing but,no thing except, no thing that is not,nothing that is not	ONLY
 a	an	A
 #the		THE
+either		EITHER
+both		BOTH
+exclusively		EXCLUSIVELY
 
 # --- the numeric quantifiers --
 #exactly		EXACT
@@ -29,12 +32,12 @@ at least	more than or equal to,no less than	MORE_THAN_OR_EQUAL
 # ------ boolean connectors -----
 and	but	AND
 or	nor,and/or	OR
-either	one of	ONEOF
+#either	one of	ONEOF
 
 # ------- Misc ------
 that	which,who	THAT
 thing		THING
-data value		DATA_VALUE
+literal datatype		DATA_THING
 
 # ---------- Word types (for declarations) ----------
 #adjective		WORD_TYPE

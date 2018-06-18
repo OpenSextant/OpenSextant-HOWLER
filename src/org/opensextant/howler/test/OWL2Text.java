@@ -54,7 +54,6 @@ public class OWL2Text {
 
     fromOWL.setRewriteAllAsSubclass(false);
     fromOWL.setMaxPairs(-1);
-    fromOWL.setRewriteDomainRanges(false);
     fromOWL.setFlattenSingleSet(false);
     fromOWL.setNegNormal(false);
 

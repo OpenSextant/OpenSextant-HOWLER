@@ -58,7 +58,6 @@ import org.opensextant.howler.text.grammar.HOWL.DataValueContext;
 import org.opensextant.howler.text.grammar.HOWL.DataValuePhraseContext;
 import org.opensextant.howler.text.grammar.HOWL.DebugContext;
 import org.opensextant.howler.text.grammar.HOWL.DeclarationStatementContext;
-import org.opensextant.howler.text.grammar.HOWL.DeclareWordSequenceContext;
 import org.opensextant.howler.text.grammar.HOWL.DescriptionStatementDataTypeContext;
 import org.opensextant.howler.text.grammar.HOWL.DescriptionStatementObjectContext;
 import org.opensextant.howler.text.grammar.HOWL.DocumentContext;
@@ -366,11 +365,8 @@ public class FromText {
 
     DescriptionStatement<ObjectPredicate> statement = new DescriptionStatement<ObjectPredicate>();
     statement.setDomain(true);
-    SubjectObjectPhrase subj = convertText(ctx.subj);
+    SubjectObjectPhrase subj = convertText(ctx.domain);
 
-    if (ctx.NOT() != null) {
-      subj.flipNegative();
-    }
     statement.setSubject(subj);
 
     PredicateExpression<ObjectPredicate> pe = convertText(ctx.pred);
@@ -382,7 +378,6 @@ public class FromText {
     statement.setPredicatePhrase(predPhrase);
 
     return statement;
-
   }
 
   private DescriptionStatement<DataPredicate> convertText(DomainStatementDataTypeContext ctx) {
@@ -390,10 +385,7 @@ public class FromText {
     DescriptionStatement<DataPredicate> statement = new DescriptionStatement<DataPredicate>();
     statement.setDomain(true);
 
-    SubjectObjectPhrase subj = convertText(ctx.subj);
-    if (ctx.NOT() != null) {
-      subj.flipNegative();
-    }
+    SubjectObjectPhrase subj = convertText(ctx.domain);
 
     statement.setSubject(subj);
 
@@ -412,18 +404,14 @@ public class FromText {
     DescriptionStatement<AnnotationPredicate> statement = new DescriptionStatement<AnnotationPredicate>();
     statement.setDomain(true);
 
-    Word subjWord = convertWord(ctx.subj, WordType.GENERIC_WORD, true, true);
+    Word subjWord = convertWord(ctx.domain, WordType.GENERIC_WORD, true, true);
     WordPhrase subj = new WordPhrase(subjWord);
-
-    if (ctx.NOT() != null) {
-      subj.flipNegative();
-    }
 
     statement.setSubject(subj);
 
     PredicateExpression<AnnotationPredicate> pe = convertText(ctx.pred);
 
-    SubjectObjectPhrase obj = new CategoryPhrase<CommonNoun>(Vocabulary.THING);
+    SubjectObjectPhrase obj = new WordPhrase(Vocabulary.THING);
 
     PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate>(
         pe, obj);
@@ -441,11 +429,7 @@ public class FromText {
 
     PredicateExpression<ObjectPredicate> pe = convertText(ctx.pred);
 
-    SubjectObjectPhrase obj = convertText(ctx.obj);
-
-    if (ctx.NOT() != null) {
-      obj.flipNegative();
-    }
+    SubjectObjectPhrase obj = convertText(ctx.range);
 
     PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(
         pe, obj);
@@ -465,11 +449,8 @@ public class FromText {
 
     PredicateExpression<DataPredicate> pe = convertText(ctx.pred);
 
-    SubjectObjectPhrase obj = convertText(ctx.obj);
+    SubjectObjectPhrase obj = convertText(ctx.range);
 
-    if (ctx.NOT() != null) {
-      obj.flipNegative();
-    }
     PredicatePhrase<SubjectObjectPhrase, DataPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, DataPredicate>(
         pe, obj);
     statement.setPredicatePhrase(predPhrase);
@@ -486,12 +467,8 @@ public class FromText {
 
     PredicateExpression<AnnotationPredicate> pe = convertText(ctx.pred);
 
-    Word objWord = convertWord(ctx.obj, WordType.GENERIC_WORD, true, true);
+    Word objWord = convertWord(ctx.range, WordType.GENERIC_WORD, true, true);
     WordPhrase obj = new WordPhrase(objWord);
-
-    if (ctx.NOT() != null) {
-      obj.flipNegative();
-    }
 
     PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate>(
         pe, obj);
@@ -896,6 +873,17 @@ public class FromText {
 
     if (ctx.ambig != null) {
       DataType dt = convertWord(ctx.AMBIG_WORD(), WordType.DATATYPE, true);
+      QuantifierExpression quant = convertText(ctx.quant());
+      CategoryPhrase<DataType> cat = new CategoryPhrase<DataType>(dt);
+      cat.setQuantifierExpression(quant);
+      if (ctx.NOT() != null) {
+        cat.flipNegative();
+      }
+      return cat;
+    }
+
+    if (ctx.th != null) {
+      DataType dt = convertWord(ctx.DATA_THING(), WordType.DATATYPE, true);
       QuantifierExpression quant = convertText(ctx.quant());
       CategoryPhrase<DataType> cat = new CategoryPhrase<DataType>(dt);
       cat.setQuantifierExpression(quant);
@@ -1475,22 +1463,34 @@ public class FromText {
       return dv;
     }
 
-    if (ctx.QUOTED_TEXT() != null) {
-      DataValue dv = new DataValue(ctx.getText());
-      dv.setDatatype(Vocabulary.STRING_TYPE);
-      // TODO guess actual type here, date, boolean ...?
-      dv.setPOS("QUOTED_TEXT");
-      // assume english?
-      // dv.setLanguage("en");
-      return dv;
+    if (ctx.QUOTED_TEXT() == null) {
+      LOGGER.warn("Data value of unknown type. Assuming text" + ctx.getText());
     }
 
-    LOGGER.warn("Data value of unknown type. Assuming STRING" + ctx.getText());
-    DataValue dv = new DataValue(ctx.getText());
-    dv.setDatatype(Vocabulary.STRING_TYPE);
-    dv.setPOS("TEXT");
+    String txt = ctx.getText();
+    // TODO declean text here
 
+    DataValue dv = new DataValue(txt);
+    DataType dt = guessDataType(txt);
+    dv.setDatatype(dt);
+    dv.setPOS("QUOTED_TEXT");
     return dv;
+  }
+
+  private DataType guessDataType(String txt) {
+
+    DataType dt = Vocabulary.STRING_TYPE;
+
+    if (txt.toLowerCase().matches("true|false")) {
+      dt = Vocabulary.BOOL_TYPE;
+      return dt;
+    }
+    if (txt.toLowerCase().matches("[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
+      dt = Vocabulary.DATE_TYPE;
+      return dt;
+    }
+
+    return dt;
   }
 
   private <T extends Word> T convertWord(String norm, WordType wordType, boolean add) {
@@ -1522,44 +1522,6 @@ public class FromText {
   }
 
   private <T extends Word> T convertWord(WordSequenceContext ctx, WordType wordType, boolean useNorm, boolean add) {
-
-    StringBuilder bldr = new StringBuilder();
-    StringBuilder posBldr = new StringBuilder();
-    for (ParseTree child : ctx.children) {
-      if (child instanceof TerminalNode) {
-        TerminalNode tnode = (TerminalNode) child;
-        Token tok = tnode.getSymbol();
-        if (tok instanceof HowlerToken) {
-          HowlerToken howlToken = (HowlerToken) tok;
-          if (useNorm) {
-            bldr.append(howlToken.getNormalForm());
-          } else {
-            bldr.append(howlToken.getText());
-          }
-          bldr.append(" ");
-          posBldr.append(howlToken.getPos());
-          posBldr.append("/");
-        }
-      }
-
-    }
-
-    String norm = bldr.toString().trim();
-    String posSeq = posBldr.toString().replaceFirst("/$", "");
-
-    T wrd = convertWord(norm, wordType, add);
-    if (wrd != null) {
-      wrd.setPOS(posSeq);
-    } else {
-      LOGGER.error("Got a null word during conversion:" + norm + " (" + posSeq + ")");
-    }
-
-    return wrd;
-
-  }
-
-  private <T extends Word> T convertWord(DeclareWordSequenceContext ctx, WordType wordType, boolean useNorm,
-      boolean add) {
 
     StringBuilder bldr = new StringBuilder();
     StringBuilder posBldr = new StringBuilder();

@@ -32,7 +32,7 @@ public class DocumentFactory {
     }
 
     if (structure.equals(FileStructure.MULTI_BLOCK)) {
-      bodies.addAll(Arrays.asList(FileUtils.readFileToString(input, "UTF-8").split("[\n\r]{2,}")));
+      bodies.addAll(Arrays.asList(FileUtils.readFileToString(input, "UTF-8").split("[\n\r]{3,}")));
     }
 
     return bodies;

@@ -28,7 +28,7 @@ IS,
 PROPER_NOUN,
 PREDICATE,
 AND,
-ONEOF,
+EXCLUSIVELY,
 OR,
 BY,
 ONLY,
@@ -44,6 +44,8 @@ MORE_THAN_OR_EQUAL,
 DATA_FACET,
 SOME,
 THE,
+EITHER,
+BOTH,
 SAME_AS,
 INVERSE_OF,
 THAT,
@@ -58,7 +60,7 @@ PREDICATE_CHARACTERISTIC,
 QUOTE,
 WORD_TYPE,
 THING,
-DATA_VALUE,
+DATA_THING,
 AMBIG_WORD
 }
 
@@ -127,32 +129,32 @@ descriptionStatementDataType
 
 domainStatementDataType
 :
-	(ONLY|NOT)  subj=compoundNounPhrase pred=predicateExpressionData (A|SOME) DATA_VALUE
+	EVERY THING THAT pred = predicateExpressionData SOME DATA_THING IS domain = compoundNounPhrase
 ;
 
 domainStatementObject
 :
-	(ONLY|NOT)  subj=compoundNounPhrase pred=predicateExpressionObject (A|SOME) THING
+	EVERY THING THAT pred = predicateExpressionObject SOME THING IS  domain = compoundNounPhrase
 ;
 
 domainStatementAnnotation
 :
-	ANNOTATION_MARKER (ONLY|NOT)  subj=wordSequence pred=predicateExpressionAnnotation (A|SOME) THING
+	ANNOTATION_MARKER EVERY THING THAT pred = predicateExpressionAnnotation SOME THING IS A domain = wordSequence
 ;
 
 rangeStatementDataType
 :
-	(A|SOME) THING pred=predicateExpressionData (ONLY|NOT)  obj=dataTypeExpression
+	EVERY THING IS A THING THAT pred=predicateExpressionData  range=dataTypeExpression
 ;
 
 rangeStatementObject
 :
-	(A|SOME) THING pred=predicateExpressionObject (ONLY|NOT)  obj=compoundNounPhrase
+	EVERY THING IS A THING THAT pred=predicateExpressionObject  range=compoundNounPhrase
 ;
 
 rangeStatementAnnotation
 :
-	ANNOTATION_MARKER (A|SOME) THING pred=predicateExpressionAnnotation (ONLY|NOT) obj=wordSequence
+	ANNOTATION_MARKER EVERY THING IS A THING THAT pred=predicateExpressionAnnotation A range=wordSequence
 ;
 
 predicateCharacteristicStatement
@@ -170,7 +172,7 @@ annotationStatement
 ANNOTATION_MARKER subj=wordSequence ANNOTATION_SPLIT rel=wordSequence ANNOTATION_SPLIT (objValue=dataValue|objWord=wordSequence)
 ;
 
-declarationStatement: subj=declareWordSequence IS A WORD_TYPE;
+declarationStatement: subj=wordSequence IS A WORD_TYPE;
 
 
 //---------- Nouns and Noun Phrases --------------
@@ -178,9 +180,9 @@ declarationStatement: subj=declareWordSequence IS A WORD_TYPE;
 //nounPhrase: compoundNounPhrase (AND compoundNounPhrase)+;
 
 compoundNounPhrase:
-	 setUnion =  			compoundNounPhrase ((OR|COMMA)  compoundNounPhrase)* OR  compoundNounPhrase
-	| setIntersection = 	compoundNounPhrase ((AND|COMMA) compoundNounPhrase)* AND compoundNounPhrase
-	| ONEOF disjointUnion = compoundNounPhrase ((OR|COMMA)  compoundNounPhrase)* OR  compoundNounPhrase
+	 BOTH setIntersection = 	  compoundNounPhrase ((AND|COMMA) compoundNounPhrase)*? AND compoundNounPhrase
+	|  EITHER setUnion =  		  compoundNounPhrase ((OR|COMMA)  compoundNounPhrase)*? OR  compoundNounPhrase
+	| EXCLUSIVELY EITHER disjointUnion = compoundNounPhrase ((OR|COMMA)  compoundNounPhrase)* OR  compoundNounPhrase
 	| proper = properNounPhrase
 	| common = commonNounPhrase
 	| itself = ITSELF
@@ -223,9 +225,9 @@ adjp
 /* DataType Expressions => CategoryPhrase<DatatType> or PhraseSet => OWL DataRange*/
 dataTypeExpression
 :
-	  setUnion =        dataTypeExpression ((OR|COMMA)  dataTypeExpression)* OR  dataTypeExpression
-	| setIntersection = dataTypeExpression ((AND|COMMA) dataTypeExpression)* AND dataTypeExpression
-	| NOT? quant? (dt=DATATYPE|ambig=AMBIG_WORD)
+	 EITHER setUnion =        dataTypeExpression ((OR|COMMA)  dataTypeExpression)* OR  dataTypeExpression
+	| BOTH setIntersection = dataTypeExpression ((AND|COMMA) dataTypeExpression)* AND dataTypeExpression
+	| NOT? quant? (dt=DATATYPE| th=DATA_THING | ambig=AMBIG_WORD)
 	| NOT comp = dataTypeExpression
 	| rest = dataTypeRestriction
 	| dv = dataValuePhrase
@@ -399,6 +401,6 @@ catchSet: (singlePhraseObject | singlePhraseData | AND|OR|COMMA|PERIOD)+?;
 
 badSentence: (.*?)BADWORD+(.*?);
 wordSequence: ~(WORD_TYPE)+?;
-declareWordSequence: ~(WORD_TYPE)+?;
+//declareWordSequence: ~(WORD_TYPE)+?;
 
 debugWordSequence: .+?;

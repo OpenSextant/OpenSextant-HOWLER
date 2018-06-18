@@ -173,20 +173,15 @@ public class HowlerLexer implements TokenSource {
     }
   }
 
-  // some cleanup of input text
+  // some cleanup of input text, mostly to work around quirks of the tokenizer
   private String clean(String input) {
 
     String cleanSurface = input;
-    // split periods away from integers
-    cleanSurface = cleanSurface.replaceAll("( [0-9]+)\\.([^0-9]|$)", "$1 .$2");
-
-    // TODO HACK, tokenizer is not tokenizing some quoted phrases correctly
-    // add space before unescaped quotes
-    cleanSurface = cleanSurface.replaceAll("([^\\\\])\"", "$1 \"");
+    // add space around plus signs
     cleanSurface = cleanSurface.replaceAll("\\+", " + ");
 
     // split some single token quantified things to multiple tokens
-    cleanSurface = cleanSurface.replaceAll("(Any|Every|No|Some|any|every|no|some)(body|one|thing|where)", "$1 thing");
+    cleanSurface = cleanSurface.replaceAll("(Any|Every|No|Some|any|every|no|some)thing ", "$1 thing ");
 
     if (!cleanSurface.equals(input)) {
       LOGGER.trace("Cleaned sentence:\t" + input + "\t" + cleanSurface);
@@ -206,10 +201,27 @@ public class HowlerLexer implements TokenSource {
       // create HOWLERToken based only on surface form
       int start = tok.getStartOffset();
       int stop = tok.getEndOffset() - 1;
-      HowlerToken howlToken = tokenFactory.create(new Pair<TokenSource, CharStream>(this, getInputStream()), 0,
-          tok.getWordForm(), Token.DEFAULT_CHANNEL, start, stop, getLine(), getCharPositionInLine());
+      String txt = tok.getWordForm();
 
-      hTokens.add(howlToken);
+      // yet another hack to get around quirks in the tokenizer
+      if (txt.endsWith("\"") && txt.length() > 1) {
+        txt = txt.substring(0, txt.length() - 1);
+        HowlerToken howlToken = tokenFactory.create(new Pair<TokenSource, CharStream>(this, getInputStream()), 0, txt,
+            Token.DEFAULT_CHANNEL, start, stop - 1, getLine(), getCharPositionInLine());
+
+        hTokens.add(howlToken);
+
+        HowlerToken quoteToken = tokenFactory.create(new Pair<TokenSource, CharStream>(this, getInputStream()), 0, "\"",
+            Token.DEFAULT_CHANNEL, stop, stop, getLine(), getCharPositionInLine());
+        hTokens.add(quoteToken);
+
+      } else {
+        HowlerToken howlToken = tokenFactory.create(new Pair<TokenSource, CharStream>(this, getInputStream()), 0, txt,
+            Token.DEFAULT_CHANNEL, start, stop, getLine(), getCharPositionInLine());
+
+        hTokens.add(howlToken);
+      }
+
     }
 
     return hTokens;
@@ -241,14 +253,16 @@ public class HowlerLexer implements TokenSource {
       int firstCharIndex = sentence.get(firstQuoteIndex).getStartIndex();
       int lastCharIndex = sentence.get(lastQuoteIndex).getStopIndex();
 
-      String quoteText = txt.substring(firstCharIndex + 1, lastCharIndex - 1);
+      String quoteText = "";
+      if (firstCharIndex + 1 > lastCharIndex) {
+        LOGGER.warn("Empty quote in text:" + txt);
+      } else {
+        quoteText = txt.substring(firstCharIndex + 1, lastCharIndex);
+      }
 
       shift = shift + lastQuoteIndex - firstQuoteIndex;
 
-      if (quoteText.isEmpty()) {
-        LOGGER.warn("Unbalanced or empty Quotes?" + sentence);
-        continue;
-      }
+      quoteText = declean(quoteText);
 
       HowlerToken quoteToken = new HowlerToken(id, quoteText);
       quoteToken.setTokenTypeName(quotedTextTypeName);
@@ -265,6 +279,18 @@ public class HowlerLexer implements TokenSource {
       sentence.add(firstQuoteIndex, quoteToken);
     }
 
+  }
+
+  /// undo the changes made by the clean step
+  private String declean(String txt) {
+
+    // join some split token quantified things to multiple tokens
+    String decleanSurface = txt.replaceAll("(Any|Every|No|Some|any|every|no|some) thing ", "$1thing ");
+    decleanSurface = decleanSurface.replace(" + ", "+");
+    // remove escapes
+    decleanSurface = decleanSurface.replace("\\\"", "\"");
+
+    return decleanSurface;
   }
 
   private void mergeDashes(List<HowlerToken> sentence) {
@@ -396,6 +422,7 @@ public class HowlerLexer implements TokenSource {
       if (isStop(tok)) {
         sentence.add(tok);
         sentences.add(sentence);
+
         sentence = new ArrayList<HowlerToken>();
       } else {
         sentence.add(tok);
@@ -432,7 +459,12 @@ public class HowlerLexer implements TokenSource {
     List<String> stringTokens = new ArrayList<String>();
 
     for (HowlerToken t : sentence) {
-      stringTokens.add(t.getText());
+      if (t.getText().isEmpty()) {
+        stringTokens.add(" ");
+      } else {
+        stringTokens.add(t.getText());
+      }
+
     }
 
     // add the boundary markers
@@ -566,7 +598,7 @@ public class HowlerLexer implements TokenSource {
 
     // if already set e.g. already seen, quoted text ...
     if (!tok.getTokenTypeName().isEmpty()) {
-      LOGGER.trace("Token Type name already set of token:" + tok + "\t" + tok.getTokenTypeName());
+      // LOGGER.trace("Token Type name already set on token:" + tok + "\t" + tok.getTokenTypeName());
       return;
     } else {
       LOGGER.trace("Token not previously seen:" + tok);
@@ -581,15 +613,29 @@ public class HowlerLexer implements TokenSource {
       LOGGER.warn("No token type mapping for POS: " + pos + " " + tok);
     }
 
+    String norm = tok.getNormalForm();
+    
     // split integers and decimals numbers
     if (tokenTypeName.equals("NUMBER")) {
-      if (tok.getNormalForm().matches("[0-9]+")) {
+      if (norm.matches("[0-9]+")) {
         tokenTypeName = "INTEGER";
-      } else if (tok.getNormalForm().matches("-?[0-9]+\\.[0-9]+")) {
+      } else if (norm.matches("[-+]?[0-9]+\\.[0-9]+")) {
+        tokenTypeName = "DECIMAL";
+      } else if (norm.matches("[-+]?[0-9]+(\\.[0-9]+)?[eE][-+][0-9]+")) {
         tokenTypeName = "DECIMAL";
       } else {
         LOGGER.trace("Non-number tagged as number:" + tok);
         tokenTypeName = "COMMON_NOUN";
+      }
+    }else{
+      if(norm.matches(".*[0-9].*")){
+        if (norm.matches("[-+]?[0-9]+(\\.[0-9]+)?[eE][-+]?[0-9]+")) {
+          tokenTypeName = "DECIMAL";
+        }else{
+          LOGGER.trace("Number? tagged as non-number:" + tok);
+          tokenTypeName = "COMMON_NOUN";
+        }
+
       }
     }
 
@@ -631,6 +677,11 @@ public class HowlerLexer implements TokenSource {
           quoteTokenIndices.add(i);
         }
       }
+      if (sentence.get(i).getText().equals("\"\"")) {
+        quoteTokenIndices.add(i);
+        quoteTokenIndices.add(i);
+      }
+
     }
     return quoteTokenIndices;
   }
@@ -958,7 +1009,16 @@ public class HowlerLexer implements TokenSource {
   }
 
   private boolean isQuoteChar(HowlerToken tok) {
-    return tok.getText().trim().equals("\"");
+
+    if (tok.getText().trim().equals("\"")) {
+      return true;
+    } else {
+      if (tok.getText().trim().endsWith("\"")) {
+        System.out.println(tok);
+      }
+    }
+
+    return false;
   }
 
   private boolean isEscape(HowlerToken tok) {

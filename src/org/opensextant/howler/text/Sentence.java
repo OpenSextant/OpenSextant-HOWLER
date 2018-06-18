@@ -98,7 +98,8 @@ public class Sentence {
       }
     }
 
-    return bldr.toString().replaceAll("[\n\r]", " ");
+    //return bldr.toString().replaceAll("[\n\r]", " ");
+    return bldr.toString();
   }
 
   private String initUpper(String norm) {

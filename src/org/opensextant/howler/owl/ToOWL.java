@@ -46,6 +46,7 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.OWLXMLDocumentFormat;
 import org.semanticweb.owlapi.model.AddImport;
 import org.semanticweb.owlapi.model.AddOntologyAnnotation;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.ClassExpressionType;
 import org.semanticweb.owlapi.model.DataRangeType;
 import org.semanticweb.owlapi.model.IRI;
@@ -56,12 +57,14 @@ import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataAllValuesFrom;
 import org.semanticweb.owlapi.model.OWLDataComplementOf;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataOneOf;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataRange;
+import org.semanticweb.owlapi.model.OWLDataSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLDocumentFormat;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -69,9 +72,11 @@ import org.semanticweb.owlapi.model.OWLFacetRestriction;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLObjectAllValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectOneOf;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectUnionOf;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -79,6 +84,7 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
+import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.util.OWLAPIStreamUtils;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 import org.slf4j.Logger;
@@ -152,7 +158,7 @@ public class ToOWL {
     for (Statement statement : doc.getStatements()) {
       for (OWLAxiom ax : convert(statement)) {
         try {
-          owlOntologyManager.addAxiom(onto, ax);
+          owlOntologyManager.addAxiom(onto, rewriteDomainRange(ax));
         } catch (Exception e) {
           LOGGER.error("Unable to add axiom to ontology: " + ax + ":" + e.getMessage());
           continue;
@@ -171,7 +177,7 @@ public class ToOWL {
       axs.addAll(convert(statement));
     }
 
-    return axs;
+    return rewriteDomainRanges(axs);
   }
 
   public List<OWLAxiom> convert(Statement statement) {
@@ -465,6 +471,11 @@ public class ToOWL {
     Word subjWord = null;
     Word objWord = null;
 
+    
+    
+    PredicateExpression<AnnotationPredicate> predExp = statement.getPredicatePhrase().getPredicateExpression();
+    OWLAnnotationProperty prop = convertAnnotation(predExp);
+ 
     // subject can be any single word except DataValue
     SubjectObjectPhrase subjPhrase = statement.getSubject();
 
@@ -477,6 +488,12 @@ public class ToOWL {
       if (catPhrase.isSimple()) {
         subjWord = catPhrase.getHead();
       }
+      
+      if(catPhrase.isThingThatPhrase()){
+         List<PredicatePhrase> thingPhrase = catPhrase.getRelativePhrases();
+         
+      }
+      
     }
 
     if (subjWord == null) {
@@ -504,8 +521,6 @@ public class ToOWL {
       return axs;
     }
 
-    PredicateExpression<AnnotationPredicate> predExp = statement.getPredicatePhrase().getPredicateExpression();
-    OWLAnnotationProperty prop = convertAnnotation(predExp);
 
     if (statement.isDomain()) {
       axs.add(owlDataFactory.getOWLAnnotationPropertyDomainAxiom(prop, convertWord(subjWord)));
@@ -516,6 +531,7 @@ public class ToOWL {
       axs.add(owlDataFactory.getOWLAnnotationPropertyRangeAxiom(prop, convertWord(objWord)));
       return axs;
     }
+
 
     List<OWLAnnotation> annos = createAnnotations(statement);
 
@@ -1626,10 +1642,7 @@ public class ToOWL {
           LOGGER.debug("Ambigous Quantifiers seen:" + qes + " " + set);
           qType = Quantifier.SOME;
         }
-        /*
-         * if (qType == Quantifier.NO) { finalCE = owlDataFactory.getOWLObjectAllValuesFrom(propExp,
-         * obj.getObjectComplementOf()); }
-         */
+
         if (qType == Quantifier.SOME) {
           finalCE = owlDataFactory.getOWLObjectSomeValuesFrom(propExp, obj);
         }
@@ -1860,4 +1873,105 @@ public class ToOWL {
     return annos;
   }
 
+  private List<OWLAxiom> rewriteDomainRanges(List<OWLAxiom> draxs) {
+
+    List<OWLAxiom> axs = new ArrayList<OWLAxiom>();
+
+    for (OWLAxiom ax : draxs) {
+
+      if (ax.isOfType(AxiomType.SUBCLASS_OF)) {
+
+        OWLAxiom finalAx = ax;
+
+        OWLSubClassOfAxiom subAx = (OWLSubClassOfAxiom) ax;
+        OWLClassExpression subExp = subAx.getSubClass();
+        OWLClassExpression superExp = subAx.getSuperClass();
+        ClassExpressionType superType = superExp.getClassExpressionType();
+        ClassExpressionType subType = subExp.getClassExpressionType();
+
+        if (subExp.isOWLThing()) {
+
+          // object range
+          if (superType.equals(ClassExpressionType.OBJECT_ALL_VALUES_FROM)) {
+            OWLObjectAllValuesFrom all = (OWLObjectAllValuesFrom) superExp;
+            finalAx = owlDataFactory.getOWLObjectPropertyRangeAxiom(all.getProperty(), all.getFiller());
+          }
+          // data range
+          if (superType.equals(ClassExpressionType.DATA_ALL_VALUES_FROM)) {
+            OWLDataAllValuesFrom all = (OWLDataAllValuesFrom) superExp;
+            finalAx = owlDataFactory.getOWLDataPropertyRangeAxiom(all.getProperty(), all.getFiller());
+          }
+
+        } else {
+
+          if (subType.equals(ClassExpressionType.OBJECT_SOME_VALUES_FROM)) {
+            OWLObjectSomeValuesFrom some = (OWLObjectSomeValuesFrom) subExp;
+            if (some.getFiller().isOWLThing()) {
+              finalAx = owlDataFactory.getOWLObjectPropertyDomainAxiom(some.getProperty(), superExp);
+            }
+          }
+          // data range
+          if (subType.equals(ClassExpressionType.DATA_SOME_VALUES_FROM)) {
+            OWLDataSomeValuesFrom some = (OWLDataSomeValuesFrom) subExp;
+            if (some.getFiller().isTopDatatype()) {
+              finalAx = owlDataFactory.getOWLDataPropertyDomainAxiom(some.getProperty(), superExp);
+            }
+          }
+        }
+
+        axs.add(finalAx);
+
+      } else {
+        axs.add(ax);
+      }
+    }
+
+    return axs;
+  }
+  
+  private OWLAxiom rewriteDomainRange(OWLAxiom ax) {
+    
+    if (ax.isOfType(AxiomType.SUBCLASS_OF)) {
+
+      OWLSubClassOfAxiom subAx = (OWLSubClassOfAxiom) ax;
+      OWLClassExpression subExp = subAx.getSubClass();
+      OWLClassExpression superExp = subAx.getSuperClass();
+      ClassExpressionType superType = superExp.getClassExpressionType();
+      ClassExpressionType subType = subExp.getClassExpressionType();
+
+      if (subExp.isOWLThing()) {
+
+        // object range
+        if (superType.equals(ClassExpressionType.OBJECT_ALL_VALUES_FROM)) {
+          OWLObjectAllValuesFrom all = (OWLObjectAllValuesFrom) superExp;
+          return owlDataFactory.getOWLObjectPropertyRangeAxiom(all.getProperty(), all.getFiller());
+        }
+        // data range
+        if (superType.equals(ClassExpressionType.DATA_ALL_VALUES_FROM)) {
+          OWLDataAllValuesFrom all = (OWLDataAllValuesFrom) superExp;
+          return owlDataFactory.getOWLDataPropertyRangeAxiom(all.getProperty(), all.getFiller());
+        }
+
+      } else {
+
+        if (subType.equals(ClassExpressionType.OBJECT_SOME_VALUES_FROM)) {
+          OWLObjectSomeValuesFrom some = (OWLObjectSomeValuesFrom) subExp;
+          if (some.getFiller().isOWLThing()) {
+            return owlDataFactory.getOWLObjectPropertyDomainAxiom(some.getProperty(), superExp);
+          }
+        }
+        // data range
+        if (subType.equals(ClassExpressionType.DATA_SOME_VALUES_FROM)) {
+          OWLDataSomeValuesFrom some = (OWLDataSomeValuesFrom) subExp;
+          if (some.getFiller().isTopDatatype()) {
+            return owlDataFactory.getOWLDataPropertyDomainAxiom(some.getProperty(), superExp);
+          }
+        }
+      }
+
+    }
+    
+    return ax;
+  }
+  
 }

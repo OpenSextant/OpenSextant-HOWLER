@@ -32,6 +32,7 @@ import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.abstraction.words.Category;
 import org.opensextant.howler.abstraction.words.DataType;
 import org.opensextant.howler.abstraction.words.Noun;
+import org.opensextant.howler.abstraction.words.ObjectPredicate;
 import org.opensextant.howler.abstraction.words.Predicate;
 import org.opensextant.howler.abstraction.words.enumerated.RelativeMarker;
 import org.opensextant.howler.abstraction.words.enumerated.Scope;
@@ -66,6 +67,17 @@ public class CategoryPhrase<T extends Category> extends SubjectObjectPhrase {
     }
 
     return false;
+  }
+
+  public PredicatePhrase<? extends SubjectObjectPhrase, ? extends Predicate> getThingThatPhrase() {
+
+    if (isThingThatPhrase()) {
+      return relativePhrases.get(0);
+    } else {
+      return new PredicatePhrase<SubjectObjectPhrase, ObjectPredicate>(new PredicateExpression(Vocabulary.IS_Object),
+          new CategoryPhrase(Vocabulary.THING));
+    }
+
   }
 
   // just "itself"

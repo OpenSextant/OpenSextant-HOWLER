@@ -66,9 +66,6 @@ public class OWLTest {
     // expand n-ary axioms including all pairs
     fromOWL.setMaxPairs(-1);
 
-    // rewrite Domain/Ranges to subclass axioms?
-    fromOWL.setRewriteDomainRanges(false);
-
     // rewrite all axioms as subclass axioms?
     fromOWL.setRewriteAllAsSubclass(false);
 

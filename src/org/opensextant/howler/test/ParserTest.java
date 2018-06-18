@@ -142,12 +142,12 @@ public class ParserTest {
 
             // write the details to results
             String txt = "";
-            if (fileMode.equals(FileStructure.DOCUMENT_PER_LINE)) {
+            if (!fileMode.equals(FileStructure.SINGLE_BLOCK)) {
               txt = originalTextDoc;
             }
 
-            FileUtils.writeStringToFile(parseResults, txtFileName + "\t" + txt + "\t" + parseType + "\t"
-                + typeString.trim() + "\t" + normSeq + "\t" + posSeq + "\n", "UTF-8", true);
+            FileUtils.writeStringToFile(parseResults, txtFileName + "\t" + txt.replaceAll("[\n\r\t]", " ") + "\t" + parseType + "\t"
+                + typeString.trim() + "\t" + normSeq.replaceAll("[\n\r\t]", " ") + "\t" + posSeq + "\n", "UTF-8", true);
           }
 
         }

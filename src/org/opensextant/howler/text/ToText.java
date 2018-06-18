@@ -107,42 +107,13 @@ public class ToText {
     sent.setSentenceType(SentenceType.DESCRIPTION);
 
     SubjectObjectPhrase subj = st.getSubject();
-    PredicateExpression pExp = st.getPredicatePhrase().getPredicateExpression();
-    SubjectObjectPhrase obj = st.getPredicatePhrase().getObject();
 
-    if (st.isDomain()) {
-      if (st.isAnnotationStatement()) {
-        sent.addWord(Vocabulary.ANNO_FLAG);
-      }
-      sent.addWords(convert(subj));
-      sent.addWords(convert(pExp));
-      sent.addWord(Quantifier.SOME);
-
-      if (pExp.isDataExpression()) {
-        sent.addWord(Vocabulary.DATAVALUE);
-      } else {
-        sent.addWord(Vocabulary.THING);
-      }
-
+    if (st.isAnnotationStatement()) {
+      return convertAnno(st);
     }
 
-    if (st.isRange()) {
-      if (st.isAnnotationStatement()) {
-        sent.addWord(Vocabulary.ANNO_FLAG);
-      }
-      sent.addWords(convert(subj));
-      sent.addWords(convert(pExp));
-      sent.addWords(convert(obj));
-    }
-
-    if (!st.isDomain() && !st.isRange()) {
-
-      if (st.isAnnotationStatement()) {
-        return convertAnno(st);
-      }
-      sent.addWords(convert(subj));
-      sent.addWords(convert(st.getPredicatePhrase()));
-    }
+    sent.addWords(convert(subj));
+    sent.addWords(convert(st.getPredicatePhrase()));
 
     for (Footnote fn : st.getFootnotes()) {
       sent.addFootnote(convert(fn));
@@ -161,6 +132,41 @@ public class ToText {
     SubjectObjectPhrase obj = st.getPredicatePhrase().getObject();
 
     sent.addWord(Vocabulary.ANNO_FLAG);
+
+    // ANNOTATION_MARKER EVERY THING THAT pred = predicateExpressionAnnotation SOME THING IS A domain = wordSequence
+    if (st.isDomain()) {
+      sent.addWord(Quantifier.EVERY);
+      sent.addWord(Vocabulary.THING);
+      sent.addWord(RelativeMarker.THAT);
+      sent.addWords(convert(pExp));
+      sent.addWord(Quantifier.SOME);
+      sent.addWord(Vocabulary.THING);
+      sent.addWord(Vocabulary.IS_Annotation);
+      sent.addWords(convert(subj));
+      for (Footnote fn : st.getFootnotes()) {
+        sent.addFootnote(convert(fn));
+      }
+
+      return sent;
+    }
+
+    // ANNOTATION_MARKER EVERY THING IS A THING THAT pred=predicateExpressionAnnotation A range=wordSequence
+    if (st.isRange()) {
+      sent.addWord(Quantifier.EVERY);
+      sent.addWord(Vocabulary.THING);
+      sent.addWord(Vocabulary.IS_Annotation);
+      sent.addWord(Quantifier.A);
+      sent.addWord(Vocabulary.THING);
+      sent.addWord(RelativeMarker.THAT);
+      sent.addWords(convert(pExp));
+      sent.addWords(convert(obj));
+      for (Footnote fn : st.getFootnotes()) {
+        sent.addFootnote(convert(fn));
+      }
+
+      return sent;
+    }
+
     sent.addWords(convert(subj));
     sent.addWord(Vocabulary.ANNO_SPLIT);
     sent.addWords(convert(pExp));
@@ -352,19 +358,33 @@ public class ToText {
     // push negatives and quantifiers to the objects
     ph.pushQuantifier();
 
-    if (!phrases.isEmpty()) {
+    if (phrases.isEmpty()) {
+      LOGGER.warn("Empty phrase Set");
+      return wrds;
+    }
 
-      if (ph.isDisjoint()) {
-        wrds.add(Vocabulary.EITHER);
-      }
-
-      // add first phrase
+    if (phrases.size() == 1) {
+      // add only phrase
       wrds.addAll(convert(phrases.get(0)));
+      return wrds;
+    }
 
-      for (int i = 1; i < phrases.size(); i++) {
-        wrds.add(ph.getSetType());
-        wrds.addAll(convert(phrases.get(i)));
-      }
+    if (ph.isDisjoint()) {
+      wrds.add(Vocabulary.EXCLUSIVE);
+    }
+
+    if (ph.getSetType().equals(BooleanSetType.AND)) {
+      wrds.add(Vocabulary.BOTH);
+    } else {
+      wrds.add(Vocabulary.EITHER);
+    }
+
+    // add first phrase
+    wrds.addAll(convert(phrases.get(0)));
+
+    for (int i = 1; i < phrases.size(); i++) {
+      wrds.add(ph.getSetType());
+      wrds.addAll(convert(phrases.get(i)));
     }
 
     return wrds;

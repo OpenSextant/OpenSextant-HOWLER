@@ -222,7 +222,7 @@ public class WordManager {
   }
 
   private <T extends Word> T createByKeyAndType(IRI key, WordType wordType, boolean add) {
-    String normal = TextUtils.getLocalName(key).trim().replaceAll("_+", " ");
+    String normal = TextUtils.getLocalName(key).replaceAll("_+", " ").trim();
 
     if (normal.isEmpty() || TextUtils.looksLikeFilePath(key)) {
       // looks like a namespace only
@@ -546,7 +546,7 @@ public class WordManager {
 
   // TODO any other cleaning for label?
   private String cleanLabel(String raw) {
-    return raw.replaceAll("[\"'\\(\\)\\,]", "").replaceAll("\\s+", " ");
+    return raw.replaceAll("[\"'\\(\\)\\,]", "").replaceAll("\\s+", " ").trim();
   }
 
   // load from tab separated file

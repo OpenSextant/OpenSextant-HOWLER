@@ -84,7 +84,7 @@ public class TextUtils {
 
     String keyString = key.toString().trim();
 
-    String local = keyString.substring(getLocalNameIndex(keyString));
+    String local = keyString.substring(getLocalNameIndex(keyString)).trim();
 
     if (local.isEmpty()) {
       LOGGER.trace("IRI with empty local name:" + keyString);

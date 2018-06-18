@@ -49,8 +49,8 @@ public class Vocabulary {
 
   /*--- Nouns ---*/
   public static final CommonNoun THING = new CommonNoun("thing", THING_IRI);
-  public static final CommonNoun NOTHING = new CommonNoun("nothing", NOTHING_IRI);
-  public static final CommonNoun DATAVALUE = new CommonNoun("data value", DATATYPE_THING_IRI);
+  public static final CommonNoun NOTHING = new CommonNoun("no thing", NOTHING_IRI);
+ // public static final DataType DATAVALUE = new DataType("data value", DATATYPE_THING_IRI,DataTypeCategory.OTHER);
   public static final CommonNoun ITSELF = new CommonNoun("itself", ITSELF_IRI);
 
   /*--- Builtin scoped predicates ---*/
@@ -72,8 +72,12 @@ public class Vocabulary {
   public static final GenericWord DOES_AUX = new GenericWord("does", "VB");
   public static final GenericWord HAS_AUX = new GenericWord("has", "VB");
   public static final GenericWord INVERSE_OF = new GenericWord("the inverse of", "ZZ");
-  public static final GenericWord EITHER = new GenericWord("either", "ZZ");
 
+  /* -------- parts of conjunctions/disjuntions -------*/
+  public static final GenericWord EITHER = new GenericWord("either", "ZZ");
+  public static final GenericWord BOTH = new GenericWord("both", "ZZ");
+  public static final GenericWord EXCLUSIVE = new GenericWord("exclusively", "ZZ");
+  
   /*-----punctuation -----*/
   public static final GenericWord DQUOTE = new GenericWord("\"", "DQUOTE");
   public static final GenericWord PERIOD = new GenericWord(".", "PERIOD");
@@ -155,7 +159,9 @@ public class Vocabulary {
       IRI.create("http://www.w3.org/2000/01/rdf-schema#Literal"), DataTypeCategory.TEXT);
   public static final DataType ANYURI_TYPE = new DataType("anyURI datatype",
       IRI.create("http://www.w3.org/2001/XMLSchema#anyURI"), DataTypeCategory.OTHER);
-
+  public static final DataType DATE_TYPE = new DataType("date datatype",
+      IRI.create("http://www.w3.org/2001/XMLSchema#date"), DataTypeCategory.DATE);
+  
   /*--- Builtin Predicates ---*/
   public static final AnnotationPredicate BACKWARD = new AnnotationPredicate("is backward compatible with",
       IRI.create(OWLNamespace.toString(), "backwardCompatibleWith"));

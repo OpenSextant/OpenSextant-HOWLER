@@ -29,6 +29,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
@@ -39,13 +40,16 @@ import org.opensextant.howler.text.FromText;
 import org.opensextant.howler.text.ToText;
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNaryAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.RemoveAxiom;
+import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.owlapi.util.OWLAPIStreamUtils;
 
 /**
@@ -69,11 +73,11 @@ public class OWL2Text2OWLTest {
 
     // the to and from converters
     ToOWL toOWL = new ToOWL();
+    toOWL.setUseHasValue(false);
+    
     FromOWL fromOWL = new FromOWL(ignoreBadImports);
-
     fromOWL.setRewriteAllAsSubclass(false);
     fromOWL.setMaxPairs(-1);
-    fromOWL.setRewriteDomainRanges(false);
     fromOWL.setFlattenSingleSet(false);
     fromOWL.setNegNormal(false);
 
@@ -138,15 +142,15 @@ public class OWL2Text2OWLTest {
             if (nyi(originalAx)) {
               axiomErrorsNYI++;
               FileUtils.writeStringToFile(results, ontoName + "\t" + "NYI" + "\t" + originalAx.getAxiomType() + "\t"
-                  + originalAx.toString().replaceAll("\\s", " ") + "\n", "UTF-8", true);
+                  + originalAx.toString().replaceAll("[\\n\\r\\t]", "<WHITE_SPACE>") + "\n", "UTF-8", true);
               FileUtils.writeStringToFile(totalResults, ontoName + "\t" + "NYI" + "\t" + originalAx.getAxiomType()
-                  + "\t" + originalAx.toString().replaceAll("\\s", " ") + "\n", "UTF-8", true);
+                  + "\t" + originalAx.toString().replaceAll("[\\n\\r\\t]", " ") + "\n", "UTF-8", true);
             } else {
               axiomErrorsMissing++;
               FileUtils.writeStringToFile(results, ontoName + "\t" + "Missing" + "\t" + originalAx.getAxiomType() + "\t"
-                  + originalAx.toString().replaceAll("\\s", " ") + "\n", "UTF-8", true);
+                  + originalAx.toString().replaceAll("[\\n\\r\\t]", "<WHITE_SPACE>") + "\n", "UTF-8", true);
               FileUtils.writeStringToFile(totalResults, ontoName + "\t" + "Missing" + "\t" + originalAx.getAxiomType()
-                  + "\t" + originalAx.toString().replaceAll("\\s", " ") + "\n", "UTF-8", true);
+                  + "\t" + originalAx.toString().replaceAll("[\\n\\r\\t]", "<WHITE_SPACE>") + "\n", "UTF-8", true);
             }
           }
         }
@@ -158,9 +162,9 @@ public class OWL2Text2OWLTest {
             axiomErrorsExtra++;
 
             FileUtils.writeStringToFile(results, ontoName + "\t" + "Extra" + "\t" + backAx.getAxiomType() + "\t"
-                + backAx.toString().replaceAll("\\s", " ") + "\n", "UTF-8", true);
+                + backAx.toString().replaceAll("[\\n\\r\\t]", "<WHITE_SPACE>") + "\n", "UTF-8", true);
             FileUtils.writeStringToFile(totalResults, ontoName + "\t" + "Extra" + "\t" + backAx.getAxiomType() + "\t"
-                + backAx.toString().replaceAll("\\s", " ") + "\n", "UTF-8", true);
+                + backAx.toString().replaceAll("[\\n\\r\\t]", "<WHITE_SPACE>") + "\n", "UTF-8", true);
           }
         }
 
@@ -213,9 +217,38 @@ public class OWL2Text2OWLTest {
   // see if an axioms appears in an ontology ignoring any axiom-level
   // annotations
   private static boolean compare(OWLOntology onto, OWLAxiom ax) {
+    
     if (onto.containsAxiomIgnoreAnnotations(ax)) {
       return true;
     }
+
+    //see if there is an annotation with same literal value
+    if (ax.getAxiomType().equals(AxiomType.ANNOTATION_ASSERTION)) {
+      OWLAnnotationAssertionAxiom anno = (OWLAnnotationAssertionAxiom) ax;
+      Optional<OWLLiteral> value = anno.literalValue();
+      String litString = "";
+      if (value.isPresent()) {
+        OWLLiteral lit = value.get();
+         litString = lit.getLiteral();
+      }else{
+        return false;
+      }
+      
+      //annotation asserts with same subject
+      List<OWLAnnotationAssertionAxiom> annos = OWLAPIStreamUtils.asList(EntitySearcher.getAnnotationAssertionAxioms(anno.getSubject(), onto));
+
+        for (OWLAnnotationAssertionAxiom annoAx : annos) {
+          if (annoAx.literalValue().isPresent()) {
+            OWLLiteral axLit = annoAx.literalValue().get();
+            String axLitString = axLit.getLiteral();
+            if (axLitString.equals(litString)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+    
 
     // TODO check for subclass rewrite
 

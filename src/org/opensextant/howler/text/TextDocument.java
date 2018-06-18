@@ -99,14 +99,14 @@ public class TextDocument {
     for (Sentence s : this.sentences) {
       if (s.getSentenceType().equals(SentenceType.DECLARATION)) {
         bldr.append(s.toString());
-        bldr.append("\n");
+        bldr.append("\n\n\n");
       }
     }
 
     for (Sentence s : this.sentences) {
       if (!s.getSentenceType().equals(SentenceType.DECLARATION)) {
         bldr.append(s.toString());
-        bldr.append("\n");
+        bldr.append("\n\n\n");
       }
     }
 
