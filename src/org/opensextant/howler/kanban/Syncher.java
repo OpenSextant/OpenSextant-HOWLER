@@ -34,7 +34,7 @@ import org.opensextant.howler.kanban.elements.Board;
 import org.opensextant.howler.kanban.elements.Card;
 import org.opensextant.howler.kanban.elements.CardList;
 import org.opensextant.howler.kanban.elements.RawText;
-import org.opensextant.howler.kanban.elements.Sentence;
+import org.opensextant.howler.kanban.elements.KanbanSentence;
 import org.slf4j.LoggerFactory;
 
 import com.keysolutions.ddpclient.DDPClient;
@@ -96,7 +96,7 @@ public class Syncher extends DDPListener implements Observer {
 
       // new sentence added
       if (collName.equalsIgnoreCase("sentences")) {
-        Sentence input = Sentence.fromMap(fields);
+        KanbanSentence input = KanbanSentence.fromMap(fields);
         input.set_id(id);
         kanban.addSentence(input);
         return;
@@ -110,7 +110,7 @@ public class Syncher extends DDPListener implements Observer {
         return;
       }
 
-      // new lists added
+      // new list added
       if (collName.equalsIgnoreCase("lists")) {
         CardList list = CardList.fromMap(fields);
         list.setId(id);

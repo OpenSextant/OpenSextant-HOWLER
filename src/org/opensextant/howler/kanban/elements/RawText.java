@@ -34,6 +34,7 @@ public class RawText {
   private String text;
   private String boardId;
   private String userId;
+  private String swimlaneId;
   private boolean inferred;
 
   private static Gson gson = new Gson();
@@ -56,6 +57,14 @@ public class RawText {
 
   public void setText(String text) {
     this.text = text;
+  }
+
+  public String getSwimlaneId() {
+    return swimlaneId;
+  }
+
+  public void setSwimlaneId(String swimlaneId) {
+    this.swimlaneId = swimlaneId;
   }
 
   public String getUserId() {

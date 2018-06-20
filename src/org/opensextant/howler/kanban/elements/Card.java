@@ -41,6 +41,7 @@ public class Card {
   String listId;
   String boardId;
   String coverId;
+  String swimlaneId ="";
   String description;
   String[] labelIds = new String[0];
   String[] members = new String[0];
@@ -59,6 +60,14 @@ public class Card {
 
   public void set_id(String _id) {
     this._id = _id;
+  }
+
+  public String getSwimlaneId() {
+    return swimlaneId;
+  }
+
+  public void setSwimlaneId(String swimlaneId) {
+    this.swimlaneId = swimlaneId;
   }
 
   public String getTitle() {

@@ -33,10 +33,11 @@ import java.util.Properties;
 
 import org.opensextant.howler.abstraction.Document;
 import org.opensextant.howler.abstraction.Statement;
-import org.opensextant.howler.kanban.elements.Sentence;
+import org.opensextant.howler.kanban.elements.KanbanSentence;
 import org.opensextant.howler.owl.FromOWL;
 import org.opensextant.howler.owl.ToOWL;
 import org.opensextant.howler.text.FromText;
+import org.opensextant.howler.text.Sentence;
 import org.opensextant.howler.text.TextDocument;
 import org.opensextant.howler.text.ToText;
 import org.semanticweb.owlapi.model.IRI;
@@ -93,6 +94,7 @@ public class Howler {
       File phraseFile = new File(baseDir, props.getProperty("os.howler.phrases"));
 
       fromText = new FromText(lexiconFile, ngramFile, typeInfoFile, phraseFile);
+      toText = new ToText();
 
       defaultNamespace = props.getProperty("os.howler.defaultNamespace");
 
@@ -137,17 +139,12 @@ public class Howler {
 
   /**
    * Convert a single SPO to a sentence
-   * @param spo
+   * @param statement
    *          the SPO to translate
    * @return the sentence which is the equivalent of the input SPO
    */
-  public Sentence toText(Statement spo) {
-    //TODO not finished
-    org.opensextant.howler.text.Sentence zz = toText.convert(spo);
-
-    Sentence sent = new Sentence();
-
-    return sent; // toText.convertAbstraction(spo);
+  public Sentence toText(Statement statement) {
+    return toText.convert(statement);
   }
 
   /**

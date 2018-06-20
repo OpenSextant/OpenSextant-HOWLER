@@ -28,25 +28,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.opensextant.howler.abstraction.Word;
-
 import com.google.gson.Gson;
 
-public class Sentence {
+public class KanbanSentence {
 
   private String _id;
   private String text;
-  private List<Word> words = new ArrayList<Word>();
+  // private List<Word> words = new ArrayList<Word>();
   private boolean parseable = true;
-  private boolean inferred = true;
+  private boolean inferred = false;
   private String userId;
   private String boardId;
   private List<String> keys = new ArrayList<String>();
 
   private static Gson gson = new Gson();
 
-  public static Sentence fromMap(Map<String, Object> fields) {
-    return gson.fromJson(gson.toJson(fields), Sentence.class);
+  public static KanbanSentence fromMap(Map<String, Object> fields) {
+    return gson.fromJson(gson.toJson(fields), KanbanSentence.class);
   }
 
   public String get_id() {
@@ -56,23 +54,16 @@ public class Sentence {
   public void set_id(String _id) {
     this._id = _id;
   }
-
-  public String getText() {
-    return text;
-  }
-
+  /*
+   * public String getText() { StringBuilder bldr = new StringBuilder(); for(Word w: words){
+   * bldr.append(w.getNormalForm()); bldr.append(" "); } return bldr.toString(); }
+   */
   public void setText(String text) {
     this.text = text;
   }
-
-  public List<Word> getWords() {
-    return words;
-  }
-
-  public void setWords(List<Word> words) {
-    this.words = words;
-  }
-
+  /*
+   * public List<Word> getWords() { return words; } public void setWords(List<Word> words) { this.words = words; }
+   */
   public String getBoardId() {
     return boardId;
   }
@@ -117,8 +108,12 @@ public class Sentence {
     this.keys.add(key);
   }
 
+  public String getText() {
+    return text;
+  }
+
   public String textKey() {
-    return this.getText().toLowerCase() + "|" + this.getBoardId();
+    return this.text.toLowerCase() + "|" + this.getBoardId();
   }
 
   public String toString() {

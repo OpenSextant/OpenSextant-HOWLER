@@ -39,14 +39,14 @@ import org.opensextant.howler.Howler;
 import org.opensextant.howler.abstraction.Document;
 import org.opensextant.howler.abstraction.Statement;
 import org.opensextant.howler.abstraction.Word;
-import org.opensextant.howler.abstraction.words.BadWord;
-import org.opensextant.howler.abstraction.words.DataValue;
+import org.opensextant.howler.abstraction.words.Predicate;
 import org.opensextant.howler.abstraction.words.enumerated.WordType;
 import org.opensextant.howler.kanban.elements.Board;
 import org.opensextant.howler.kanban.elements.Card;
 import org.opensextant.howler.kanban.elements.CardList;
+import org.opensextant.howler.kanban.elements.KanbanSentence;
 import org.opensextant.howler.kanban.elements.RawText;
-import org.opensextant.howler.kanban.elements.Sentence;
+import org.opensextant.howler.text.Sentence;
 import org.opensextant.howler.text.TextDocument;
 import org.semanticweb.HermiT.ReasonerFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -55,7 +55,9 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -83,18 +85,18 @@ import com.keysolutions.ddpclient.EmailAuth;
  * 
  */
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked"})
 public class Kanban {
 
   // the primary kanban elements indexed by their IDs
   Map<String, Board> boards = new HashMap<String, Board>();
   Map<String, CardList> lists = new HashMap<String, CardList>();
   Map<String, Card> cards = new HashMap<String, Card>();
-  Map<String, Sentence> sentences = new HashMap<String, Sentence>();
+  Map<String, KanbanSentence> sentences = new HashMap<String, KanbanSentence>();
   Map<String, RawText> rawTexts = new HashMap<String, RawText>();
 
   // sentences indexed by their content and board to avoid duplicates
-  Map<String, Sentence> sentencesByText = new HashMap<String, Sentence>();
+  Map<String, KanbanSentence> sentencesByText = new HashMap<String, KanbanSentence>();
 
   // cards index by the keys which links them to sentences
   // used to determine if card already exists
@@ -173,8 +175,6 @@ public class Kanban {
     // create a ontology for each board
     this.addOntology(board);
 
-    this.loadOntology(board);
-
     // if already done initial synch then this is a new board
     if (this.synched) {
       this.prepBoards();
@@ -182,7 +182,7 @@ public class Kanban {
 
   }
 
-  public Board getBoard(String id) {
+  private Board getBoard(String id) {
     return this.boards.get(id);
   }
 
@@ -193,7 +193,7 @@ public class Kanban {
     LOGGER.info("Added List:" + list.getTitle());
   }
 
-  public CardList getList(String id) {
+  private CardList getList(String id) {
     return this.lists.get(id);
   }
 
@@ -207,19 +207,19 @@ public class Kanban {
     LOGGER.info("Added Card:" + card.getTitle());
   }
 
-  public Card getCard(String id) {
+  private Card getCard(String id) {
     return this.cards.get(id);
   }
 
-  public Card getCardByKey(String key) {
+  private Card getCardByKey(String key) {
     return this.cardsByKey.get(key);
   }
 
-  public Sentence getSentence(String id) {
+  private KanbanSentence getSentence(String id) {
     return sentences.get(id);
   }
 
-  public void addSentence(Sentence sentence) {
+  public void addSentence(KanbanSentence sentence) {
 
     this.sentences.put(sentence.get_id(), sentence);
 
@@ -231,7 +231,7 @@ public class Kanban {
 
   }
 
-  public RawText getRawText(String id) {
+  private RawText getRawText(String id) {
     return rawTexts.get(id);
   }
 
@@ -240,22 +240,60 @@ public class Kanban {
     this.rawTexts.put(rawText.get_id(), rawText);
     LOGGER.info("Added RawText:" + rawText.getText());
 
-    // create sentences from the input text
-    List<Sentence> sents = this.createSentences(rawText);
+    // rawtext to abstraction Document
+    Document doc = howler.convertText("dummy", rawText.getText());
+
+    // create ontology from abstraction document
+    OWLOntology onto = howler.toOntology(doc, true);
+
+    TextDocument textDoc = howler.toText(doc);
+
+    List<KanbanSentence> kbSents = new ArrayList<KanbanSentence>();
+
+    for (Sentence sent : textDoc.getSentences()) {
+
+      List<Word> keyWords = new ArrayList<Word>();
+      KanbanSentence kbSent = new KanbanSentence();
+      kbSent.setBoardId(rawText.getBoardId());
+      kbSent.setUserId(rawText.getUserId());
+      kbSent.setText(sent.toString());
+      kbSent.setInferred(rawText.isInferred());
+
+      for (Word w : sent.getWords()) {
+        WordType wt = w.getWordType();
+        if (!wt.equals(WordType.GENERIC_WORD) && !wt.equals(WordType.QUANTIFIER) && !wt.equals(WordType.WORD_TYPE)) {
+          if (w instanceof Predicate) {
+            Predicate pred = (Predicate) w;
+            if (!pred.isBuiltinPredicate()) {
+              keyWords.add(w);
+              this.addCard(w, rawText.getBoardId(), rawText.getSwimlaneId(), rawText.getUserId());
+            }
+          } else {
+            keyWords.add(w);
+            this.addCard(w, rawText.getBoardId(), rawText.getSwimlaneId(), rawText.getUserId());
+          }
+        }
+      }
+
+      for (Word wrd : keyWords) {
+        kbSent.addKey(wrd.getKey().toString());
+      }
+      kbSents.add(kbSent);
+    }
 
     // send the sentences to the Wekan system
-    this.sendSentences(sents, false);
+    this.sendSentences(kbSents, false);
 
     // remove the rawtext
     client.collectionDelete("rawtext", rawText.get_id());
 
   }
 
-  public boolean isSynched() {
+  private boolean isSynched() {
     return synched;
   }
 
-  public void setSynched(boolean synched) {
+  private void setSynched(boolean synched) {
     this.synched = synched;
     if (synched) {
       this.prepBoards();
@@ -298,62 +336,10 @@ public class Kanban {
 
   }
 
-  // create Sentences from the input text
-  public List<Sentence> createSentences(RawText raw) {
-
-    List<Sentence> sentences = new ArrayList<Sentence>();
-
-    String text = raw.getText();
-    String boardId = raw.getBoardId();
-    boolean inferred = raw.isInferred();
-
-    // roundtrip: input text to Document, to ontology, to Document
-    Document doc = howler.convertText("dummy", text);
-
-    // continue round trip: Document to ontology back to Document
-    OWLOntology onto = howler.toOntology(doc, true);
-    doc = howler.convertOntology(onto);
-
-    // loop over each of the SPOs created from the input text
-    for (Statement spo : doc.getStatements()) {
-
-      // all the words used in the SPO
-      List<Word> words = spo.getWords();
-
-      // TODO
-      // create and populate a Sentence
-      Sentence sent = new Sentence();
-      sent.setWords(words);
-      sent.setBoardId(boardId);
-      // a sentence is inferred if the raw text was inferred
-      sent.setInferred(inferred);
-
-      // create the keys based on the words in the sentence
-      // key is of the form: logicalform|wordtype|boardID
-
-      for (Word w : words) {
-        if (w instanceof DataValue || w instanceof BadWord) {
-          continue;
-        }
-        String tmpKey = w.getLogicalForm() + "|" + w.getWordType() + "|" + boardId;
-        sent.addKey(tmpKey);
-      }
-
-      // get the clean text from the SPO
-      Sentence cleanText = howler.toText(spo);
-      // TODO
-      // sent.setText(cleanText);
-      sentences.add(sent);
-
-    }
-
-    return sentences;
-  }
-
   // send the sentences to the Wekan Kanban system
-  public void sendSentences(List<Sentence> sentences, boolean update) {
+  private void sendSentences(List<KanbanSentence> sentences, boolean update) {
 
-    for (Sentence sent : sentences) {
+    for (KanbanSentence sent : sentences) {
 
       if (sent.isParseable()) {
         String textKey = sent.textKey();
@@ -361,13 +347,6 @@ public class Kanban {
         // look for duplicate sentence (same text key)
         if (!this.sentencesByText.containsKey(textKey)) {
           this.sentencesByText.put(textKey, sent);
-
-          // null out the quantifiers and relative clauses since not needed
-          // TODO Needed?
-          for (Word w : sent.getWords()) {
-            // w.setRelativePhrases(null);
-            // w.setQuantifier(null);
-          }
 
           // convert to field map
           String json = gson.toJson(sent);
@@ -391,8 +370,36 @@ public class Kanban {
     }
   }
 
+  private void addCard(Word wrd, String boardID, String swimlaneID, String userID) {
+
+    if (!this.cardsByKey.containsKey(wrd.getKey().toString())) {
+      // create and populate new card
+      Card card = new Card();
+
+      card.setTitle(wrd.getNormalForm());
+      card.setKey(wrd.getKey().toString());
+      card.setEntityType(wrd.getWordType());
+      card.setBoardId(boardID);
+      // TODO list selected is first list in board. Better choice?
+      card.setListId(boards.get(boardID).getLists().get(0).getId());
+      card.setSwimlaneId("");
+      card.setUserid(userID);
+
+      // create field map and send to Wekan
+      String json = gson.toJson(card);
+      Map<String, Object> fields = gson.fromJson(json, Map.class);
+
+      int id = client.collectionInsert("cards", fields);
+      LOGGER.info("Inserting new Card. ID=" + id + ". " + card.getTitle());
+      this.cardsByKey.put(card.getKey(), card);
+    } else {
+      LOGGER.info("Already have Card for Word:" + wrd);
+    }
+
+  }
+
   // create any new cards needed to represent words used in the sentence
-  public void addCards(Sentence sent) {
+  private void addCards(KanbanSentence sent) {
 
     String userID = sent.getUserId();
     String boardID = sent.getBoardId();
@@ -433,7 +440,7 @@ public class Kanban {
   }
 
   // create a new blank ontology for a board
-  public void addOntology(Board board) {
+  private void addOntology(Board board) {
 
     try {
 
@@ -454,7 +461,7 @@ public class Kanban {
   }
 
   // load an ontology into an existing board
-  public void loadOntology(Board board) {
+  private void loadOntology(Board board) {
     OWLOntology currentOnto = ontologiesByBoardID.get(board.getId());
 
     if (this.baseOnto != null) {
@@ -464,7 +471,7 @@ public class Kanban {
   }
 
   // create a axiom(s) from a sentence and add to appropriate ontology
-  public void addAxioms(Sentence sent) {
+  private void addAxioms(KanbanSentence sent) {
 
     // don't add results from inferred sentence (already there)
     if (!sent.isInferred()) {
@@ -535,7 +542,7 @@ public class Kanban {
 
               // don't include "XX is a Thing" axioms
               if (!this.isThingAxiom(ax)) {
-                this.sendAxiom(ax, sent.getBoardId(), sent.getUserId());
+                this.sendAxiom(ax, sent.getBoardId(), sent.getUserId(),true);
               }
             }
           } catch (OWLOntologyCreationException e) {
@@ -547,7 +554,7 @@ public class Kanban {
 
   }
 
-  private void sendAxiom(OWLAxiom ax, String boardId, String userID) {
+  private void sendAxiom(OWLAxiom ax, String boardId, String userID, boolean inferred) {
 
     Document inferDoc = howler.convertAxiom(ax, "dummy");
 
@@ -560,7 +567,7 @@ public class Kanban {
       raw.setText(inf.getContents());
       raw.setBoardId(boardId);
       raw.setUserId(userID);
-      raw.setInferred(true);
+      raw.setInferred(inferred);
 
       // create field map and send to Wekan
       String json = gson.toJson(raw);
@@ -596,6 +603,19 @@ public class Kanban {
         LOGGER.debug("Accepting axiom: " + ax);
         return false;
       }
+    }
+
+    if (ax.getAxiomType() == AxiomType.DISJOINT_CLASSES) {
+      OWLDisjointClassesAxiom ca = (OWLDisjointClassesAxiom) ax;
+
+      for (OWLClassExpression ce : OWLAPIStreamUtils.asList(ca.classExpressions())) {
+        if (ce.isTopEntity() || ce.isBottomEntity()) {
+          LOGGER.debug("Rejecting axiom: " + ax);
+          return true;
+        }
+      }
+
+      return false;
     }
 
     return false;
