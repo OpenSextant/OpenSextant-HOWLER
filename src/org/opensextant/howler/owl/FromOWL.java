@@ -1240,7 +1240,6 @@ public class FromOWL {
     return statementList;
   }
 
-
   private List<DescriptionStatement<AnnotationPredicate>> convertOWL(OWLAnnotationPropertyRangeAxiom ax) {
     List<DescriptionStatement<AnnotationPredicate>> statementList = new ArrayList<DescriptionStatement<AnnotationPredicate>>();
 
@@ -1254,7 +1253,7 @@ public class FromOWL {
     rangePhrase.setQuantifierType(Quantifier.A);
 
     PredicateExpression<AnnotationPredicate> predExp = convertOWL(ax.getProperty());
-   
+
     // predicate range
     PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate> statementPredPhrase = new PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate>(
         predExp, rangePhrase);
@@ -1270,22 +1269,20 @@ public class FromOWL {
     return statementList;
   }
 
-  
   private List<DescriptionStatement<AnnotationPredicate>> convertOWL(OWLAnnotationPropertyDomainAxiom ax) {
     List<DescriptionStatement<AnnotationPredicate>> statementList = new ArrayList<DescriptionStatement<AnnotationPredicate>>();
 
     PredicateExpression<AnnotationPredicate> predExp = convertOWL(ax.getProperty());
     Word subj = convertOWLPrimitive(ax.getDomain());
-    
-    SubjectObjectPhrase subjPhrase = new WordPhrase (subj);
+
+    SubjectObjectPhrase subjPhrase = new WordPhrase(subj);
     subjPhrase.setQuantifierType(Quantifier.A);
-    
+
     CategoryPhrase<CommonNoun> relObjPhrase = new CategoryPhrase<CommonNoun>(Vocabulary.THING);
     relObjPhrase.setQuantifierType(Quantifier.SOME);
 
     PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate> predPhrase = new PredicatePhrase<SubjectObjectPhrase, AnnotationPredicate>(
         predExp, relObjPhrase);
-
 
     DescriptionStatement<AnnotationPredicate> statement = new DescriptionStatement<AnnotationPredicate>();
     statement.setDomain(true);

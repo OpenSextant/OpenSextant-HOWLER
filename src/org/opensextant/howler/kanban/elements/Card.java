@@ -41,7 +41,7 @@ public class Card {
   String listId;
   String boardId;
   String coverId;
-  String swimlaneId ="";
+  String swimlaneId = "";
   String description;
   String[] labelIds = new String[0];
   String[] members = new String[0];
@@ -172,6 +172,11 @@ public class Card {
 
   public void setArchived(boolean archived) {
     this.archived = archived;
+  }
+
+  @Override
+  public String toString() {
+    return "Card:" + this.title + " (" + this.entityType + ") " + this.key;
   }
 
 }

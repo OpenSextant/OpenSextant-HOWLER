@@ -98,7 +98,7 @@ public class Sentence {
       }
     }
 
-    //return bldr.toString().replaceAll("[\n\r]", " ");
+    // return bldr.toString().replaceAll("[\n\r]", " ");
     return bldr.toString();
   }
 

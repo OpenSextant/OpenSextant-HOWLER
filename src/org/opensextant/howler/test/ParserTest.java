@@ -88,7 +88,7 @@ public class ParserTest {
       for (File textFile : textFiles) {
         String txtFileName = textFile.getName();
 
-        WordManager.getWordManager().reset();
+        //WordManager.getWordManager().reset();
         FromText from = new FromText(lexFile, gramFile, typeInfoFile, phraseFile);
 
         System.out.println();
@@ -146,15 +146,17 @@ public class ParserTest {
               txt = originalTextDoc;
             }
 
-            FileUtils.writeStringToFile(parseResults, txtFileName + "\t" + txt.replaceAll("[\n\r\t]", " ") + "\t" + parseType + "\t"
-                + typeString.trim() + "\t" + normSeq.replaceAll("[\n\r\t]", " ") + "\t" + posSeq + "\n", "UTF-8", true);
+            FileUtils.writeStringToFile(
+                parseResults, txtFileName + "\t" + txt.replaceAll("[\n\r\t]", " ") + "\t" + parseType + "\t"
+                    + typeString.trim() + "\t" + normSeq.replaceAll("[\n\r\t]", " ") + "\t" + posSeq + "\n",
+                "UTF-8", true);
           }
 
         }
         // WordManager.getWordManager().reset();
       }
     }
-    // WordManager.getWordManager().dumpWordsToFile(wDump);
+     WordManager.getWordManager().dumpWordsToFile(wDump);
   }
 
 }

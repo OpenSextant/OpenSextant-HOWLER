@@ -91,4 +91,13 @@ public class RawText {
     this.inferred = inferred;
   }
 
+  @Override
+  public String toString() {
+    return "RawText [_id=" + _id + ", text=" + text + ", boardId=" + boardId + ", userId=" + userId + ", swimlaneId="
+        + swimlaneId + ", inferred=" + inferred + "]";
+  }
+
+  
+  
+  
 }

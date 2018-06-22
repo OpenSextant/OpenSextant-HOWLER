@@ -81,4 +81,10 @@ public class CardList {
     this.cards.add(card);
   }
 
+  @Override
+  public String toString() {
+    return "CardList [id=" + id + ", title=" + title + ", archived=" + archived + ", boardId=" + boardId + ", cards="
+        + cards + "]";
+  }
+
 }

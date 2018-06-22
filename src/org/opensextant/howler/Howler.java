@@ -33,7 +33,6 @@ import java.util.Properties;
 
 import org.opensextant.howler.abstraction.Document;
 import org.opensextant.howler.abstraction.Statement;
-import org.opensextant.howler.kanban.elements.KanbanSentence;
 import org.opensextant.howler.owl.FromOWL;
 import org.opensextant.howler.owl.ToOWL;
 import org.opensextant.howler.text.FromText;
@@ -194,24 +193,40 @@ public class Howler {
     return properties;
   }
 
-  /**
-   * Gets the text factory.
-   * @return the text factory used by this Howler.
-   */
-  public FromText getTextFactory() {
+  public Document convertText(String title, String text) {
+    return fromText.convertText(text, IRI.create(defaultNamespace, title.replace(" ", "_")), title);
+  }
+
+  public FromText getFromText() {
     return fromText;
   }
 
-  /**
-   * Gets the OWL factory.
-   * @return the OWL factory used by this Howler.
-   */
-  public FromOWL getOwlFactory() {
+  public void setFromText(FromText fromText) {
+    this.fromText = fromText;
+  }
+
+  public ToText getToText() {
+    return toText;
+  }
+
+  public void setToText(ToText toText) {
+    this.toText = toText;
+  }
+
+  public FromOWL getFromOWL() {
     return fromOWL;
   }
 
-  public Document convertText(String title, String text) {
-    return fromText.convertText(text, IRI.create(defaultNamespace, title.replace(" ", "_")), title);
+  public void setFromOWL(FromOWL fromOWL) {
+    this.fromOWL = fromOWL;
+  }
+
+  public ToOWL getToOWL() {
+    return toOWL;
+  }
+
+  public void setToOWL(ToOWL toOWL) {
+    this.toOWL = toOWL;
   }
 
 }

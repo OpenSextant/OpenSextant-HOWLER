@@ -34,7 +34,6 @@ public class KanbanSentence {
 
   private String _id;
   private String text;
-  // private List<Word> words = new ArrayList<Word>();
   private boolean parseable = true;
   private boolean inferred = false;
   private String userId;
@@ -54,16 +53,11 @@ public class KanbanSentence {
   public void set_id(String _id) {
     this._id = _id;
   }
-  /*
-   * public String getText() { StringBuilder bldr = new StringBuilder(); for(Word w: words){
-   * bldr.append(w.getNormalForm()); bldr.append(" "); } return bldr.toString(); }
-   */
+
   public void setText(String text) {
     this.text = text;
   }
-  /*
-   * public List<Word> getWords() { return words; } public void setWords(List<Word> words) { this.words = words; }
-   */
+
   public String getBoardId() {
     return boardId;
   }
@@ -116,8 +110,11 @@ public class KanbanSentence {
     return this.text.toLowerCase() + "|" + this.getBoardId();
   }
 
+  @Override
   public String toString() {
-    return this.text;
+    return "KanbanSentence [_id=" + _id + ", text=" + text + ", parseable=" + parseable + ", inferred=" + inferred
+        + ", userId=" + userId + ", boardId=" + boardId + ", keys=" + keys + "]";
   }
+
 
 }

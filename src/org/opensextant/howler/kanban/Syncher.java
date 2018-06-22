@@ -33,8 +33,8 @@ import java.util.Observer;
 import org.opensextant.howler.kanban.elements.Board;
 import org.opensextant.howler.kanban.elements.Card;
 import org.opensextant.howler.kanban.elements.CardList;
-import org.opensextant.howler.kanban.elements.RawText;
 import org.opensextant.howler.kanban.elements.KanbanSentence;
+import org.opensextant.howler.kanban.elements.RawText;
 import org.slf4j.LoggerFactory;
 
 import com.keysolutions.ddpclient.DDPClient;
@@ -88,17 +88,19 @@ public class Syncher extends DDPListener implements Observer {
 
       // new raw text added
       if (collName.equalsIgnoreCase("rawtext")) {
-        RawText input = RawText.fromMap(fields);
-        input.set_id(id);
-        kanban.addRawText(input);
+        RawText raw = RawText.fromMap(fields);
+        raw.set_id(id);
+        LOGGER.debug("Got a " + msgtype + " message for collection " + collName + ":" + raw);
+        kanban.addRawText(raw);
         return;
       }
 
       // new sentence added
       if (collName.equalsIgnoreCase("sentences")) {
-        KanbanSentence input = KanbanSentence.fromMap(fields);
-        input.set_id(id);
-        kanban.addSentence(input);
+        KanbanSentence sent = KanbanSentence.fromMap(fields);
+        sent.set_id(id);
+        LOGGER.debug("Got a " + msgtype + " message for collection " + collName + ":" + sent);
+        //kanban.addSentence(sent);
         return;
       }
 
@@ -106,6 +108,7 @@ public class Syncher extends DDPListener implements Observer {
       if (collName.equalsIgnoreCase("boards")) {
         Board board = Board.fromMap(fields);
         board.setId(id);
+        LOGGER.debug("Got a " + msgtype + " message for collection " + collName + ":" + board);
         kanban.addBoard(board);
         return;
       }
@@ -114,6 +117,7 @@ public class Syncher extends DDPListener implements Observer {
       if (collName.equalsIgnoreCase("lists")) {
         CardList list = CardList.fromMap(fields);
         list.setId(id);
+        LOGGER.debug("Got a " + msgtype + " message for collection " + collName + ":" + list);
         kanban.addList(list);
         return;
       }
@@ -122,11 +126,12 @@ public class Syncher extends DDPListener implements Observer {
       if (collName.equalsIgnoreCase("cards")) {
         Card card = Card.fromMap(fields);
         card.set_id(id);
-        kanban.addCard(card);
+        LOGGER.debug("Got a " + msgtype + " message for collection " + collName + ":" + card);
+        //kanban.addCard(card);
         return;
       }
 
-      LOGGER.info("Got a " + msgtype + " message for collection " + collName + " Ignoring.");
+      LOGGER.info("Got a " + msgtype + " message for collection " + collName + " Ignoring:" + msg);
       return;
     }
 

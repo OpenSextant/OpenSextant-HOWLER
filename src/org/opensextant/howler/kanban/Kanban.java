@@ -39,6 +39,7 @@ import org.opensextant.howler.Howler;
 import org.opensextant.howler.abstraction.Document;
 import org.opensextant.howler.abstraction.Statement;
 import org.opensextant.howler.abstraction.Word;
+import org.opensextant.howler.abstraction.statements.DeclarationStatement;
 import org.opensextant.howler.abstraction.words.Predicate;
 import org.opensextant.howler.abstraction.words.enumerated.WordType;
 import org.opensextant.howler.kanban.elements.Board;
@@ -47,6 +48,7 @@ import org.opensextant.howler.kanban.elements.CardList;
 import org.opensextant.howler.kanban.elements.KanbanSentence;
 import org.opensextant.howler.kanban.elements.RawText;
 import org.opensextant.howler.text.Sentence;
+import org.opensextant.howler.text.Sentence.SentenceType;
 import org.opensextant.howler.text.TextDocument;
 import org.semanticweb.HermiT.ReasonerFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -89,38 +91,37 @@ import com.keysolutions.ddpclient.EmailAuth;
 public class Kanban {
 
   // the primary kanban elements indexed by their IDs
-  Map<String, Board> boards = new HashMap<String, Board>();
-  Map<String, CardList> lists = new HashMap<String, CardList>();
-  Map<String, Card> cards = new HashMap<String, Card>();
-  Map<String, KanbanSentence> sentences = new HashMap<String, KanbanSentence>();
-  Map<String, RawText> rawTexts = new HashMap<String, RawText>();
+  private Map<String, Board> boards = new HashMap<String, Board>();
+  //private Map<String, CardList> lists = new HashMap<String, CardList>();
+  //private Map<String, Card> cards = new HashMap<String, Card>();
+  private Map<String, KanbanSentence> sentences = new HashMap<String, KanbanSentence>();
+  //private Map<String, RawText> rawTexts = new HashMap<String, RawText>();
 
   // sentences indexed by their content and board to avoid duplicates
-  Map<String, KanbanSentence> sentencesByText = new HashMap<String, KanbanSentence>();
+  private Map<String, KanbanSentence> sentencesByText = new HashMap<String, KanbanSentence>();
 
   // cards index by the keys which links them to sentences
   // used to determine if card already exists
-  Map<String, Card> cardsByKey = new HashMap<String, Card>();
+  private Map<String, Card> cardsByKey = new HashMap<String, Card>();
 
-  // mapping between board ontology (indexed by the board's ID)
-  Map<String, OWLOntology> ontologiesByBoardID = new HashMap<String, OWLOntology>();
+  // mapping between boards and ontologies (indexed by the board's ID)
+  private Map<String, OWLOntology> ontologiesByBoardID = new HashMap<String, OWLOntology>();
 
   // the elements that do the English <-> OWL conversions
-  Howler howler;
+  private Howler howler;
 
   // the client which talks to the Wekan system
   private DDPClient client;
 
   // the elements that create/manage the ontologies
-  OWLDataFactory owlFactory;
-  OWLOntologyManager mgr;
-  ReasonerFactory reasonerFactory = new ReasonerFactory();
+  private OWLDataFactory owlFactory;
+  private OWLOntologyManager mgr;
+  private ReasonerFactory reasonerFactory = new ReasonerFactory();
 
   // used to convert from Java to JSON
-  Gson gson = new Gson();
+  private Gson gson = new Gson();
 
   private boolean synched = false;
-  private OWLOntology baseOnto;
   private Syncher syncher;
   private String user;
   private String pass;
@@ -143,14 +144,6 @@ public class Kanban {
 
       props.load(new FileInputStream(propFile));
 
-      // get the base ontology which is to be preloaded into each board/ontology
-      String baseOntoPath = props.getProperty("os.howler.kanban.baseOntology");
-
-      // paths are relative to config file
-      File baseDir = new File(configPath).getParentFile();
-
-      baseOnto = mgr.loadOntologyFromOntologyDocument(new File(baseDir, baseOntoPath));
-
       String host = props.getProperty("os.howler.kanban.host");
       Integer port = Integer.parseInt(props.getProperty("os.howler.kanban.port"));
 
@@ -162,18 +155,34 @@ public class Kanban {
       this.user = props.getProperty("os.howler.kanban.user");
       this.pass = props.getProperty("os.howler.kanban.password");
 
-    } catch (OWLOntologyCreationException | IOException | URISyntaxException e) {
+    } catch (IOException | URISyntaxException e) {
       LOGGER.error("Couldn't load base ontology from " + configPath + ". " + e.getMessage());
     }
 
   }
 
+  //added a board -> create an ontology
   public void addBoard(Board board) {
+    
     this.boards.put(board.getId(), board);
     LOGGER.info("Added Board:" + board.getTitle());
 
     // create a ontology for each board
-    this.addOntology(board);
+    try {
+
+      // better way to create ontology IRI?
+      IRI iri = IRI.create(board.getTitle().replace(" ", "_"));
+
+      // create ontology and place in ontologies map by boardID
+      OWLOntology onto = mgr.createOntology(iri);
+
+      ontologiesByBoardID.put(board.getId(), onto);
+
+      LOGGER.info("Added new ontology " + iri);
+
+    } catch (OWLOntologyCreationException e) {
+      LOGGER.error("Unable to create ontology for board:" + board.getTitle() + ":" + e.getMessage());
+    }
 
     // if already done initial synch then this is a new board
     if (this.synched) {
@@ -181,24 +190,22 @@ public class Kanban {
     }
 
   }
-
-  private Board getBoard(String id) {
-    return this.boards.get(id);
-  }
-
+  /*
+   * private Board getBoard(String id) { return this.boards.get(id); }
+   */
+  
   public void addList(CardList list) {
-    this.lists.put(list.getId(), list);
     // add the list to the board it is part of
     this.boards.get(list.getBoardId()).addList(list);
-    LOGGER.info("Added List:" + list.getTitle());
+    LOGGER.info("Added List:" + list.getTitle() + " to board " + this.boards.get(list.getBoardId()).getTitle() );
   }
-
-  private CardList getList(String id) {
-    return this.lists.get(id);
-  }
-
+  
+  /*
+   * private CardList getList(String id) { return this.lists.get(id); }
+   */
+  /*
   public void addCard(Card card) {
-    this.cards.put(card.get_id(), card);
+   // this.cards.put(card.get_id(), card);
     // add the card to the board it is part of
     boards.get(card.getBoardId()).addCard(card);
     this.cardsByKey.put(card.getKey(), card);
@@ -206,23 +213,14 @@ public class Kanban {
     lists.get(card.getListId()).addCard(card);
     LOGGER.info("Added Card:" + card.getTitle());
   }
-
-  private Card getCard(String id) {
-    return this.cards.get(id);
-  }
-
-  private Card getCardByKey(String key) {
-    return this.cardsByKey.get(key);
-  }
-
-  private KanbanSentence getSentence(String id) {
-    return sentences.get(id);
-  }
-
-  public void addSentence(KanbanSentence sentence) {
-
-    this.sentences.put(sentence.get_id(), sentence);
-
+*/
+  /*
+   * private Card getCard(String id) { return this.cards.get(id); } private Card getCardByKey(String key) { return
+   * this.cardsByKey.get(key); } private KanbanSentence getSentence(String id) { return sentences.get(id); }
+   */
+  /*
+  private void addSentence(KanbanSentence sentence) {
+    
     LOGGER.info("Added Sentence:" + sentence.getText());
     // create any cards needed to match words used in sentence
     this.addCards(sentence);
@@ -230,75 +228,116 @@ public class Kanban {
     this.addAxioms(sentence);
 
   }
-
-  private RawText getRawText(String id) {
-    return rawTexts.get(id);
-  }
-
+  */
+  
+  /*
+   * private RawText getRawText(String id) { return rawTexts.get(id); }
+   */
   public void addRawText(RawText rawText) {
 
-    this.rawTexts.put(rawText.get_id(), rawText);
-    LOGGER.info("Added RawText:" + rawText.getText());
+    //rawTexts.put(rawText.get_id(), rawText);
 
     // rawtext to abstraction Document
     Document doc = howler.convertText("dummy", rawText.getText());
 
-    // create ontology from abstraction document
-    OWLOntology onto = howler.toOntology(doc, true);
+    OWLOntology onto = this.ontologiesByBoardID.get(rawText.getBoardId());
 
+    // add the contents of the converted rawtext to the appropriate ontology
+    addToOntology(doc, onto);
+
+    // convert the doc back to text
     TextDocument textDoc = howler.toText(doc);
 
+    // do the declarations from the Document
+    for (Statement st : doc.getStatements()) {
+      if (st instanceof DeclarationStatement) {
+        DeclarationStatement dec = (DeclarationStatement) st;
+        this.addCard(dec.getWord(), rawText.getBoardId(), rawText.getSwimlaneId(), rawText.getUserId());
+      }
+    }
+
+    // create the cards and sentences that will be sent to Wekan
     List<KanbanSentence> kbSents = new ArrayList<KanbanSentence>();
 
     for (Sentence sent : textDoc.getSentences()) {
 
-      List<Word> keyWords = new ArrayList<Word>();
+      // if a declaration, skip we already did these
+      if (sent.getSentenceType().equals(SentenceType.DECLARATION)) {
+        continue;
+      }
+
+      // create sentence and any cards needed
       KanbanSentence kbSent = new KanbanSentence();
       kbSent.setBoardId(rawText.getBoardId());
       kbSent.setUserId(rawText.getUserId());
       kbSent.setText(sent.toString());
       kbSent.setInferred(rawText.isInferred());
 
+      // only keywords words
+      List<Word> keyWords = new ArrayList<Word>();
+
       for (Word w : sent.getWords()) {
         WordType wt = w.getWordType();
-        if (!wt.equals(WordType.GENERIC_WORD) && !wt.equals(WordType.QUANTIFIER) && !wt.equals(WordType.WORD_TYPE)) {
+        // dont create cards for generic, quantifiers or WordTypes
+        if (!wt.equals(WordType.GENERIC_WORD) && !wt.equals(WordType.QUANTIFIER) && !wt.equals(WordType.NEGATIVE) && !wt.equals(WordType.WORD_TYPE)) {
           if (w instanceof Predicate) {
             Predicate pred = (Predicate) w;
+            // don't create card for builtin predicates
             if (!pred.isBuiltinPredicate()) {
               keyWords.add(w);
-              this.addCard(w, rawText.getBoardId(), rawText.getSwimlaneId(), rawText.getUserId());
             }
           } else {
             keyWords.add(w);
-            this.addCard(w, rawText.getBoardId(), rawText.getSwimlaneId(), rawText.getUserId());
           }
         }
       }
 
       for (Word wrd : keyWords) {
+        this.addCard(wrd, rawText.getBoardId(), rawText.getSwimlaneId(), rawText.getUserId());
         kbSent.addKey(wrd.getKey().toString());
       }
+     
+      // add sentence to index
+      this.sentences.put(kbSent.get_id(), kbSent);
+      
+      // add inferences
+      this.addAxioms(kbSent);
+      
       kbSents.add(kbSent);
     }
 
     // send the sentences to the Wekan system
     this.sendSentences(kbSents, false);
 
+
+    
     // remove the rawtext
     client.collectionDelete("rawtext", rawText.get_id());
 
   }
 
+  private void addToOntology(Document doc, OWLOntology onto) {
+
+    OWLOntology newOnto = howler.getToOWL().convert(doc);
+
+    for (OWLAxiom ax : OWLAPIStreamUtils.asList(newOnto.axioms())) {
+      onto.add(ax);
+    }
+
+    mgr.removeOntology(newOnto);
+
+  }
+
+  /*
   private boolean isSynched() {
     return synched;
   }
-
+*/
   private void setSynched(boolean synched) {
     this.synched = synched;
     if (synched) {
       this.prepBoards();
     }
-
   }
 
   // make sure start up conditions are set following synch
@@ -398,6 +437,7 @@ public class Kanban {
 
   }
 
+  /*
   // create any new cards needed to represent words used in the sentence
   private void addCards(KanbanSentence sent) {
 
@@ -438,37 +478,7 @@ public class Kanban {
 
     }
   }
-
-  // create a new blank ontology for a board
-  private void addOntology(Board board) {
-
-    try {
-
-      // better way to create ontology IRI?
-      IRI iri = IRI.create(board.getTitle());
-
-      // create ontology and place in ontologies map by boardID
-      OWLOntology onto = mgr.createOntology(iri);
-
-      ontologiesByBoardID.put(board.getId(), onto);
-
-      LOGGER.info("Added new ontology " + iri);
-
-    } catch (OWLOntologyCreationException e) {
-      LOGGER.error("Unable to create ontology for board:" + board.getTitle() + ":" + e.getMessage());
-    }
-
-  }
-
-  // load an ontology into an existing board
-  private void loadOntology(Board board) {
-    OWLOntology currentOnto = ontologiesByBoardID.get(board.getId());
-
-    if (this.baseOnto != null) {
-      currentOnto.addAxioms(OWLAPIStreamUtils.asList(this.baseOnto.axioms()));
-    }
-
-  }
+*/
 
   // create a axiom(s) from a sentence and add to appropriate ontology
   private void addAxioms(KanbanSentence sent) {
@@ -542,7 +552,7 @@ public class Kanban {
 
               // don't include "XX is a Thing" axioms
               if (!this.isThingAxiom(ax)) {
-                this.sendAxiom(ax, sent.getBoardId(), sent.getUserId(),true);
+                this.sendAxiom(ax, sent.getBoardId(), sent.getUserId(), true);
               }
             }
           } catch (OWLOntologyCreationException e) {

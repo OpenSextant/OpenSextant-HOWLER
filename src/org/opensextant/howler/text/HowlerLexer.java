@@ -136,7 +136,7 @@ public class HowlerLexer implements TokenSource {
     mergeQuotedString(toks, input);
 
     // merge dashed words into single token set text,start/stop
-    mergeDashes(toks);
+    mergeDashes(toks, input);
 
     // ensure that PERIODs are marked
     addStops(toks);
@@ -177,8 +177,8 @@ public class HowlerLexer implements TokenSource {
   private String clean(String input) {
 
     String cleanSurface = input;
-    // add space around plus signs
-    cleanSurface = cleanSurface.replaceAll("\\+", " + ");
+    // add space following plus signs
+    // cleanSurface = cleanSurface.replaceAll("\\+", "+ ");
 
     // split some single token quantified things to multiple tokens
     cleanSurface = cleanSurface.replaceAll("(Any|Every|No|Some|any|every|no|some)thing ", "$1 thing ");
@@ -267,7 +267,6 @@ public class HowlerLexer implements TokenSource {
       HowlerToken quoteToken = new HowlerToken(id, quoteText);
       quoteToken.setTokenTypeName(quotedTextTypeName);
       quoteToken.setText(quoteText);
-      // quoteToken.setNormalForm(quoteText);
       quoteToken.setStartIndex(firstCharIndex);
       quoteToken.setStopIndex(lastCharIndex);
 
@@ -286,20 +285,29 @@ public class HowlerLexer implements TokenSource {
 
     // join some split token quantified things to multiple tokens
     String decleanSurface = txt.replaceAll("(Any|Every|No|Some|any|every|no|some) thing ", "$1thing ");
-    decleanSurface = decleanSurface.replace(" + ", "+");
+    // decleanSurface = decleanSurface.replace("+ ", "+");
     // remove escapes
     decleanSurface = decleanSurface.replace("\\\"", "\"");
 
     return decleanSurface;
   }
 
-  private void mergeDashes(List<HowlerToken> sentence) {
+  private void mergeDashes(List<HowlerToken> sentence, String txt) {
     // token index pairs to be merged
     List<List<Integer>> pairs = new ArrayList<List<Integer>>();
 
     int i = 0;
     while (i < sentence.size() - 1) {
       List<Integer> pair = new ArrayList<Integer>();
+
+      // pattern is xx -yy
+      if (!isDash(sentence.get(i)) && isStartsWithDash(sentence.get(i))) {
+        pair.add(i - 1);
+        pair.add(i);
+        pairs.add(pair);
+      }
+
+      // pattern is xx - yy
       if (isDash(sentence.get(i))) {
         pair.add(i - 1);
         pair.add(i + 1);
@@ -327,19 +335,14 @@ public class HowlerLexer implements TokenSource {
 
       List<HowlerToken> seq = new ArrayList<HowlerToken>(
           sentence.subList(pair.get(0) - shift, pair.get(1) + 1 - shift));
-      // merge tokens from pair(0) to pair(1)
-      StringBuilder bldr = new StringBuilder();
-      StringBuilder normBldr = new StringBuilder();
 
-      for (HowlerToken tok : seq) {
-        bldr.append(tok.getText());
-        normBldr.append(tok.getText());
-      }
+      int textStartIndex = seq.get(0).getStartIndex();
+      int textStopIndex = seq.get(seq.size() - 1).getStopIndex();
 
-      String dashText = bldr.toString().trim();
+      String dashText = txt.substring(textStartIndex, textStopIndex + 1);
       HowlerToken dashToken = new HowlerToken(0, dashText);
-      dashToken.setStartIndex(seq.get(0).getStartIndex());
-      dashToken.setStopIndex(seq.get(seq.size() - 1).getStopIndex());
+      dashToken.setStartIndex(textStartIndex);
+      dashToken.setStopIndex(textStopIndex);
       sentence.subList(pair.get(0) - shift, pair.get(1) + 1 - shift).clear();
       sentence.add(pair.get(0) - shift, dashToken);
       shift = shift + pair.get(1) - pair.get(0);
@@ -614,7 +617,7 @@ public class HowlerLexer implements TokenSource {
     }
 
     String norm = tok.getNormalForm();
-    
+
     // split integers and decimals numbers
     if (tokenTypeName.equals("NUMBER")) {
       if (norm.matches("[0-9]+")) {
@@ -627,11 +630,11 @@ public class HowlerLexer implements TokenSource {
         LOGGER.trace("Non-number tagged as number:" + tok);
         tokenTypeName = "COMMON_NOUN";
       }
-    }else{
-      if(norm.matches(".*[0-9].*")){
+    } else {
+      if (norm.matches(".*[0-9].*")) {
         if (norm.matches("[-+]?[0-9]+(\\.[0-9]+)?[eE][-+]?[0-9]+")) {
           tokenTypeName = "DECIMAL";
-        }else{
+        } else {
           LOGGER.trace("Number? tagged as non-number:" + tok);
           tokenTypeName = "COMMON_NOUN";
         }
@@ -1008,14 +1011,15 @@ public class HowlerLexer implements TokenSource {
     return !tok.getTokenTypeName().equals(quotedTextTypeName) && tok.getText().trim().matches("[-\\/\\+]");
   }
 
+  private boolean isStartsWithDash(HowlerToken tok) {
+    return !tok.getTokenTypeName().equals(quotedTextTypeName)
+        && tok.getText().trim().substring(0, 1).matches("[-\\/\\+]");
+  }
+
   private boolean isQuoteChar(HowlerToken tok) {
 
     if (tok.getText().trim().equals("\"")) {
       return true;
-    } else {
-      if (tok.getText().trim().endsWith("\"")) {
-        System.out.println(tok);
-      }
     }
 
     return false;

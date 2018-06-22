@@ -146,4 +146,9 @@ public class Board {
     this.lists.add(list);
   }
 
+  @Override
+  public String toString() {
+    return "Board [title=" + title + ", cards=" + cards + "]";
+  }
+
 }

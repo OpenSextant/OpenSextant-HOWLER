@@ -74,7 +74,7 @@ public class OWL2Text2OWLTest {
     // the to and from converters
     ToOWL toOWL = new ToOWL();
     toOWL.setUseHasValue(false);
-    
+
     FromOWL fromOWL = new FromOWL(ignoreBadImports);
     fromOWL.setRewriteAllAsSubclass(false);
     fromOWL.setMaxPairs(-1);
@@ -217,38 +217,38 @@ public class OWL2Text2OWLTest {
   // see if an axioms appears in an ontology ignoring any axiom-level
   // annotations
   private static boolean compare(OWLOntology onto, OWLAxiom ax) {
-    
+
     if (onto.containsAxiomIgnoreAnnotations(ax)) {
       return true;
     }
 
-    //see if there is an annotation with same literal value
+    // see if there is an annotation with same literal value
     if (ax.getAxiomType().equals(AxiomType.ANNOTATION_ASSERTION)) {
       OWLAnnotationAssertionAxiom anno = (OWLAnnotationAssertionAxiom) ax;
       Optional<OWLLiteral> value = anno.literalValue();
       String litString = "";
       if (value.isPresent()) {
         OWLLiteral lit = value.get();
-         litString = lit.getLiteral();
-      }else{
+        litString = lit.getLiteral();
+      } else {
         return false;
       }
-      
-      //annotation asserts with same subject
-      List<OWLAnnotationAssertionAxiom> annos = OWLAPIStreamUtils.asList(EntitySearcher.getAnnotationAssertionAxioms(anno.getSubject(), onto));
 
-        for (OWLAnnotationAssertionAxiom annoAx : annos) {
-          if (annoAx.literalValue().isPresent()) {
-            OWLLiteral axLit = annoAx.literalValue().get();
-            String axLitString = axLit.getLiteral();
-            if (axLitString.equals(litString)) {
-              return true;
-            }
+      // annotation asserts with same subject
+      List<OWLAnnotationAssertionAxiom> annos = OWLAPIStreamUtils
+          .asList(EntitySearcher.getAnnotationAssertionAxioms(anno.getSubject(), onto));
+
+      for (OWLAnnotationAssertionAxiom annoAx : annos) {
+        if (annoAx.literalValue().isPresent()) {
+          OWLLiteral axLit = annoAx.literalValue().get();
+          String axLitString = axLit.getLiteral();
+          if (axLitString.equals(litString)) {
+            return true;
           }
         }
-        return false;
       }
-    
+      return false;
+    }
 
     // TODO check for subclass rewrite
 

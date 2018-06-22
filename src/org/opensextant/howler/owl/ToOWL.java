@@ -471,11 +471,9 @@ public class ToOWL {
     Word subjWord = null;
     Word objWord = null;
 
-    
-    
     PredicateExpression<AnnotationPredicate> predExp = statement.getPredicatePhrase().getPredicateExpression();
     OWLAnnotationProperty prop = convertAnnotation(predExp);
- 
+
     // subject can be any single word except DataValue
     SubjectObjectPhrase subjPhrase = statement.getSubject();
 
@@ -488,12 +486,12 @@ public class ToOWL {
       if (catPhrase.isSimple()) {
         subjWord = catPhrase.getHead();
       }
-      
-      if(catPhrase.isThingThatPhrase()){
-         List<PredicatePhrase> thingPhrase = catPhrase.getRelativePhrases();
-         
+
+      if (catPhrase.isThingThatPhrase()) {
+        List<PredicatePhrase> thingPhrase = catPhrase.getRelativePhrases();
+
       }
-      
+
     }
 
     if (subjWord == null) {
@@ -521,7 +519,6 @@ public class ToOWL {
       return axs;
     }
 
-
     if (statement.isDomain()) {
       axs.add(owlDataFactory.getOWLAnnotationPropertyDomainAxiom(prop, convertWord(subjWord)));
       return axs;
@@ -531,7 +528,6 @@ public class ToOWL {
       axs.add(owlDataFactory.getOWLAnnotationPropertyRangeAxiom(prop, convertWord(objWord)));
       return axs;
     }
-
 
     List<OWLAnnotation> annos = createAnnotations(statement);
 
@@ -556,43 +552,24 @@ public class ToOWL {
       PredicatePhrase<SubjectObjectPhrase, ObjectPredicate> predPhrase = statement.getSubjectObjectPredicatePhrase();
       PredicateExpression<ObjectPredicate> pExp = predPhrase.getPredicateExpression();
 
-      boolean neg = pExp.isNegative();
-
       OWLClassExpression predObjCE = convertObject(predPhrase);
 
-      OWLClassExpression objCE = convertObject(predPhrase.getObject());
+     // OWLClassExpression objCE = convertObject(predPhrase.getObject());
 
       if (pExp.getPredicate().isBuiltinPredicate()) {
 
         PredicateType predType = pExp.getPredicate().getPredicateType();
 
         if (predType == PredicateType.IS) {
-          if (neg) {
-            axs.add(owlDataFactory.getOWLClassAssertionAxiom(predObjCE.getObjectComplementOf(), subject, annos));
-          } else {
-            axs.add(owlDataFactory.getOWLClassAssertionAxiom(objCE, subject, annos));
-          }
+            axs.add(owlDataFactory.getOWLClassAssertionAxiom(predObjCE, subject, annos));
         }
 
         if (predType == PredicateType.SAME_AS) {
           OWLObjectOneOf subjOneOf = owlDataFactory.getOWLObjectOneOf(subject);
-          if (neg) {
-            List<OWLClassExpression> ceList = new ArrayList<OWLClassExpression>();
-            ceList.add(subjOneOf);
-            ceList.add(objCE);
-            axs.add(owlDataFactory.getOWLDisjointClassesAxiom(ceList, annos));
-          } else {
-            axs.add(owlDataFactory.getOWLEquivalentClassesAxiom(subjOneOf, objCE, annos));
-          }
+          axs.add(owlDataFactory.getOWLEquivalentClassesAxiom(subjOneOf, predObjCE, annos));
         }
       } else {// must be VERB type predicate
-
-        if (neg) {
-          axs.add(owlDataFactory.getOWLClassAssertionAxiom(predObjCE.getObjectComplementOf(), subject, annos));
-        } else {
           axs.add(owlDataFactory.getOWLClassAssertionAxiom(predObjCE, subject, annos));
-        }
-
       }
 
       return axs;
@@ -1928,9 +1905,9 @@ public class ToOWL {
 
     return axs;
   }
-  
+
   private OWLAxiom rewriteDomainRange(OWLAxiom ax) {
-    
+
     if (ax.isOfType(AxiomType.SUBCLASS_OF)) {
 
       OWLSubClassOfAxiom subAx = (OWLSubClassOfAxiom) ax;
@@ -1970,8 +1947,8 @@ public class ToOWL {
       }
 
     }
-    
+
     return ax;
   }
-  
+
 }
