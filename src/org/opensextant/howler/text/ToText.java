@@ -515,15 +515,7 @@ public class ToText {
 
     if (type.equals(PredicateType.IS)) {
 
-      if (wt.equals(WordType.DATA_PREDICATE)) {
-        wrds.add(Vocabulary.IS_Data);
-      }
-      if (wt.equals(WordType.OBJECT_PREDICATE)) {
-        wrds.add(Vocabulary.IS_Object);
-      }
-      if (wt.equals(WordType.ANNOTATION_PREDICATE)) {
-        wrds.add(Vocabulary.IS_Annotation);
-      }
+      wrds.add(Vocabulary.IMPLIES);
 
       if (negative) {
         wrds.add(Negative.NOT);

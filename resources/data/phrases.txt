@@ -1,7 +1,7 @@
 #normal form	Alternate surface forms	Token Type
 
 # ---- subtype/equivalence/inverse predicates
-is	is a type of	IS
+is	is a type of,implies	IS
 same as	the same as,also known as,equivalent to,identical to	SAME_AS
 the inverse of		INVERSE_OF
 

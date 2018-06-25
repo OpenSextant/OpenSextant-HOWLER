@@ -69,6 +69,7 @@ public class Vocabulary {
 
   /* ------- parts of predicate expressions ------- */
   public static final GenericWord IS_AUX = new GenericWord("is", "VB");
+  public static final GenericWord IMPLIES = new GenericWord("implies", "VB");  
   public static final GenericWord DOES_AUX = new GenericWord("does", "VB");
   public static final GenericWord HAS_AUX = new GenericWord("has", "VB");
   public static final GenericWord INVERSE_OF = new GenericWord("the inverse of", "ZZ");
