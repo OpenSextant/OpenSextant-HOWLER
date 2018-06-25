@@ -554,14 +554,14 @@ public class ToOWL {
 
       OWLClassExpression predObjCE = convertObject(predPhrase);
 
-     // OWLClassExpression objCE = convertObject(predPhrase.getObject());
+      // OWLClassExpression objCE = convertObject(predPhrase.getObject());
 
       if (pExp.getPredicate().isBuiltinPredicate()) {
 
         PredicateType predType = pExp.getPredicate().getPredicateType();
 
         if (predType == PredicateType.IS) {
-            axs.add(owlDataFactory.getOWLClassAssertionAxiom(predObjCE, subject, annos));
+          axs.add(owlDataFactory.getOWLClassAssertionAxiom(predObjCE, subject, annos));
         }
 
         if (predType == PredicateType.SAME_AS) {
@@ -569,7 +569,7 @@ public class ToOWL {
           axs.add(owlDataFactory.getOWLEquivalentClassesAxiom(subjOneOf, predObjCE, annos));
         }
       } else {// must be VERB type predicate
-          axs.add(owlDataFactory.getOWLClassAssertionAxiom(predObjCE, subject, annos));
+        axs.add(owlDataFactory.getOWLClassAssertionAxiom(predObjCE, subject, annos));
       }
 
       return axs;

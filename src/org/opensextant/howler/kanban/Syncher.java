@@ -100,7 +100,7 @@ public class Syncher extends DDPListener implements Observer {
         KanbanSentence sent = KanbanSentence.fromMap(fields);
         sent.set_id(id);
         LOGGER.debug("Got a " + msgtype + " message for collection " + collName + ":" + sent);
-        //kanban.addSentence(sent);
+        // kanban.addSentence(sent);
         return;
       }
 
@@ -127,7 +127,7 @@ public class Syncher extends DDPListener implements Observer {
         Card card = Card.fromMap(fields);
         card.set_id(id);
         LOGGER.debug("Got a " + msgtype + " message for collection " + collName + ":" + card);
-        //kanban.addCard(card);
+        // kanban.addCard(card);
         return;
       }
 

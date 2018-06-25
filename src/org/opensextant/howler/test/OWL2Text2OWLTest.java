@@ -139,18 +139,21 @@ public class OWL2Text2OWLTest {
         for (OWLAxiom originalAx : OWLAPIStreamUtils.asList(originalOnto.axioms())) {
           if (!compare(backOnto, originalAx)) {
 
+            String axString = originalAx.toString().replaceAll("[\\n\\r\\t]", "<WHITE_SPACE>");
             if (nyi(originalAx)) {
               axiomErrorsNYI++;
-              FileUtils.writeStringToFile(results, ontoName + "\t" + "NYI" + "\t" + originalAx.getAxiomType() + "\t"
-                  + originalAx.toString().replaceAll("[\\n\\r\\t]", "<WHITE_SPACE>") + "\n", "UTF-8", true);
-              FileUtils.writeStringToFile(totalResults, ontoName + "\t" + "NYI" + "\t" + originalAx.getAxiomType()
-                  + "\t" + originalAx.toString().replaceAll("[\\n\\r\\t]", " ") + "\n", "UTF-8", true);
+              FileUtils.writeStringToFile(results,
+                  ontoName + "\t" + "NYI" + "\t" + originalAx.getAxiomType() + "\t" + axString + "\n", "UTF-8", true);
+              FileUtils.writeStringToFile(totalResults,
+                  ontoName + "\t" + "NYI" + "\t" + originalAx.getAxiomType() + "\t" + axString + "\n", "UTF-8", true);
             } else {
               axiomErrorsMissing++;
-              FileUtils.writeStringToFile(results, ontoName + "\t" + "Missing" + "\t" + originalAx.getAxiomType() + "\t"
-                  + originalAx.toString().replaceAll("[\\n\\r\\t]", "<WHITE_SPACE>") + "\n", "UTF-8", true);
-              FileUtils.writeStringToFile(totalResults, ontoName + "\t" + "Missing" + "\t" + originalAx.getAxiomType()
-                  + "\t" + originalAx.toString().replaceAll("[\\n\\r\\t]", "<WHITE_SPACE>") + "\n", "UTF-8", true);
+              FileUtils.writeStringToFile(results,
+                  ontoName + "\t" + "Missing" + "\t" + originalAx.getAxiomType() + "\t" + axString + "\n", "UTF-8",
+                  true);
+              FileUtils.writeStringToFile(totalResults,
+                  ontoName + "\t" + "Missing" + "\t" + originalAx.getAxiomType() + "\t" + axString + "\n", "UTF-8",
+                  true);
             }
           }
         }
@@ -160,11 +163,11 @@ public class OWL2Text2OWLTest {
         for (OWLAxiom backAx : OWLAPIStreamUtils.asList(backOnto.axioms())) {
           if (!compare(originalOnto, backAx)) {
             axiomErrorsExtra++;
-
-            FileUtils.writeStringToFile(results, ontoName + "\t" + "Extra" + "\t" + backAx.getAxiomType() + "\t"
-                + backAx.toString().replaceAll("[\\n\\r\\t]", "<WHITE_SPACE>") + "\n", "UTF-8", true);
-            FileUtils.writeStringToFile(totalResults, ontoName + "\t" + "Extra" + "\t" + backAx.getAxiomType() + "\t"
-                + backAx.toString().replaceAll("[\\n\\r\\t]", "<WHITE_SPACE>") + "\n", "UTF-8", true);
+            String axString = backAx.toString().replaceAll("[\\n\\r\\t]", "<WHITE_SPACE>");
+            FileUtils.writeStringToFile(results,
+                ontoName + "\t" + "Extra" + "\t" + backAx.getAxiomType() + "\t" + axString + "\n", "UTF-8", true);
+            FileUtils.writeStringToFile(totalResults,
+                ontoName + "\t" + "Extra" + "\t" + backAx.getAxiomType() + "\t" + axString + "\n", "UTF-8", true);
           }
         }
 
@@ -229,7 +232,7 @@ public class OWL2Text2OWLTest {
       String litString = "";
       if (value.isPresent()) {
         OWLLiteral lit = value.get();
-        litString = lit.getLiteral();
+        litString = lit.getLiteral().replaceAll("\n", " ");;
       } else {
         return false;
       }
@@ -241,7 +244,7 @@ public class OWL2Text2OWLTest {
       for (OWLAnnotationAssertionAxiom annoAx : annos) {
         if (annoAx.literalValue().isPresent()) {
           OWLLiteral axLit = annoAx.literalValue().get();
-          String axLitString = axLit.getLiteral();
+          String axLitString = axLit.getLiteral().replaceAll("\n", " ");
           if (axLitString.equals(litString)) {
             return true;
           }

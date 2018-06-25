@@ -46,6 +46,7 @@ import org.opensextant.howler.abstraction.words.enumerated.DataFacet;
 import org.opensextant.howler.abstraction.words.enumerated.PredicateCharacteristic;
 import org.opensextant.howler.abstraction.words.enumerated.Quantifier;
 import org.opensextant.howler.abstraction.words.enumerated.WordType;
+import org.opensextant.howler.text.DocumentFactory.FileStructure;
 import org.opensextant.howler.text.grammar.HOWL;
 import org.opensextant.howler.text.grammar.HOWL.AdjpContext;
 import org.opensextant.howler.text.grammar.HOWL.AnnotationStatementContext;
@@ -132,7 +133,7 @@ public class FromText {
 
     IRI id = doc.getId();
     String shortname = doc.getShortName();
-    String txt = doc.toString();
+    String txt = doc.toString(FileStructure.DOCUMENT_PER_LINE, false);
     return convertText(txt, id, shortname);
   }
 

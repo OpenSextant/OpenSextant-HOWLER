@@ -7,6 +7,7 @@ import org.opensextant.howler.abstraction.Word;
 import org.semanticweb.owlapi.model.IRI;
 
 public enum DataFacet implements Word {
+//@formatter:off 
  LENGTH_FACET("length of", Vocabulary.XSDNamespace, "length"),
  MIN_LENGTH_FACET("minimum length of", Vocabulary.XSDNamespace,"minLength"),
  MAX_LENGTH_FACET("maximum length of", Vocabulary.XSDNamespace, "maxLength"),
@@ -19,6 +20,7 @@ public enum DataFacet implements Word {
  FRACTION_DIGITS_FACET("fractional digits of", Vocabulary.XSDNamespace,"fractionDigits"),
  LANG_RANGE_FACET("language range of", Vocabulary.RDFNamespace,"langRange"),
  ERROR_FACET("unknown relation to", Vocabulary.BUILTIN_NS, "error");
+//@formatter:on
 
   private IRI namespace;
   private String logicalform;

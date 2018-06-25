@@ -7,6 +7,7 @@ import org.opensextant.howler.abstraction.Word;
 import org.semanticweb.owlapi.model.IRI;
 
 public enum Quantifier implements Word {
+//@formatter:off
   NULL("", false),
   EVERY("every", false),
   SOME("some", false),
@@ -18,6 +19,7 @@ public enum Quantifier implements Word {
   LESS_THAN("less than",true),
   MORE_THAN_OR_EQUAL("at least", true),
   LESS_THAN_OR_EQUAL("at most", true);
+//@formatter:on
 
   private boolean numeric;
   private String normalform;

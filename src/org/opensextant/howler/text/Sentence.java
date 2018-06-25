@@ -10,7 +10,7 @@ import org.opensextant.howler.abstraction.words.DataValue;
 public class Sentence {
 
   public enum SentenceType {
-    DECLARATION, DESCRIPTION, FACT, PREDICATE_RELATION, PREDICATE_CHARACTERISTIC, ERROR
+    DECLARATION, DESCRIPTION, FACT, ANNOTATION, PREDICATE_RELATION, PREDICATE_CHARACTERISTIC, ERROR
   };
 
   private List<Word> words = new ArrayList<Word>();

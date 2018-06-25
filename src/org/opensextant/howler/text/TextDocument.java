@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.opensextant.howler.abstraction.Vocabulary;
 import org.opensextant.howler.abstraction.Word;
+import org.opensextant.howler.text.DocumentFactory.FileStructure;
 import org.opensextant.howler.text.Sentence.SentenceType;
 import org.semanticweb.owlapi.model.IRI;
 
@@ -94,20 +95,44 @@ public class TextDocument {
   }
 
   public String toString() {
-    StringBuilder bldr = new StringBuilder();
+    return toString(FileStructure.DOCUMENT_PER_LINE, false);
+  }
 
-    for (Sentence s : this.sentences) {
-      if (s.getSentenceType().equals(SentenceType.DECLARATION)) {
-        bldr.append(s.toString());
-        bldr.append("\n\n\n");
-      }
+  public String toString(FileStructure format, boolean hdrs) {
+
+    StringBuilder bldr = new StringBuilder();
+    String delim = "\n";
+
+    if (format.equals(FileStructure.DOCUMENT_PER_LINE)) {
+      delim = "\n";
     }
 
-    for (Sentence s : this.sentences) {
-      if (!s.getSentenceType().equals(SentenceType.DECLARATION)) {
-        bldr.append(s.toString());
-        bldr.append("\n\n\n");
+    if (format.equals(FileStructure.SINGLE_BLOCK)) {
+      delim = " ";
+    }
+
+    if (format.equals(FileStructure.MULTI_BLOCK)) {
+      delim = "\n\n\n";
+    }
+
+    for (SentenceType typ : SentenceType.values()) {
+
+      if (hdrs) {
+        bldr.append("#\n");
+        bldr.append("# " + typ.toString() + " Statements" + "\n");
+        bldr.append("#------------\n");
       }
+      for (Sentence s : this.sentences) {
+        if (s.getSentenceType().equals(typ)) {
+          if(format.equals(FileStructure.DOCUMENT_PER_LINE)){
+            bldr.append(s.toString().replaceAll("\n", " "));
+          }else{
+            bldr.append(s.toString());
+          }
+          bldr.append(delim);
+        }
+      }
+
     }
 
     return bldr.toString();

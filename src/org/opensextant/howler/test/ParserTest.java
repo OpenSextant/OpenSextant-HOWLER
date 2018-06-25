@@ -88,7 +88,7 @@ public class ParserTest {
       for (File textFile : textFiles) {
         String txtFileName = textFile.getName();
 
-        //WordManager.getWordManager().reset();
+        // WordManager.getWordManager().reset();
         FromText from = new FromText(lexFile, gramFile, typeInfoFile, phraseFile);
 
         System.out.println();
@@ -156,7 +156,7 @@ public class ParserTest {
         // WordManager.getWordManager().reset();
       }
     }
-     WordManager.getWordManager().dumpWordsToFile(wDump);
+    WordManager.getWordManager().dumpWordsToFile(wDump);
   }
 
 }

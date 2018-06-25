@@ -8,6 +8,7 @@ import org.opensextant.howler.utils.TextUtils;
 import org.semanticweb.owlapi.model.IRI;
 
 public enum PredicateCharacteristic implements Word {
+//@formatter:off  
   FUNCTIONAL("functional"),
   SYMMETRIC("symmetric"),
   ASYMMETRIC("asymmetric"),
@@ -15,6 +16,7 @@ public enum PredicateCharacteristic implements Word {
   TRANSITIVE("transitive"),
   INVERSE_FUNCTIONAL("inverse functional"),
   IRREFLEXIVE("irreflexive");
+//@formatter:on
 
   private final String logicalform;
   private String normalform;
@@ -84,5 +86,5 @@ public enum PredicateCharacteristic implements Word {
   public void setPrefix(String prefix) {
     // ignore
   }
-  
+
 }

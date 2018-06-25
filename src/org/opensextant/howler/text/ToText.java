@@ -125,7 +125,7 @@ public class ToText {
   private Sentence convertAnno(DescriptionStatement st) {
 
     Sentence sent = new Sentence();
-    sent.setSentenceType(SentenceType.DESCRIPTION);
+    sent.setSentenceType(SentenceType.ANNOTATION);
 
     SubjectObjectPhrase subj = st.getSubject();
     PredicateExpression pExp = st.getPredicatePhrase().getPredicateExpression();

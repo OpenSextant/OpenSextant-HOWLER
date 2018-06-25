@@ -92,10 +92,7 @@ public class Kanban {
 
   // the primary kanban elements indexed by their IDs
   private Map<String, Board> boards = new HashMap<String, Board>();
-  //private Map<String, CardList> lists = new HashMap<String, CardList>();
-  //private Map<String, Card> cards = new HashMap<String, Card>();
   private Map<String, KanbanSentence> sentences = new HashMap<String, KanbanSentence>();
-  //private Map<String, RawText> rawTexts = new HashMap<String, RawText>();
 
   // sentences indexed by their content and board to avoid duplicates
   private Map<String, KanbanSentence> sentencesByText = new HashMap<String, KanbanSentence>();
@@ -161,9 +158,9 @@ public class Kanban {
 
   }
 
-  //added a board -> create an ontology
+  // added a board -> create an ontology
   public void addBoard(Board board) {
-    
+
     this.boards.put(board.getId(), board);
     LOGGER.info("Added Board:" + board.getTitle());
 
@@ -190,52 +187,16 @@ public class Kanban {
     }
 
   }
-  /*
-   * private Board getBoard(String id) { return this.boards.get(id); }
-   */
-  
+
   public void addList(CardList list) {
     // add the list to the board it is part of
     this.boards.get(list.getBoardId()).addList(list);
-    LOGGER.info("Added List:" + list.getTitle() + " to board " + this.boards.get(list.getBoardId()).getTitle() );
+    LOGGER.info("Added List:" + list.getTitle() + " to board " + this.boards.get(list.getBoardId()).getTitle());
   }
-  
-  /*
-   * private CardList getList(String id) { return this.lists.get(id); }
-   */
-  /*
-  public void addCard(Card card) {
-   // this.cards.put(card.get_id(), card);
-    // add the card to the board it is part of
-    boards.get(card.getBoardId()).addCard(card);
-    this.cardsByKey.put(card.getKey(), card);
-    // add the card to the list it is part of
-    lists.get(card.getListId()).addCard(card);
-    LOGGER.info("Added Card:" + card.getTitle());
-  }
-*/
-  /*
-   * private Card getCard(String id) { return this.cards.get(id); } private Card getCardByKey(String key) { return
-   * this.cardsByKey.get(key); } private KanbanSentence getSentence(String id) { return sentences.get(id); }
-   */
-  /*
-  private void addSentence(KanbanSentence sentence) {
-    
-    LOGGER.info("Added Sentence:" + sentence.getText());
-    // create any cards needed to match words used in sentence
-    this.addCards(sentence);
-    // create axiom(s) that corresponds to sentence and add to ontology
-    this.addAxioms(sentence);
 
-  }
-  */
-  
-  /*
-   * private RawText getRawText(String id) { return rawTexts.get(id); }
-   */
   public void addRawText(RawText rawText) {
 
-    //rawTexts.put(rawText.get_id(), rawText);
+    // rawTexts.put(rawText.get_id(), rawText);
 
     // rawtext to abstraction Document
     Document doc = howler.convertText("dummy", rawText.getText());
@@ -279,7 +240,8 @@ public class Kanban {
       for (Word w : sent.getWords()) {
         WordType wt = w.getWordType();
         // dont create cards for generic, quantifiers or WordTypes
-        if (!wt.equals(WordType.GENERIC_WORD) && !wt.equals(WordType.QUANTIFIER) && !wt.equals(WordType.NEGATIVE) && !wt.equals(WordType.WORD_TYPE)) {
+        if (!wt.equals(WordType.GENERIC_WORD) && !wt.equals(WordType.QUANTIFIER) && !wt.equals(WordType.NEGATIVE)
+            && !wt.equals(WordType.WORD_TYPE)) {
           if (w instanceof Predicate) {
             Predicate pred = (Predicate) w;
             // don't create card for builtin predicates
@@ -296,21 +258,19 @@ public class Kanban {
         this.addCard(wrd, rawText.getBoardId(), rawText.getSwimlaneId(), rawText.getUserId());
         kbSent.addKey(wrd.getKey().toString());
       }
-     
+
       // add sentence to index
       this.sentences.put(kbSent.get_id(), kbSent);
-      
+
       // add inferences
       this.addAxioms(kbSent);
-      
+
       kbSents.add(kbSent);
     }
 
     // send the sentences to the Wekan system
     this.sendSentences(kbSents, false);
 
-
-    
     // remove the rawtext
     client.collectionDelete("rawtext", rawText.get_id());
 
@@ -328,11 +288,6 @@ public class Kanban {
 
   }
 
-  /*
-  private boolean isSynched() {
-    return synched;
-  }
-*/
   private void setSynched(boolean synched) {
     this.synched = synched;
     if (synched) {
@@ -436,49 +391,6 @@ public class Kanban {
     }
 
   }
-
-  /*
-  // create any new cards needed to represent words used in the sentence
-  private void addCards(KanbanSentence sent) {
-
-    String userID = sent.getUserId();
-    String boardID = sent.getBoardId();
-
-    for (String key : sent.getKeys()) {
-
-      // seen key before?
-      if (!this.cardsByKey.keySet().contains(key)) {
-
-        // keys look like:logicalForm|WordType|boardID
-        String[] pieces = key.split("\\|");
-
-        // title is the words logical form with part of speech following
-        String title = pieces[0].replaceAll("_", " ") + " (" + pieces[1].toLowerCase() + ")";
-
-        // create and populate new card
-        Card card = new Card();
-
-        card.setTitle(title);
-        card.setKey(key);
-        card.setEntityType(WordType.valueOf(pieces[1]));
-        card.setBoardId(boardID);
-        // TODO list selected is first list in board. Better choice?
-        card.setListId(boards.get(boardID).getLists().get(0).getId());
-        card.setUserid(userID);
-
-        // create field map and send to Wekan
-        String json = gson.toJson(card);
-        Map<String, Object> fields = gson.fromJson(json, Map.class);
-
-        int id = client.collectionInsert("cards", fields);
-        LOGGER.info("Inserting new Card. ID=" + id + ". " + card.getTitle());
-
-        this.cardsByKey.put(key, card);
-      }
-
-    }
-  }
-*/
 
   // create a axiom(s) from a sentence and add to appropriate ontology
   private void addAxioms(KanbanSentence sent) {

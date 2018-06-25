@@ -33,6 +33,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.opensextant.howler.abstraction.WordManager;
 import org.opensextant.howler.owl.FromOWL;
+import org.opensextant.howler.text.DocumentFactory.FileStructure;
 import org.opensextant.howler.text.TextDocument;
 import org.opensextant.howler.text.ToText;
 
@@ -46,7 +47,16 @@ public class OWL2Text {
 
     File inputDirsFile = new File(args[0]);
     File resultsDir = new File(args[1]);
-    boolean ignoreBadImports = Boolean.valueOf(args[2]);
+    
+    FileStructure outFormat = FileStructure.DOCUMENT_PER_LINE;
+
+     try {
+      outFormat = FileStructure.valueOf(args[2]);
+    } catch (Exception e) {
+      System.err.println("Bad value for format:" + args[2]);
+    }
+
+    boolean ignoreBadImports = Boolean.valueOf(args[3]);
 
     // the to and from converters
     FromOWL fromOWL = new FromOWL(ignoreBadImports);
@@ -91,7 +101,7 @@ public class OWL2Text {
         // create a name from the input ontology file
         String ontoNameBase = ontoFile.getName().split("\\.")[0];
         File outText = new File(byOntoDir, ontoNameBase + ".txt");
-        FileUtils.writeStringToFile(outText, backText.toString(), "UTF-8");
+        FileUtils.writeStringToFile(outText, backText.toString(outFormat,true), "UTF-8");
       }
     }
 

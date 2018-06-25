@@ -7,7 +7,8 @@ import org.opensextant.howler.abstraction.Word;
 import org.opensextant.howler.utils.TextUtils;
 import org.semanticweb.owlapi.model.IRI;
 
-public enum WordType implements Word { 
+public enum WordType implements Word {
+//@formatter:off
   GENERIC_WORD("generic word",false,false),
   BADWORD("badword",false,false),
   ADJECTIVE("adjective",false,false),
@@ -32,6 +33,7 @@ public enum WordType implements Word {
   PREDICATE("predicate",true,false),
   SCOPE("scope",false,true),
   WORD_TYPE("word type",false,true);
+//@formatter:on
 
   private final String logicalform;
   private String normalForm;
