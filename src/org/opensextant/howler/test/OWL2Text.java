@@ -47,10 +47,10 @@ public class OWL2Text {
 
     File inputDirsFile = new File(args[0]);
     File resultsDir = new File(args[1]);
-    
+
     FileStructure outFormat = FileStructure.DOCUMENT_PER_LINE;
 
-     try {
+    try {
       outFormat = FileStructure.valueOf(args[2]);
     } catch (Exception e) {
       System.err.println("Bad value for format:" + args[2]);
@@ -101,7 +101,7 @@ public class OWL2Text {
         // create a name from the input ontology file
         String ontoNameBase = ontoFile.getName().split("\\.")[0];
         File outText = new File(byOntoDir, ontoNameBase + ".txt");
-        FileUtils.writeStringToFile(outText, backText.toString(outFormat,true), "UTF-8");
+        FileUtils.writeStringToFile(outText, backText.toString(outFormat, true), "UTF-8");
       }
     }
 

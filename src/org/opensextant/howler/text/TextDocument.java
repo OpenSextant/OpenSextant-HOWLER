@@ -124,9 +124,9 @@ public class TextDocument {
       }
       for (Sentence s : this.sentences) {
         if (s.getSentenceType().equals(typ)) {
-          if(format.equals(FileStructure.DOCUMENT_PER_LINE)){
+          if (format.equals(FileStructure.DOCUMENT_PER_LINE)) {
             bldr.append(s.toString().replaceAll("\n", " "));
-          }else{
+          } else {
             bldr.append(s.toString());
           }
           bldr.append(delim);

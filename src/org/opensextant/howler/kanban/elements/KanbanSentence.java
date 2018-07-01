@@ -116,5 +116,4 @@ public class KanbanSentence {
         + ", userId=" + userId + ", boardId=" + boardId + ", keys=" + keys + "]";
   }
 
-
 }

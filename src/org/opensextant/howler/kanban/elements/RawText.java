@@ -97,7 +97,4 @@ public class RawText {
         + swimlaneId + ", inferred=" + inferred + "]";
   }
 
-  
-  
-  
 }
