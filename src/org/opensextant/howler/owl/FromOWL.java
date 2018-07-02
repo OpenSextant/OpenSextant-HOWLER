@@ -1,11 +1,14 @@
 package org.opensextant.howler.owl;
 
+import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.asSet;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.opensextant.howler.abstraction.Document;
 import org.opensextant.howler.abstraction.Phrase;
@@ -146,6 +149,7 @@ import org.semanticweb.owlapi.normalform.NegationalNormalFormConverter;
 import org.semanticweb.owlapi.util.AutoIRIMapper;
 import org.semanticweb.owlapi.util.OWLAPIStreamUtils;
 import org.semanticweb.owlapi.vocab.OWLFacet;
+import org.semanticweb.owlapi.vocab.XSDVocabulary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -312,7 +316,7 @@ public class FromOWL {
     // create a declaration for each element of the signature not explicitly declared
     for (OWLEntity ent : OWLAPIStreamUtils.asList(onto.signature(Imports.EXCLUDED))) {
       // don't include builtin (OWL,RDF..) entities
-      if (!onto.isDeclared(ent, Imports.EXCLUDED) && !ent.isBuiltIn()) {
+      if (!onto.isDeclared(ent, Imports.EXCLUDED) && !isBuiltin(ent)) {
         DeclarationStatement statement = new DeclarationStatement();
         statement.setWord(convertOWLPrimitive(ent));
         statement.setDerived(true);
@@ -2251,6 +2255,19 @@ public class FromOWL {
     } else {
       LOGGER.trace("Ontology " + onto.getOntologyID().getDefaultDocumentIRI() + " does not have any prefixes defined");
     }
+  }
+
+  private boolean isBuiltin(OWLEntity ent) {
+
+    if (ent.isBuiltIn()) {
+      return true;
+    }
+
+    if (asSet(Stream.of(XSDVocabulary.values()).map(i -> i.getIRI())).contains(ent.getIRI())) {
+      return true;
+    }
+
+    return false;
   }
 
 }

@@ -24,7 +24,9 @@
  */
 package org.opensextant.howler.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.opensextant.howler.abstraction.Vocabulary;
@@ -35,6 +37,7 @@ import org.slf4j.LoggerFactory;
 public class TextUtils {
 
   static Map<String, Integer> numbers = new HashMap<String, Integer>();
+  static List<String> fileTypes = new ArrayList<String>();
 
   static {
     numbers.put("one", 1);
@@ -57,6 +60,15 @@ public class TextUtils {
     numbers.put("eighteen", 18);
     numbers.put("nineteen", 19);
     numbers.put("twenty", 20);
+
+    fileTypes.add("txt");
+    fileTypes.add("owl");
+    fileTypes.add("rdf");
+    fileTypes.add("ttl");
+    fileTypes.add("xml");
+    fileTypes.add("htm");
+    fileTypes.add("html");
+
   }
 
   // Log object
@@ -128,8 +140,10 @@ public class TextUtils {
     String localName = getLocalName(iri);
 
     if (localName.contains(".")) {
-      // TODO check for common extensions?
-      return true;
+      String[] pieces = localName.split("\\.");
+      if (fileTypes.contains(pieces[pieces.length - 1])) {
+        return true;
+      }
     }
     if (localName.matches("[0-9]+")) {
       return true;

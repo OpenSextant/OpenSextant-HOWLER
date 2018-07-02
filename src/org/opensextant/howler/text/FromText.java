@@ -1486,7 +1486,7 @@ public class FromText {
       dt = Vocabulary.BOOL_TYPE;
       return dt;
     }
-    if (txt.toLowerCase().matches("[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
+    if (txt.toLowerCase().matches("-?[0-9]{3,4}-[0-9]{2}-[0-9]{2}")) {
       dt = Vocabulary.DATE_TYPE;
       return dt;
     }

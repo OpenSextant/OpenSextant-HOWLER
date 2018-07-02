@@ -242,6 +242,7 @@ public class Vocabulary {
     fixedVocabulary.add(TOKEN_TYPE);
     fixedVocabulary.add(DATETIME_TYPE);
     fixedVocabulary.add(DATETIMESTAMP_TYPE);
+    fixedVocabulary.add(DATE_TYPE);
     fixedVocabulary.add(LITERAL_TYPE);
     fixedVocabulary.add(ANYURI_TYPE);
 
